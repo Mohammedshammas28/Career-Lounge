@@ -1,13 +1,8 @@
 "use client"
 
-"use client"
-
 import { CheckCircle2, Award, Shield, Network } from "lucide-react"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 export function WhyChooseSection() {
-  const { ref, isVisible } = useScrollReveal({ threshold: 0.1 })
-
   const reasons = [
     {
       icon: Award,
@@ -36,13 +31,13 @@ export function WhyChooseSection() {
   ]
 
   return (
-    <section className="py-24 lg:py-32 bg-background" ref={ref}>
+    <section className="py-24 lg:py-32 bg-background">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className={`mx-auto max-w-2xl text-center mb-16 ${isVisible ? 'scroll-reveal-up' : ''}`}>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
+        <div className="mx-auto max-w-2xl text-center mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             Why Choose <span className="gradient-text">Career Lounge?</span>
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
             We stand out as your trusted partner because we combine certified expertise, 
             complete transparency, and an extensive global network to support your success.
           </p>
@@ -54,8 +49,8 @@ export function WhyChooseSection() {
             return (
               <div
                 key={index}
-                className={`relative group card-gradient card-hover-lift ${isVisible ? 'scroll-reveal-up' : ''}`}
-                style={{animationDelay: isVisible ? `${index * 0.1}s` : '0s'}}
+                className="relative group animate-fadeInUp card-gradient card-hover-lift"
+                style={{animation: `fadeInUp 0.6s ease-out ${0.3 + index * 0.1}s both`}}
               >
                 <div className="h-full p-6 rounded-xl border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/20">
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all group-hover:scale-125 group-hover:animate-spin-slow">
@@ -73,7 +68,7 @@ export function WhyChooseSection() {
           })}
         </div>
 
-        <div className={`mt-16 card-gradient border border-border/50 rounded-xl p-8 md:p-12 ${isVisible ? 'scroll-reveal-scale' : ''}`}>
+        <div className="mt-16 card-gradient border border-border/50 rounded-xl p-8 md:p-12 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.8s both'}}>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="group cursor-pointer hover:scale-105 transition-transform">
               <div className="text-4xl font-bold gradient-text mb-2 group-hover:animate-bounce transition-all">500+</div>

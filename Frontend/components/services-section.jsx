@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Compass, GraduationCap, Users, Plane, ChevronRight } from "lucide-react"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 const services = [
   {
@@ -53,16 +52,15 @@ const services = [
 
 export function ServicesSection() {
   const [activeService, setActiveService] = useState(0)
-  const { ref, isVisible } = useScrollReveal({ threshold: 0.1 })
 
   return (
-    <section id="services" className="py-24 lg:py-32" ref={ref}>
+    <section id="services" className="py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className={`mx-auto max-w-2xl text-center mb-16 ${isVisible ? 'scroll-reveal-up' : ''}`}>
-          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4">
+        <div className="mx-auto max-w-2xl text-center mb-16">
+          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             What We Do
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
             Our <span className="gradient-text">Core Services</span>
           </h2>
         </div>

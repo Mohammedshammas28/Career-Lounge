@@ -1,38 +1,31 @@
-"use client"
-
-"use client"
-
 import { Compass, GraduationCap, Briefcase, Globe } from "lucide-react"
-import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 export function AboutSection() {
-  const { ref, isVisible } = useScrollReveal({ threshold: 0.1 })
-
   return (
-    <section id="about" className="py-24 lg:py-32" ref={ref}>
+    <section id="about" className="py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className={`mx-auto max-w-2xl text-center ${isVisible ? 'scroll-reveal-up' : ''}`}>
-          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4">
+        <div className="mx-auto max-w-2xl text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
+          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             About Us
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
             <span className="gradient-text">Empowering Careers.</span> Enabling Futures.
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>
             Career Lounge is your trusted partner for professional growth, academic advancement, 
             and global opportunities. We specialize in career counselling, educational consultancy 
             (domestic & international), recruitment, and immigration services—helping individuals 
             navigate life-changing decisions with clarity and confidence.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.4s both'}}>
             Whether you&apos;re a student planning your future, a job seeker preparing for your next role, 
             or a professional aiming to study or settle abroad, Career Lounge is here to guide you 
             every step of the way.
           </p>
         </div>
 
-        <div className={`mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-8 stagger-container`}>
-          <div className={`text-center card-gradient card-hover-lift group ${isVisible ? 'scroll-reveal-up' : ''}`} style={{animationDelay: isVisible ? '0.1s' : '0s'}}>
+        <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-8 stagger-container">
+          <div className="text-center card-gradient card-hover-lift group animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             <div className="mx-auto h-14 w-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
               <Compass className="h-7 w-7 text-primary group-hover:animate-rotate-continuous" />
             </div>
@@ -43,7 +36,7 @@ export function AboutSection() {
             </p>
           </div>
 
-          <div className={`text-center card-gradient card-hover-lift group ${isVisible ? 'scroll-reveal-up' : ''}`} style={{animationDelay: isVisible ? '0.2s' : '0s'}}>
+          <div className="text-center card-gradient card-hover-lift group animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
             <div className="mx-auto h-14 w-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
               <GraduationCap className="h-7 w-7 text-primary group-hover:animate-rotate-continuous" />
             </div>
@@ -54,7 +47,7 @@ export function AboutSection() {
             </p>
           </div>
 
-          <div className={`text-center card-gradient card-hover-lift group ${isVisible ? 'scroll-reveal-up' : ''}`} style={{animationDelay: isVisible ? '0.3s' : '0s'}}>
+          <div className="text-center card-gradient card-hover-lift group animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>
             <div className="mx-auto h-14 w-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
               <Briefcase className="h-7 w-7 text-primary group-hover:animate-rotate-continuous" />
             </div>
@@ -65,7 +58,7 @@ export function AboutSection() {
             </p>
           </div>
 
-          <div className={`text-center card-gradient card-hover-lift group ${isVisible ? 'scroll-reveal-up' : ''}`} style={{animationDelay: isVisible ? '0.4s' : '0s'}}>
+          <div className="text-center card-gradient card-hover-lift group animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.4s both'}}>
             <div className="mx-auto h-14 w-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
               <Globe className="h-7 w-7 text-primary group-hover:animate-rotate-continuous" />
             </div>

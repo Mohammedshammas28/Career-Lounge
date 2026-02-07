@@ -4,13 +4,23 @@ import nodemailer from "nodemailer";
 // For Gmail: use your email and app-specific password
 // For other services: update the transporter configuration
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+const createTransporter = () => {
+  const emailUser = process.env.EMAIL_USER;
+  const emailPassword = process.env.EMAIL_PASSWORD;
+
+  if (!emailUser || !emailPassword) {
+    console.error("Email environment variables not configured");
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: emailUser,
+      pass: emailPassword,
+    },
+  });
+};
 
 export async function POST(request) {
   try {
@@ -21,6 +31,14 @@ export async function POST(request) {
       return Response.json(
         { error: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    const transporter = createTransporter();
+    if (!transporter) {
+      return Response.json(
+        { error: "Email service not configured. Please contact the administrator." },
+        { status: 503 }
       );
     }
 
