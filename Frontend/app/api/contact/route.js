@@ -24,7 +24,7 @@ const createTransporter = () => {
 
 export async function POST(request) {
   try {
-    const { firstName, lastName, email, organization, role, message } = await request.json();
+    const { firstName, lastName, email, serviceType, message } = await request.json();
 
     // Validate required fields
     if (!firstName || !lastName || !email || !message) {
@@ -47,8 +47,7 @@ export async function POST(request) {
       <h2>New Contact Form Submission</h2>
       <p><strong>Name:</strong> ${firstName} ${lastName}</p>
       <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Organization:</strong> ${organization || "Not provided"}</p>
-      <p><strong>Role:</strong> ${role || "Not provided"}</p>
+      <p><strong>Service Type:</strong> ${serviceType || "Not provided"}</p>
       <h3>Message:</h3>
       <p>${message.replace(/\n/g, "<br/>")}</p>
       <hr/>
@@ -63,8 +62,7 @@ export async function POST(request) {
       <h3>Your submitted information:</h3>
       <p><strong>Name:</strong> ${firstName} ${lastName}</p>
       <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Organization:</strong> ${organization || "Not provided"}</p>
-      <p><strong>Role:</strong> ${role || "Not provided"}</p>
+      <p><strong>Service Type:</strong> ${serviceType || "Not provided"}</p>
       <h3>Message:</h3>
       <p>${message.replace(/\n/g, "<br/>")}</p>
       <hr/>

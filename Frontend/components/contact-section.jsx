@@ -4,6 +4,14 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Mail, Phone, MapPin } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
@@ -12,11 +20,11 @@ export function ContactSection() {
     firstName: "",
     lastName: "",
     email: "",
-    organization: "",
-    role: "",
+    serviceType: "",
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const { toast } = useToast()
 
   const handleSubmit = async (e) => {
@@ -54,15 +62,12 @@ export function ContactSection() {
         firstName: "",
         lastName: "",
         email: "",
-        organization: "",
-        role: "",
+        serviceType: "",
         message: "",
       })
 
-      toast({
-        title: "Success",
-        description: "Thank you for reaching out! We'll get back to you soon.",
-      })
+      // Show success dialog
+      setShowSuccessDialog(true)
     } catch (error) {
       console.error("Form submission error:", error)
       toast({
@@ -190,31 +195,25 @@ export function ContactSection() {
                 />
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4 animate-stagger-container">
-                <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.65s both'}}>
-                  <label htmlFor="organization" className="block text-sm text-muted-foreground mb-2 font-medium">
-                    Organization
-                  </label>
-                  <Input
-                    id="organization"
-                    name="organization"
-                    value={formData.organization}
-                    onChange={handleChange}
-                    className="bg-secondary/50 border-border hover:border-primary/50 focus:border-primary transition-colors"
-                  />
-                </div>
-                <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.7s both'}}>
-                  <label htmlFor="role" className="block text-sm text-muted-foreground mb-2 font-medium">
-                    Role
-                  </label>
-                  <Input
-                    id="role"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className="bg-secondary/50 border-border hover:border-primary/50 focus:border-primary transition-colors"
-                  />
-                </div>
+              <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.65s both'}}>
+                <label htmlFor="serviceType" className="block text-sm text-muted-foreground mb-2 font-medium">
+                  Which Service Are You Interested In?
+                </label>
+                <select
+                  id="serviceType"
+                  name="serviceType"
+                  value={formData.serviceType}
+                  onChange={handleChange}
+                  className="w-full bg-secondary/50 border border-border hover:border-primary/50 focus:border-primary focus:outline-none transition-colors rounded-md px-3 py-2 text-foreground"
+                  required
+                >
+                  <option value="">Select a service</option>
+                  <option value="Career Counselling">Career Counselling</option>
+                  <option value="Immigration Services">Immigration Services</option>
+                  <option value="Recruitment Services">Recruitment Services</option>
+                  <option value="Educational Consultancy">Educational Consultancy</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
 
               <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.75s both'}}>
@@ -243,6 +242,26 @@ export function ContactSection() {
             </form>
           </div>
         </div>
+
+        {/* Success Dialog */}
+        <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+          <AlertDialogContent className="bg-white border-primary/30">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-2xl text-primary text-center">✓ Form Submitted!</AlertDialogTitle>
+              <AlertDialogDescription className="text-center mt-4 text-foreground">
+                <p className="font-semibold mb-2">Thank you for contacting us, {formData.firstName}!</p>
+                <p>We've received your message and will get back to you as soon as possible.</p>
+                <p className="text-sm text-muted-foreground mt-2">You'll hear from us shortly at {formData.email}</p>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogAction 
+              onClick={() => setShowSuccessDialog(false)}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+            >
+              Got it!
+            </AlertDialogAction>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </section>
   )
