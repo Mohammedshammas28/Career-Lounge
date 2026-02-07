@@ -1,39 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import { Menu, X, Sun, Moon } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [theme, setTheme] = useState("dark")
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    const savedTheme = localStorage.getItem("theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light")
-    setTheme(initialTheme)
-    applyTheme(initialTheme)
-  }, [])
-
-  const applyTheme = (newTheme) => {
-    const html = document.documentElement
-    if (newTheme === "dark") {
-      html.classList.add("dark")
-    } else {
-      html.classList.remove("dark")
-    }
-    localStorage.setItem("theme", newTheme)
-  }
-
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark"
-    setTheme(newTheme)
-    applyTheme(newTheme)
-  }
 
   const navItems = [
     { name: "About", href: "#about" },
@@ -41,8 +14,6 @@ export function Header() {
     { name: "Process", href: "#process" },
     { name: "Contact", href: "#contact" },
   ]
-
-  if (!mounted) return null
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border animate-fadeIn">
@@ -55,14 +26,6 @@ export function Header() {
           </Link>
         </div>
         <div className="flex lg:hidden gap-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="inline-flex items-center justify-center rounded-md p-2.5 text-foreground transition-all hover:bg-secondary hover:scale-110"
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground transition-all hover:bg-secondary hover:scale-110"
@@ -87,13 +50,6 @@ export function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
-          <button
-            onClick={toggleTheme}
-            className="inline-flex items-center justify-center rounded-md p-2.5 text-foreground transition-all hover:bg-secondary hover:scale-110"
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
           <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
             Get Started
           </Button>
