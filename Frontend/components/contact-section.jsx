@@ -120,6 +120,7 @@ function SuccessDialog({ isOpen, onClose, firstName, email }) {
   )
 }
 
+// Rewritten form component with improved structure
 export function ContactSection() {
   const [formData, setFormData] = useState({
     firstName: "",
