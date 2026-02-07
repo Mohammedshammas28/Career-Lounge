@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd Frontend && pnpm run build",
+  "outputDirectory": "Frontend/.next",
+  "regions": ["iad1"],
+  "env": {
+    "EMAIL_USER": "@EMAIL_USER",
+    "EMAIL_PASSWORD": "@EMAIL_PASSWORD",
+    "OWNER_EMAIL": "@OWNER_EMAIL"
+  }
+}
