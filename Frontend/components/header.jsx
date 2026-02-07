@@ -50,9 +50,11 @@ export function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
-            Get Started
-          </Button>
+          <Link href="#contact">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
+              Get Started
+            </Button>
+          </Link>
         </div>
       </nav>
 
@@ -91,9 +93,11 @@ export function Header() {
                   ))}
                 </div>
                 <div className="py-6">
-                  <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                    Get Started
-                  </Button>
+                  <Link href="#contact" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                      Get Started
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
