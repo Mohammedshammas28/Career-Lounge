@@ -61,33 +61,59 @@ export function HeroSection() {
             </div>
           </div>
           
-          {/* Right side decorative element */}
+          {/* Right side feature highlights */}
           <div className="hidden lg:block relative animate-slideInRight" style={{animation: 'slideInRight 0.6s ease-out 0.2s both'}}>
             <div className="absolute -inset-4 bg-primary/5 rounded-3xl blur-3xl animate-pulse" />
             <div className="relative bg-card border border-border rounded-2xl p-8 space-y-6 transition-all hover:shadow-xl hover:border-primary/50">
-              <div className="flex items-center gap-4 transition-transform hover:translate-x-1">
-                <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center animate-float">
-                  <span className="text-primary font-bold">CL</span>
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-primary tracking-wide uppercase">Why Choose Us</p>
+                <h3 className="text-2xl font-bold text-foreground">What Makes Us Different</h3>
+              </div>
+              
+              <div className="space-y-4 pt-4">
+                <div className="flex gap-4 items-start transition-all hover:translate-x-1">
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-primary font-bold text-lg">✓</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Expert Coaching</p>
+                    <p className="text-sm text-muted-foreground mt-1">1-on-1 sessions with industry experts</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-foreground">Career Lounge</p>
-                  <p className="text-sm text-muted-foreground">Professional Development</p>
+                
+                <div className="flex gap-4 items-start transition-all hover:translate-x-1">
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-primary font-bold text-lg">✓</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Career Roadmap</p>
+                    <p className="text-sm text-muted-foreground mt-1">Personalized strategic guidance</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4 items-start transition-all hover:translate-x-1">
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-primary font-bold text-lg">✓</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Skill Development</p>
+                    <p className="text-sm text-muted-foreground mt-1">Build in-demand professional skills</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 items-start transition-all hover:translate-x-1">
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-primary font-bold text-lg">✓</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Job Placement</p>
+                    <p className="text-sm text-muted-foreground mt-1">Connect with 50+ partner companies</p>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="h-3 bg-secondary rounded-full w-full animate-shimmer" style={{animation: 'slideInLeft 0.6s ease-out 0.3s both'}} />
-                <div className="h-3 bg-secondary rounded-full w-4/5 animate-shimmer" style={{animation: 'slideInLeft 0.6s ease-out 0.4s both'}} />
-                <div className="h-3 bg-secondary rounded-full w-3/5 animate-shimmer" style={{animation: 'slideInLeft 0.6s ease-out 0.5s both'}} />
-              </div>
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <div className="bg-secondary rounded-lg p-4 transition-all hover:bg-primary/20 hover:scale-105">
-                  <p className="text-xs text-muted-foreground">Resume Score</p>
-                  <p className="text-2xl font-bold text-primary">92%</p>
-                </div>
-                <div className="bg-secondary rounded-lg p-4 transition-all hover:bg-primary/20 hover:scale-105">
-                  <p className="text-xs text-muted-foreground">Interview Ready</p>
-                  <p className="text-2xl font-bold text-primary">Yes</p>
-                </div>
+
+              <div className="pt-4 border-t border-border">
+                <p className="text-xs text-muted-foreground italic">Join thousands of professionals transforming their careers</p>
               </div>
             </div>
           </div>

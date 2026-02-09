@@ -248,7 +248,7 @@ export function ContactSection() {
                   name="serviceType"
                   value={formData.serviceType}
                   onChange={handleChange}
-                  className="w-full bg-secondary/30 border border-border/60 hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all rounded-lg px-4 py-2.5 text-foreground font-medium"
+                  className="w-full bg-secondary/50 dark:bg-secondary/70 border-2 border-primary/40 dark:border-primary/60 hover:border-primary/60 dark:hover:border-primary/80 focus:border-primary dark:focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/50 transition-all rounded-lg px-4 py-2.5 text-foreground dark:text-foreground font-medium appearance-none cursor-pointer"
                   required
                 >
                   <option value="">Choose a service...</option>
