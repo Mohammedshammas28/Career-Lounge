@@ -96,17 +96,17 @@ function SuccessDialog({ isOpen, onClose, firstName, email }) {
             Message Received!
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center mt-4">
-            <div className="space-y-2">
-              <div className="text-white font-semibold text-base">
+            <span className="block space-y-2">
+              <span className="block text-white font-semibold text-base">
                 Thank you, {firstName}!
-              </div>
-              <div className="text-white/80 text-sm">
+              </span>
+              <span className="block text-white/80 text-sm">
                 We&apos;ve received your message and will contact you within 24-48 hours.
-              </div>
-              <div className="text-sm text-white/70">
+              </span>
+              <span className="block text-sm text-white/70">
                 📧 Confirmation sent to <br /> <span className="font-semibold text-white">{email}</span>
-              </div>
-            </div>
+              </span>
+            </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogAction 

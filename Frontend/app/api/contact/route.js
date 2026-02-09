@@ -1,9 +1,5 @@
 import nodemailer from "nodemailer";
 
-// Configure your email service here
-// For Gmail: use your email and app-specific password
-// For other services: update the transporter configuration
-
 const createTransporter = () => {
   const emailUser = process.env.EMAIL_USER;
   const emailPassword = process.env.EMAIL_PASSWORD;

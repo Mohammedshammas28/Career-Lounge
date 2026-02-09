@@ -8,16 +8,18 @@ The contact form requires email credentials to work. When deploying, `.env.local
 
 ## Solution: Set Environment Variables on Your Deployment Platform
 
-### If deploying to **Vercel**:
+### If deploying to **Vercel**: ✅ RECOMMENDED
 
 1. Go to your project dashboard on **vercel.com**
 2. Click **Settings** → **Environment Variables**
-3. Add these three variables:
+3. Add these three variables for **Production** environment:
    - `EMAIL_USER` = `m.shammas2k6@gmail.com`
    - `EMAIL_PASSWORD` = `arvj oeqe prxv bjhj` (your Gmail app password)
    - `OWNER_EMAIL` = `m.shammas2k6@gmail.com`
 4. Click "Save"
-5. Redeploy your application
+5. **Redeploy your application** (Go to Deployments → Click the three-dot menu → Redeploy)
+
+**Note:** Environment variables must be set BEFORE deployment for them to take effect. If you forgot this step, you must redeploy after setting them.
 
 ### If deploying to **Netlify**:
 
@@ -66,7 +68,7 @@ To test locally before deploying:
    OWNER_EMAIL=m.shammas2k6@gmail.com
    ```
 
-2. Run: `pnpm run build && pnpm run start`
+2. Run: `pnpm install && pnpm run build && pnpm run start`
 3. Test the form at `http://localhost:3000`
 
 ---
@@ -77,12 +79,24 @@ To test locally before deploying:
 - Check email credentials are correct
 - Verify Gmail 2FA is enabled
 - Check spam folder for test emails
+- Ensure the app password is correct (not your regular password)
 
 ### Form shows "Email service not configured":
-- Environment variables are not set on deployment platform
+- **Environment variables are NOT set on deployment platform**
 - Follow the platform-specific steps above
+- **IMPORTANT**: You must REDEPLOY after setting environment variables
 
-### "Failed to send email":
-- Check the browser console for the error message
-- Verify all three environment variables are set
-- Ensure the app password is correct (not your regular password)
+### "Failed to send email" error:
+- Check the Vercel deployment logs for the specific error
+- Go to Vercel Dashboard → Deployments → Click on your deployment → Functions tab
+- Check the runtime logs for email-related errors
+- Verify all three environment variables are correctly set
+
+### Deployment fails during build:
+- Make sure dependencies are installed: `pnpm install`
+- Check that `route.ts` exists in `Frontend/app/api/contact/` (should be `.ts`, not `.js`)
+- Ensure `@types/nodemailer` is in devDependencies
+
+### Port or runtime errors on Vercel:
+- Check that `next.config.mjs` doesn't have conflicting settings
+- Verify the build output in Vercel logs
