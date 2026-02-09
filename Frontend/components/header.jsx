@@ -26,7 +26,8 @@ export function Header() {
             </span>
           </Link>
         </div>
-        <div className="flex lg:hidden gap-2">
+        <div className="flex lg:hidden gap-2 items-center">
+          <ThemeToggle />
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground transition-all hover:bg-secondary hover:scale-110"
@@ -62,50 +63,44 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          <div className="fixed inset-0 bg-background/95 backdrop-blur-sm" />
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="-m-1.5 p-1.5">
-                <span className="text-2xl font-bold tracking-tight text-foreground">
-                  Career<span className="text-primary">Lounge</span>
-                </span>
-              </Link>
+        <>
+          <div 
+            className="lg:hidden fixed inset-0 z-40 bg-black/50" 
+            onClick={() => setMobileMenuOpen(false)} 
+          />
+          <nav className="lg:hidden fixed top-16 left-0 right-0 z-50 bg-background px-6 py-6 border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold text-foreground">Menu</h2>
               <button
                 type="button"
-                className="-m-2.5 rounded-md p-2.5 text-foreground"
+                className="-m-2.5 rounded-md p-2.5 text-foreground hover:bg-secondary transition-all"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span className="sr-only">Close menu</span>
                 <X className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-border">
-                <div className="space-y-2 py-6">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-medium text-foreground hover:bg-secondary"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-                <div className="py-6 flex items-center justify-between">
-                  <ThemeToggle />
-                  <Link href="#contact" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                      Get Started
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+            <div className="space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block rounded-lg px-4 py-3 text-base font-semibold text-foreground hover:bg-secondary/50 transition-all"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </div>
-          </div>
-        </div>
+            <div className="py-6 border-t border-border mt-6">
+              <Link href="#contact" onClick={() => setMobileMenuOpen(false)}>
+                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          </nav>
+        </>
       )}
     </header>
   )
