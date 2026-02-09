@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -49,7 +50,8 @@ export function Header() {
             </Link>
           ))}
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
+          <ThemeToggle />
           <Link href="#contact">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
               Get Started
@@ -92,9 +94,10 @@ export function Header() {
                     </Link>
                   ))}
                 </div>
-                <div className="py-6">
+                <div className="py-6 flex items-center justify-between">
+                  <ThemeToggle />
                   <Link href="#contact" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                       Get Started
                     </Button>
                   </Link>
