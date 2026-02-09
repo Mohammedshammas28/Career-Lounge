@@ -61,59 +61,60 @@ export function HeroSection() {
             </div>
           </div>
           
-          {/* Right side CTA card with images */}
+          {/* Right side video/image showcase */}
           <div className="hidden lg:block relative animate-slideInRight" style={{animation: 'slideInRight 0.6s ease-out 0.2s both'}}>
             <div className="absolute -inset-4 bg-primary/5 rounded-3xl blur-3xl animate-pulse" />
-            <div className="relative bg-gradient-to-br from-card to-card/80 border border-primary/30 rounded-2xl p-8 space-y-6 transition-all hover:shadow-2xl hover:border-primary/50 overflow-hidden">
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-0" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -z-0" />
-              
-              <div className="relative z-10 space-y-4">
-                <div className="inline-flex items-center justify-center h-12 w-12 rounded-lg bg-primary/20 text-primary font-bold text-lg animate-bounce">
-                  🚀
+            <div className="relative">
+              {/* Video Container */}
+              <div className="relative bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl overflow-hidden border border-primary/30 shadow-2xl hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-all duration-300 group">
+                {/* Video/Image Background */}
+                <div className="relative w-full aspect-video bg-gradient-to-br from-primary/30 via-primary/20 to-primary/10 flex items-center justify-center overflow-hidden">
+                  {/* Animated background elements */}
+                  <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.1)_25%,rgba(59,130,246,0.1)_50%,transparent_50%,transparent_75%,rgba(59,130,246,0.1)_75%,rgba(59,130,246,0.1))] bg-[length:40px_40px] animate-pulse" />
+                  
+                  {/* Play button */}
+                  <div className="relative z-10 flex flex-col items-center gap-4">
+                    <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-bounce border-2 border-primary/40">
+                      <div className="h-16 w-16 rounded-full bg-primary/30 flex items-center justify-center">
+                        <svg className="w-8 h-8 text-primary fill-current" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <p className="text-primary font-semibold text-sm animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>Watch Success Stories</p>
+                  </div>
+
+                  {/* Decorative circles */}
+                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full border-2 border-primary/50 animate-pulse" />
+                  <div className="absolute bottom-4 left-4 w-6 h-6 rounded-full border-2 border-primary/30 animate-pulse" style={{animationDelay: '0.5s'}} />
                 </div>
-                <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">Ready to Transform Your Career?</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Join thousands of professionals who have successfully launched their dream careers with Career Lounge.
+
+                {/* Info overlay */}
+                <div className="bg-card/80 backdrop-blur-sm border-t border-primary/20 p-6 space-y-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.35s both'}}>
+                  <div>
+                    <p className="text-xs font-semibold text-primary tracking-wide uppercase mb-2">Transformational Stories</p>
+                    <h3 className="text-lg font-bold text-foreground">From Career Crisis to Success</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    See how professionals like you have transformed their careers with Career Lounge's personalized guidance and expert mentorship.
                   </p>
+                  
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border">
+                    <div className="text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.4s both'}}>
+                      <p className="text-lg font-bold text-primary">500+</p>
+                      <p className="text-xs text-muted-foreground">Success Stories</p>
+                    </div>
+                    <div className="text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.45s both'}}>
+                      <p className="text-lg font-bold text-primary">4.9★</p>
+                      <p className="text-xs text-muted-foreground">Rating</p>
+                    </div>
+                    <div className="text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.5s both'}}>
+                      <p className="text-lg font-bold text-primary">30 min</p>
+                      <p className="text-xs text-muted-foreground">Avg. Video</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* Visual showcase grid */}
-              <div className="relative z-10 grid grid-cols-2 gap-3 pt-4">
-                <div className="bg-primary/10 rounded-lg p-4 text-center hover:bg-primary/20 transition-all group animate-fadeInUp hover:scale-105 hover:shadow-lg" style={{animation: 'fadeInUp 0.6s ease-out 0.4s both'}}>
-                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform animate-pulse" style={{animationDelay: '0s'}}>👥</div>
-                  <p className="text-xs font-semibold text-foreground">Expert Mentors</p>
-                  <p className="text-xs text-muted-foreground mt-1">Industry leaders</p>
-                </div>
-                <div className="bg-primary/10 rounded-lg p-4 text-center hover:bg-primary/20 transition-all group animate-fadeInUp hover:scale-105 hover:shadow-lg" style={{animation: 'fadeInUp 0.6s ease-out 0.45s both'}}>
-                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform animate-pulse" style={{animationDelay: '0.2s'}}>📈</div>
-                  <p className="text-xs font-semibold text-foreground">95% Success</p>
-                  <p className="text-xs text-muted-foreground mt-1">Track record</p>
-                </div>
-                <div className="bg-primary/10 rounded-lg p-4 text-center hover:bg-primary/20 transition-all group animate-fadeInUp hover:scale-105 hover:shadow-lg" style={{animation: 'fadeInUp 0.6s ease-out 0.5s both'}}>
-                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform animate-pulse" style={{animationDelay: '0.4s'}}>⏱️</div>
-                  <p className="text-xs font-semibold text-foreground">Quick Support</p>
-                  <p className="text-xs text-muted-foreground mt-1">24-48 hrs</p>
-                </div>
-                <div className="bg-primary/10 rounded-lg p-4 text-center hover:bg-primary/20 transition-all group animate-fadeInUp hover:scale-105 hover:shadow-lg" style={{animation: 'fadeInUp 0.6s ease-out 0.55s both'}}>
-                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform animate-pulse" style={{animationDelay: '0.6s'}}>🎯</div>
-                  <p className="text-xs font-semibold text-foreground">Guaranteed</p>
-                  <p className="text-xs text-muted-foreground mt-1">Results</p>
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="relative z-10 pt-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.6s both'}}>
-                <button
-                  onClick={handleScrollToContact}
-                  className="w-full bg-primary text-primary-foreground font-semibold py-3 px-6 rounded-lg hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105 active:scale-95"
-                >
-                  Start Your Journey Today
-                </button>
-                <p className="text-xs text-muted-foreground text-center mt-3 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.65s both'}}>✓ Free consultation included</p>
               </div>
             </div>
           </div>
