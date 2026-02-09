@@ -62,7 +62,7 @@ export function HeroSection() {
           </div>
           
           {/* Right side video/image showcase */}
-          <div className="hidden lg:block relative animate-slideInRight" style={{animation: 'slideInRight 0.6s ease-out 0.2s both'}}>
+          <div className="relative animate-slideInRight mt-12 lg:mt-0" style={{animation: 'slideInRight 0.6s ease-out 0.2s both'}}>
             <div className="absolute -inset-4 bg-primary/5 rounded-3xl blur-3xl animate-pulse" />
             <div className="relative">
               {/* Video Container */}
