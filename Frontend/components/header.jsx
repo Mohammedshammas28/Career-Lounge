@@ -18,11 +18,19 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border animate-fadeIn">
+      {/* Animated notification banner */}
+      <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-2">
+        <div className="animate-scroll-left flex gap-8">
+          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+        </div>
+      </div>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105">
-            <span className="text-2xl font-bold tracking-tight text-foreground">
-              Career<span className="text-primary animate-pulse">Lounge</span>
+          <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105 group">
+            <span className="text-2xl font-bold tracking-tight text-foreground group-hover:animate-wave">
+              Career<span className="text-primary animate-glow ml-1 inline-block">Lounge</span>
             </span>
           </Link>
         </div>
@@ -45,9 +53,9 @@ export function Header() {
               style={{
                 animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
               }}
-              className="text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full"
+              className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full"
             >
-              {item.name}
+              <span className="relative group-hover:animate-glow">{item.name}</span>
             </Link>
           ))}
         </div>
