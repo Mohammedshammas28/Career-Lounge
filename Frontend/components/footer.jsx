@@ -30,16 +30,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="relative overflow-hidden border-t border-border/50">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1920&h=600&fit=crop')"
-        }}
-      />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
+    <footer className="relative overflow-hidden border-t border-border/50 bg-card">
       {/* Decorative gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-50 z-20" />
       
