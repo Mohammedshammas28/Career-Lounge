@@ -21,7 +21,7 @@ export default function ImmigrationPage() {
           }}
         />
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-green-900/60 via-black/50 to-background z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-black/30 to-white dark:from-green-900/60 dark:via-black/50 dark:to-background z-10" />
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             <div className="h-16 w-16 rounded-xl bg-green-500/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
@@ -83,7 +83,7 @@ export default function ImmigrationPage() {
             backgroundImage: "url('https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1920&h=1080&fit=crop')"
           }}
         />
-        <div className="absolute inset-0 bg-card/85 z-10" />
+<div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-foreground text-center mb-16">Our Services Include</h2>
           

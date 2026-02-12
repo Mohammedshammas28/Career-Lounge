@@ -198,7 +198,7 @@ export function ContactSection() {
         }}
       />
       {/* Overlay */}
-      <div className="absolute inset-0 bg-background/85 dark:bg-background/80 z-10" />
+      <div className="absolute inset-0 bg-white/70 dark:bg-background/80 z-10" />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none z-20" />
       
       <div className="mx-auto max-w-4xl px-6 lg:px-8 relative z-30">

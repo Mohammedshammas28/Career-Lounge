@@ -40,7 +40,7 @@ export function WhyChooseSection() {
         }}
       />
       {/* Overlay */}
-      <div className="absolute inset-0 bg-background/85 dark:bg-background/80 z-10" />
+      <div className="absolute inset-0 bg-white/70 dark:bg-background/80 z-10" />
       
       <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">

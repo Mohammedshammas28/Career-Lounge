@@ -22,7 +22,7 @@ export function HeroSection() {
       />
       
       {/* Dark gradient overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/20 dark:from-black/70 dark:via-black/50 dark:to-black/30 z-10" />
       
       {/* Animated gradient overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent z-20 animate-pulse" />

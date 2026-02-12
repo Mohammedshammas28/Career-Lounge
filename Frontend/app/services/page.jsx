@@ -23,7 +23,7 @@ const services = [
     description: "Support for domestic and international education from course selection to university admissions.",
     href: "/services/educational-consultancy",
     color: "from-purple-500 to-pink-500",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&h=400&fit=crop"
   },
   {
     icon: Users,
@@ -57,7 +57,7 @@ export default function ServicesPage() {
           }}
         />
         {/* Overlay */}
-        <div className="absolute inset-0 bg-background/85 dark:bg-background/80 z-10" />
+        <div className="absolute inset-0 bg-white/70 dark:bg-background/80 z-10" />
         
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center mb-16">
@@ -90,7 +90,7 @@ export default function ServicesPage() {
                         style={{ backgroundImage: `url('${service.image}')` }}
                       />
                       {/* Gradient overlay on image */}
-                      <div className={`absolute inset-0 bg-gradient-to-t ${service.color} opacity-40 group-hover:opacity-60 transition-opacity duration-300`} />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-20 group-hover:opacity-40 transition-opacity duration-300`} />
                       {/* Icon overlay */}
                       <div className="absolute bottom-4 left-4 z-10">
                         <div className="h-14 w-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all">

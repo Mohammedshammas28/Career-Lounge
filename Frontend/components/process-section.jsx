@@ -36,7 +36,7 @@ export function ProcessSection() {
         }}
       />
       {/* Overlay */}
-      <div className="absolute inset-0 bg-card/85 dark:bg-card/80 z-10" />
+      <div className="absolute inset-0 bg-white/70 dark:bg-card/80 z-10" />
       {/* Decorative background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 pointer-events-none z-20" />
       

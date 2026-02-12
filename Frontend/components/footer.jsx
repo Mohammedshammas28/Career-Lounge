@@ -39,7 +39,7 @@ export function Footer() {
         }}
       />
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-card/80 dark:bg-card/85 z-10" />
+      <div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
       {/* Decorative gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-50 z-20" />
       
