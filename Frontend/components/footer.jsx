@@ -5,16 +5,16 @@ export function Footer() {
   const footerLinks = {
     navigation: [
       { name: "Home", href: "/" },
-      { name: "About", href: "#about" },
-      { name: "Services", href: "#services" },
-      { name: "Process", href: "#process" },
-      { name: "Contact", href: "#contact" },
+      { name: "About", href: "/about" },
+      { name: "Services", href: "/services" },
+      { name: "How It Works", href: "/how-it-works" },
+      { name: "Contact", href: "/contact" },
     ],
     services: [
-      { name: "Resume Building", href: "#services" },
-      { name: "Interview Coaching", href: "#services" },
-      { name: "Job Search Strategy", href: "#services" },
-      { name: "Career Development", href: "#services" },
+      { name: "Career Counselling", href: "/services/career-counselling" },
+      { name: "Educational Consultancy", href: "/services/educational-consultancy" },
+      { name: "Recruitment Services", href: "/services/recruitment" },
+      { name: "Immigration Services", href: "/services/immigration" },
     ],
     legal: [
       { name: "Privacy Policy", href: "#" },
@@ -30,11 +30,20 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-card border-t border-border/50 relative overflow-hidden">
+    <footer className="relative overflow-hidden border-t border-border/50">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1920&h=600&fit=crop')"
+        }}
+      />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-card/80 dark:bg-card/85 z-10" />
       {/* Decorative gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-50 z-20" />
       
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 relative z-10">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 relative z-30">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-16">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
@@ -68,7 +77,7 @@ export function Footer() {
                 <li key={link.name} style={{animation: `fadeInUp 0.6s ease-out ${0.1 + idx * 0.05}s both`}} className="animate-fadeInUp">
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300"
+                    className="text-sm text-muted-foreground hover:text-primary inline-block hover:translate-x-1 transition-all duration-300"
                   >
                     {link.name}
                   </Link>
@@ -85,7 +94,7 @@ export function Footer() {
                 <li key={link.name} style={{animation: `fadeInUp 0.6s ease-out ${0.2 + idx * 0.05}s both`}} className="animate-fadeInUp">
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300"
+                    className="text-sm text-muted-foreground hover:text-primary inline-block hover:translate-x-1 transition-all duration-300"
                   >
                     {link.name}
                   </Link>

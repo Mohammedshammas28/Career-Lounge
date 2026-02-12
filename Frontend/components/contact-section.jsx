@@ -190,9 +190,18 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="py-24 lg:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none" />
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&h=1080&fit=crop')"
+        }}
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-background/85 dark:bg-background/80 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none z-20" />
       
-      <div className="mx-auto max-w-4xl px-6 lg:px-8 relative z-10">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8 relative z-30">
         {/* Header */}
         <div className="text-center mb-16 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
           <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4">Get in Touch</p>

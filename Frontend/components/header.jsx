@@ -10,10 +10,11 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
-    { name: "About", href: "#about" },
-    { name: "Services", href: "#services" },
-    { name: "Process", href: "#process" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Services", href: "/services" },
+    { name: "How It Works", href: "/how-it-works" },
+    { name: "Contact", href: "/contact" },
   ]
 
   return (
@@ -61,7 +62,7 @@ export function Header() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
           <ThemeToggle />
-          <Link href="#contact">
+          <Link href="/contact">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
               Get Started
             </Button>
@@ -101,7 +102,7 @@ export function Header() {
               ))}
             </div>
             <div className="py-6 border-t border-border mt-6">
-              <Link href="#contact" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
                 <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                   Get Started
                 </Button>

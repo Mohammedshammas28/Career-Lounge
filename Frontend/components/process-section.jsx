@@ -27,11 +27,20 @@ export function ProcessSection() {
   ]
 
   return (
-    <section id="process" className="py-24 lg:py-32 bg-card relative overflow-hidden">
+    <section id="process" className="py-24 lg:py-32 relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&h=1080&fit=crop')"
+        }}
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-card/85 dark:bg-card/80 z-10" />
       {/* Decorative background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 pointer-events-none z-20" />
       
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-30">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             How It Works

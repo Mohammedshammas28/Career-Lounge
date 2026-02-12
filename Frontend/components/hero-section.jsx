@@ -13,20 +13,31 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background animate-pulse" />
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&h=1080&fit=crop')"
+        }}
+      />
       
-      <div className="relative mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
+      {/* Dark gradient overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30 z-10" />
+      
+      {/* Animated gradient overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent z-20 animate-pulse" />
+      
+      <div className="relative z-30 mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left">
             <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-slideInLeft" style={{animation: 'slideInLeft 0.6s ease-out 0.1s both'}}>
               Your Career Partner
             </p>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance animate-slideInLeft" style={{animation: 'slideInLeft 0.6s ease-out 0.2s both'}}>
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl text-balance animate-slideInLeft" style={{animation: 'slideInLeft 0.6s ease-out 0.2s both'}}>
               Where ambition meets{" "}
               <span className="text-primary inline-block animate-float">opportunity</span>
             </h1>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground max-w-xl mx-auto lg:mx-0 animate-slideInLeft" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>
+            <p className="mt-6 text-lg leading-relaxed text-gray-200 max-w-xl mx-auto lg:mx-0 animate-slideInLeft" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>
               We help professionals navigate their career journey with expert coaching, 
               strategic guidance, and personalized support. Transform your potential into success.
             </p>
@@ -45,18 +56,18 @@ export function HeroSection() {
             </div>
             
             {/* Stats */}
-            <div className="mt-16 grid grid-cols-3 gap-8 border-t border-border pt-8 animate-slideInLeft" style={{animation: 'fadeInUp 0.6s ease-out 0.5s both'}}>
+            <div className="mt-16 grid grid-cols-3 gap-8 border-t border-white/20 pt-8 animate-slideInLeft" style={{animation: 'fadeInUp 0.6s ease-out 0.5s both'}}>
               <div className="transition-all hover:scale-110 hover:text-primary">
                 <p className="text-3xl font-bold text-primary">500+</p>
-                <p className="text-sm text-muted-foreground mt-1">Careers Launched</p>
+                <p className="text-sm text-gray-300 mt-1">Careers Launched</p>
               </div>
               <div className="transition-all hover:scale-110 hover:text-primary">
                 <p className="text-3xl font-bold text-primary">95%</p>
-                <p className="text-sm text-muted-foreground mt-1">Success Rate</p>
+                <p className="text-sm text-gray-300 mt-1">Success Rate</p>
               </div>
               <div className="transition-all hover:scale-110 hover:text-primary">
                 <p className="text-3xl font-bold text-primary">50+</p>
-                <p className="text-sm text-muted-foreground mt-1">Industry Partners</p>
+                <p className="text-sm text-gray-300 mt-1">Industry Partners</p>
               </div>
             </div>
           </div>
@@ -68,25 +79,32 @@ export function HeroSection() {
               {/* Video Container */}
               <div className="relative bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl overflow-hidden border border-primary/30 shadow-2xl hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-all duration-300 group">
                 {/* Video/Image Background */}
-                <div className="relative w-full aspect-video bg-gradient-to-br from-primary/30 via-primary/20 to-primary/10 flex items-center justify-center overflow-hidden">
-                  {/* Animated background elements */}
-                  <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.1)_25%,rgba(59,130,246,0.1)_50%,transparent_50%,transparent_75%,rgba(59,130,246,0.1)_75%,rgba(59,130,246,0.1))] bg-[length:40px_40px] animate-pulse" />
+                <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden">
+                  {/* Background Image */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    style={{
+                      backgroundImage: "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=450&fit=crop')"
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
                   
                   {/* Play button */}
                   <div className="relative z-10 flex flex-col items-center gap-4">
-                    <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-bounce border-2 border-primary/40">
-                      <div className="h-16 w-16 rounded-full bg-primary/30 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-primary fill-current" viewBox="0 0 24 24">
+                    <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-bounce border-2 border-white/40">
+                      <div className="h-16 w-16 rounded-full bg-white/30 flex items-center justify-center">
+                        <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
                     </div>
-                    <p className="text-primary font-semibold text-sm animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>Watch Success Stories</p>
+                    <p className="text-white font-semibold text-sm drop-shadow-lg animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.3s both'}}>Watch Success Stories</p>
                   </div>
 
                   {/* Decorative circles */}
-                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full border-2 border-primary/50 animate-pulse" />
-                  <div className="absolute bottom-4 left-4 w-6 h-6 rounded-full border-2 border-primary/30 animate-pulse" style={{animationDelay: '0.5s'}} />
+                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full border-2 border-white/50 animate-pulse" />
+                  <div className="absolute bottom-4 left-4 w-6 h-6 rounded-full border-2 border-white/30 animate-pulse" style={{animationDelay: '0.5s'}} />
                 </div>
 
                 {/* Info overlay */}

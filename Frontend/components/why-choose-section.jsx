@@ -31,8 +31,18 @@ export function WhyChooseSection() {
   ]
 
   return (
-    <section className="py-24 lg:py-32 bg-background">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="py-24 lg:py-32 relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')"
+        }}
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-background/85 dark:bg-background/80 z-10" />
+      
+      <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             Why Choose <span className="gradient-text">Career Lounge?</span>
