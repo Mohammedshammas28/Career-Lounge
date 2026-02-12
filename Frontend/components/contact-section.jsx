@@ -194,7 +194,7 @@ export function ContactSection() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&h=1080&fit=crop')"
+          backgroundImage: "url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1920&h=1080&fit=crop')"
         }}
       />
       {/* Overlay */}
