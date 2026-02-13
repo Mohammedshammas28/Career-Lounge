@@ -12,21 +12,8 @@ export const metadata = {
   description: 'Career Lounge helps professionals advance their careers through expert coaching, resume building, and job search strategies.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/career-lounge.png',
+    apple: '/career-lounge.png',
   },
 }
 
