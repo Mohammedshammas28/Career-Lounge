@@ -5,9 +5,9 @@ export function AboutSection() {
     <section id="about" className="py-24 lg:py-32 relative overflow-hidden">
       {/* Background image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop')"
+          backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')" // Match Why Choose Us section
         }}
       />
       

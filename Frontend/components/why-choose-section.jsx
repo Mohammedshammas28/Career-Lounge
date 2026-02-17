@@ -34,20 +34,20 @@ export function WhyChooseSection() {
     <section className="py-24 lg:py-32 relative overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')"
         }}
       />
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/70 dark:bg-background/80 z-10" />
+      {/* Dark overlay for text readability (match About Us) */}
+      <div className="absolute inset-0 bg-black/50 z-10" />
       
       <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
             Why Choose <span className="gradient-text">Career Lounge?</span>
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-muted-foreground animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
+          <p className="mt-6 text-lg leading-relaxed text-gray-100 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
             We stand out as your trusted partner because we combine certified expertise, 
             complete transparency, and an extensive global network to support your success.
           </p>
@@ -66,10 +66,10 @@ export function WhyChooseSection() {
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all group-hover:scale-125 group-hover:animate-spin-slow">
                     <Icon className="h-6 w-6 text-primary group-hover:animate-bounce" />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-primary transition-colors">
                     {reason.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">
+                  <p className="text-gray-100 leading-relaxed group-hover:text-white transition-colors">
                     {reason.description}
                   </p>
                 </div>
@@ -82,15 +82,15 @@ export function WhyChooseSection() {
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="group cursor-pointer hover:scale-105 transition-transform">
               <div className="text-4xl font-bold gradient-text mb-2 group-hover:animate-bounce transition-all">500+</div>
-              <div className="text-muted-foreground group-hover:text-foreground transition-colors font-medium">Happy Clients</div>
+              <div className="text-white group-hover:text-primary transition-colors font-medium">Happy Clients</div>
             </div>
             <div className="group cursor-pointer hover:scale-105 transition-transform">
               <div className="text-4xl font-bold gradient-text mb-2 group-hover:animate-heartbeat transition-all">95%</div>
-              <div className="text-muted-foreground group-hover:text-foreground transition-colors font-medium">Success Rate</div>
+              <div className="text-white group-hover:text-primary transition-colors font-medium">Success Rate</div>
             </div>
             <div className="group cursor-pointer hover:scale-105 transition-transform">
               <div className="text-4xl font-bold gradient-text mb-2 group-hover:animate-spin-slow transition-all">50+</div>
-              <div className="text-muted-foreground group-hover:text-foreground transition-colors font-medium">Partner Institutions</div>
+              <div className="text-white group-hover:text-primary transition-colors font-medium">Partner Institutions</div>
             </div>
           </div>
         </div>
