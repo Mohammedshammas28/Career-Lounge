@@ -47,18 +47,51 @@ export function Header() {
           </button>
         </div>
         <div className="hidden lg:flex lg:gap-x-10">
-          {navItems.map((item, index) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              style={{
-                animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
-              }}
-              className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full"
-            >
-              <span className="relative group-hover:animate-glow">{item.name}</span>
-            </Link>
-          ))}
+          {navItems.map((item, index) => {
+            if (item.name === "Services") {
+              const DropdownMenu = require("@/components/ui/dropdown-menu");
+              return (
+                <DropdownMenu.DropdownMenu key="Services">
+                  <DropdownMenu.DropdownMenuTrigger asChild>
+                    <span
+                      style={{
+                        animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
+                      }}
+                      className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full cursor-pointer select-none"
+                    >
+                      <span className="relative group-hover:animate-glow">Services</span>
+                    </span>
+                  </DropdownMenu.DropdownMenuTrigger>
+                  <DropdownMenu.DropdownMenuContent align="start">
+                    <DropdownMenu.DropdownMenuItem asChild>
+                      <Link href="/services/career-counselling">Career Counselling</Link>
+                    </DropdownMenu.DropdownMenuItem>
+                    <DropdownMenu.DropdownMenuItem asChild>
+                      <Link href="/services/educational-consultancy">Educational Consultancy</Link>
+                    </DropdownMenu.DropdownMenuItem>
+                    <DropdownMenu.DropdownMenuItem asChild>
+                      <Link href="/services/immigration">Immigration</Link>
+                    </DropdownMenu.DropdownMenuItem>
+                    <DropdownMenu.DropdownMenuItem asChild>
+                      <Link href="/services/recruitment">Recruitment</Link>
+                    </DropdownMenu.DropdownMenuItem>
+                  </DropdownMenu.DropdownMenuContent>
+                </DropdownMenu.DropdownMenu>
+              );
+            }
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                style={{
+                  animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
+                }}
+                className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full"
+              >
+                <span className="relative group-hover:animate-glow">{item.name}</span>
+              </Link>
+            );
+          })}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
           <ThemeToggle />
@@ -90,16 +123,43 @@ export function Header() {
               </button>
             </div>
             <div className="space-y-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block rounded-lg px-4 py-3 text-base font-semibold text-foreground hover:bg-secondary/50 transition-all"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                if (item.name === "Services") {
+                  return (
+                    <div key="Services" className="">
+                      <details className="group">
+                        <summary className="block rounded-lg px-4 py-3 text-base font-semibold text-foreground hover:bg-secondary/50 transition-all cursor-pointer select-none">
+                          Services
+                        </summary>
+                        <div className="pl-6 flex flex-col gap-1 mt-1">
+                          <Link href="/services/career-counselling" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                            Career Counselling
+                          </Link>
+                          <Link href="/services/educational-consultancy" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                            Educational Consultancy
+                          </Link>
+                          <Link href="/services/immigration" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                            Immigration
+                          </Link>
+                          <Link href="/services/recruitment" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                            Recruitment
+                          </Link>
+                        </div>
+                      </details>
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block rounded-lg px-4 py-3 text-base font-semibold text-foreground hover:bg-secondary/50 transition-all"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
             </div>
             <div className="py-6 border-t border-border mt-6">
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
