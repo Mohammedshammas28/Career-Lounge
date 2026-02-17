@@ -22,7 +22,9 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          {children}
+            <div className="pt-24 md:pt-0">
+              {children}
+            </div>
           <Analytics />
         </ThemeProvider>
       </body>

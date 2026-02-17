@@ -19,14 +19,6 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border animate-fadeIn">
-      {/* Animated notification banner */}
-      <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-2">
-        <div className="animate-scroll-left flex gap-8">
-          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
-          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
-          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
-        </div>
-      </div>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105 group">
@@ -101,7 +93,16 @@ export function Header() {
             </Button>
           </Link>
         </div>
+
       </nav>
+      {/* Animated notification banner moved below navbar */}
+      <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-2">
+        <div className="animate-scroll-left flex gap-8">
+          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+        </div>
+      </div>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
