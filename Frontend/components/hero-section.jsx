@@ -48,7 +48,7 @@ export function HeroSection() {
                 </Button>
               </Link>
               <Link href="/about">
-                <Button size="lg" variant="outline" className="border-border text-foreground hover:bg-secondary bg-transparent transition-all hover:shadow-lg hover:scale-105">
+                <Button size="lg" variant="outline" className="border-gray-400 text-foreground bg-white/80 dark:bg-transparent hover:bg-gray-100 dark:hover:bg-secondary transition-all hover:shadow-lg hover:scale-105">
                   Learn More
                 </Button>
               </Link>
