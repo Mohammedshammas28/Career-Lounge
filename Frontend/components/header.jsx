@@ -18,8 +18,8 @@ export function Header() {
   ]
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black backdrop-blur-md border-b border-border animate-fadeIn">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8 bg-black">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black backdrop-blur-md border-b border-border animate-fadeIn">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8 bg-white dark:bg-black">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105 group">
             <span className="text-2xl font-bold tracking-tight text-foreground group-hover:animate-wave">
@@ -111,7 +111,7 @@ export function Header() {
             className="lg:hidden fixed inset-0 z-40 bg-black/50" 
             onClick={() => setMobileMenuOpen(false)} 
           />
-          <nav className="lg:hidden fixed top-16 left-0 right-0 z-50 bg-black px-6 py-6 border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <nav className="lg:hidden fixed top-16 left-0 right-0 z-50 bg-white dark:bg-black px-6 py-6 border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold text-foreground">Menu</h2>
               <button
