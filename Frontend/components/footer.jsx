@@ -30,7 +30,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="relative overflow-hidden border-t border-border/50 bg-card">
+    <footer className="relative overflow-hidden border-t border-border/50 bg-black">
       {/* Decorative gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-50 z-20" />
       

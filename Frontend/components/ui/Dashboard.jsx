@@ -1,17 +1,14 @@
-// ...existing code...
 import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom"; // Not used in Next.js
 import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
 import {
-  IconCalendarEvent,
   IconClipboardList,
-  IconUsersGroup,
-  IconUserCheck,
   IconSettings,
   IconLogout,
   IconHome,
 } from "@tabler/icons-react";
 import { cn } from "../../lib/utils";
+import { ThemeToggle } from "../theme-toggle";
 // import { getMe } from "../../services/auth"; // Not found, remove for now
 
 // ─── Stat Card ───────────────────────────────────────────────────────────────
@@ -103,6 +100,12 @@ export default function StudentDashboard() {
   const [recentEvents, setRecentEvents] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
+  // Banner state
+  const [bannerText, setBannerText] = useState("");
+  const [bannerImage, setBannerImage] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(null);
+  // Track loading state for banner save
+  const [bannerSaving, setBannerSaving] = useState(false);
 
   useEffect(() => {
     async function fetchUser() {
@@ -126,49 +129,54 @@ export default function StudentDashboard() {
       ]);
     }
     fetchUser();
+    // Fetch banner from API
+    async function fetchBanner() {
+      try {
+        const res = await fetch("/api/banner");
+        if (res.ok) {
+          const data = await res.json();
+          setBannerText(data.text || "Welcome to Career Lounge!");
+          setBannerPreview(data.image || null);
+        }
+      } catch (err) {
+        setBannerText("Welcome to Career Lounge!");
+        setBannerPreview(null);
+      }
+    }
+    fetchBanner();
   }, []);
 
+  // No nav links for admin dashboard banner/user data view
+  // You can add admin-specific links here if needed
   const navLinks = [
     {
       label: "Overview",
       section: "overview",
-      icon: <IconHome size={20} className="text-neutral-300 shrink-0" />,
+      icon: <IconHome size={20} className="text-blue-400 shrink-0" />,
     },
     {
-      label: "Events",
-      section: "events",
-      icon: (
-        <IconCalendarEvent size={20} className="text-neutral-300 shrink-0" />
-      ),
+      label: "Edit Banner",
+      section: "banner",
+      icon: <IconSettings size={20} className="text-blue-400 shrink-0" />,
     },
     {
-      label: "Attendance",
-      section: "attendance",
-      icon: (
-        <IconClipboardList size={20} className="text-neutral-300 shrink-0" />
-      ),
-    },
-    {
-      label: "Results",
-      section: "results",
-      icon: <IconUserCheck size={20} className="text-neutral-300 shrink-0" />,
-    },
-    {
-      label: "Profile",
-      section: "profile",
-      icon: <IconUsersGroup size={20} className="text-neutral-300 shrink-0" />,
-    },
-    {
-      label: "Settings",
-      section: "settings",
-      icon: <IconSettings size={20} className="text-neutral-300 shrink-0" />,
+      label: "Contact Form",
+      section: "contact",
+      icon: <IconClipboardList size={20} className="text-blue-400 shrink-0" />,
     },
   ];
-
   // ─── Overview Section ───────────────────────────────────────────────
   // Add your overview UI code below
+  const contactData = [
+    { name: "John Doe", email: "john@example.com", service: "Career Counselling" },
+    { name: "Jane Smith", email: "jane@example.com", service: "Immigration" },
+  ];
+  const currentBanner = {
+    image: bannerPreview || "banner.jpg", // Show preview if available
+    text: bannerText,
+  };
+
   const renderSection = () => {
-    // Only overview for now, can expand later
     if (loading) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white flex items-center justify-center">
@@ -181,26 +189,108 @@ export default function StudentDashboard() {
     }
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* OVERVIEW UI CODE GOES HERE */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-white">
-            Student Overview
-          </h2>
-          <div className="bg-neutral-900 rounded-xl p-6 flex flex-col gap-2 w-full max-w-md shadow">
-            <div className="flex flex-col gap-1">
-              <span className="text-base text-neutral-400">Name</span>
-              <span className="text-lg font-semibold text-white">
-                {user?.name}
-              </span>
+        {activeSection === "overview" && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">Dashboard Overview</h2>
+            <div className="bg-blue-500/10 dark:bg-blue-900/30 border border-blue-500 rounded-xl p-6 flex flex-col gap-4 w-full max-w-2xl shadow">
+              <div className="mb-4">
+                <span className="text-base text-neutral-700 dark:text-neutral-400">Total Contact Form Submissions:</span>
+                <span className="ml-2 text-lg font-bold text-neutral-900 dark:text-white">{contactData.length}</span>
+              </div>
+              <div className="mb-4">
+                <span className="text-base text-neutral-700 dark:text-neutral-400">Current Banner Text:</span>
+                <span className="ml-2 text-lg font-bold text-neutral-900 dark:text-white">{currentBanner.text}</span>
+              </div>
+              <div className="mb-4">
+                <span className="text-base text-neutral-700 dark:text-neutral-400">Current Banner Image:</span>
+                <img src={currentBanner.image} alt="Banner" className="mt-2 rounded w-full max-w-xs" />
+              </div>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-base text-neutral-400">Email</span>
-              <span className="text-lg text-white">{user?.email}</span>
-            </div>
-            {/* Add more student info fields below as needed */}
           </div>
-        </div>
-        {/* You can add stat cards, action cards, recent events, etc. below */}
+        )}
+        {activeSection === "banner" && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">Edit Home Page Banner</h2>
+            <div className="bg-blue-500/10 dark:bg-blue-900/30 border border-blue-500 rounded-xl p-6 flex flex-col gap-4 w-full max-w-2xl shadow">
+              <label className="text-base text-neutral-700 dark:text-neutral-400 mb-2">Banner Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                className="mb-2"
+                onChange={e => {
+                  const file = e.target.files[0];
+                  setBannerImage(file);
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => setBannerPreview(reader.result);
+                    reader.readAsDataURL(file);
+                  } else {
+                    setBannerPreview(null);
+                  }
+                }}
+              />
+              {bannerPreview && (
+                <img src={bannerPreview} alt="Banner Preview" className="mb-2 rounded w-full max-w-xs" />
+              )}
+              <label className="text-base text-neutral-700 dark:text-neutral-400 mb-2">Banner Text</label>
+              <input
+                type="text"
+                value={bannerText}
+                onChange={e => setBannerText(e.target.value)}
+                placeholder="Enter banner text"
+                className="mb-2 p-2 rounded bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white"
+              />
+              <button
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-fit self-end disabled:opacity-50"
+                disabled={bannerSaving}
+                onClick={async () => {
+                  setBannerSaving(true);
+                  // Convert image to base64 if available
+                  let imageData = bannerPreview;
+                  // POST to API
+                  try {
+                    const res = await fetch("/api/banner", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ text: bannerText, image: imageData }),
+                    });
+                    if (res.ok) {
+                      setActiveSection("overview");
+                    }
+                  } catch (err) {}
+                  setBannerSaving(false);
+                }}
+              >
+                {bannerSaving ? "Saving..." : "Save Banner"}
+              </button>
+            </div>
+          </div>
+        )}
+        {activeSection === "contact" && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">Contact Form Submissions</h2>
+            <div className="bg-blue-500/10 dark:bg-blue-900/30 border border-blue-500 rounded-xl p-6 w-full max-w-2xl shadow">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="text-blue-600 dark:text-blue-400">
+                    <th className="py-2">Name</th>
+                    <th className="py-2">Email</th>
+                    <th className="py-2">Service Requested</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contactData.map((row, idx) => (
+                    <tr key={idx} className="border-t border-blue-500">
+                      <td className="py-2 text-neutral-900 dark:text-white">{row.name}</td>
+                      <td className="py-2 text-neutral-900 dark:text-white">{row.email}</td>
+                      <td className="py-2 text-neutral-900 dark:text-white">{row.service}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -208,12 +298,18 @@ export default function StudentDashboard() {
   // ─── Remaining UI Code ──────────────────────────────────────────────
   // Add sidebar, navigation, and main dashboard layout below
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-black flex-col md:flex-row">
+    <div className="flex h-screen w-full overflow-hidden bg-white dark:bg-black flex-col md:flex-row">
       {/* SIDEBAR UI CODE GOES HERE */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-        <SidebarBody className="justify-between gap-8 bg-black">
+        <SidebarBody className="justify-between gap-8 bg-white dark:bg-black border-r border-blue-500">
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto gap-1">
-            <div className="h-6 w-7 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-gradient-to-br from-blue-500 to-cyan-400 mb-4" />
+            <div className="flex items-center justify-between mb-4">
+              <div className="h-6 w-7 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-gradient-to-br from-blue-500 to-cyan-400" />
+              <div className="flex-1" />
+              <div>
+                <ThemeToggle />
+              </div>
+            </div>
             <div className="mt-8 flex flex-col gap-1">
               {navLinks.map((link) => (
                 <SidebarLink
@@ -222,8 +318,8 @@ export default function StudentDashboard() {
                   onClick={() => setActiveSection(link.section)}
                   className={
                     activeSection === link.section
-                      ? "bg-white/10 text-white"
-                      : ""
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "text-neutral-400"
                   }
                 />
               ))}
@@ -258,7 +354,7 @@ export default function StudentDashboard() {
       </Sidebar>
 
       {/* MAIN DASHBOARD UI CODE GOES HERE */}
-      <main className="flex-1 overflow-y-auto bg-black text-white w-full">
+      <main className="flex-1 overflow-y-auto bg-white dark:bg-black text-black dark:text-white w-full">
         {renderSection()}
       </main>
     </div>
