@@ -2,6 +2,7 @@ import React from "react"
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { BannerProvider } from '@/components/BannerContext'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -26,9 +27,11 @@ export default function RootLayout({ children }) {
         {/* Optional dark overlay for readability */}
         <div className="fixed inset-0 -z-10 bg-black/50" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <BannerProvider>
             <div className="pt-24 md:pt-0">
               {children}
             </div>
+          </BannerProvider>
           <Analytics />
         </ThemeProvider>
       </body>

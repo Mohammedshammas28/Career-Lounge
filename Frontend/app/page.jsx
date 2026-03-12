@@ -13,8 +13,10 @@ export default function Home() {
       {/* Gap between Header and banner */}
       <div className="h-10" />
       {/* Announcement Carousel Banner */}
-      <div className="w-full flex justify-center items-center py-2 px-0 bg-transparent" id="carousel-banner">
-        <AnnouncementCarousel />
+      <div className="w-full flex justify-center items-center py-2 px-4 bg-transparent" id="carousel-banner">
+        <div className="w-full max-w-6xl">
+          <AnnouncementCarousel />
+        </div>
       </div>
       {/* Gap between banner and hero section */}
       <div className="h-3" />

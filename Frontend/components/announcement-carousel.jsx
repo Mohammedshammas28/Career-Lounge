@@ -1,48 +1,34 @@
 import { useState, useEffect } from "react";
 import { AnnouncementBanner } from "@/components/announcement-banner";
-
-const announcements = [
-  {
-    imageUrl: "/University.jpg",
-    title: "Scholarship Opportunity: XYZ University",
-    description: "XYZ University is offering full scholarships for 2026 admissions. Apply now to secure your future!",
-    details: "XYZ University is pleased to announce a full scholarship program for the academic year 2026. The scholarship covers tuition, accommodation, and a monthly stipend. Eligible students must have a strong academic record and demonstrate leadership potential. For more information and application details, visit the university website or contact our office."
-  },
-  {
-    imageUrl: "image1.png",
-    title: "Admissions Open: ABC Institute",
-    description: "ABC Institute has opened admissions for 2026. Limited seats available for top courses!",
-    details: "ABC Institute is now accepting applications for the 2026 academic year. Explore a variety of undergraduate and postgraduate programs. Early applicants may be eligible for special scholarships. Visit our website for more details."
-  },
-  {
-    imageUrl: "image2.png",
-    title: "International Student Exchange Program",
-    description: "Apply for our 2026 International Exchange Program and study abroad for a semester!",
-    details: "Our International Student Exchange Program offers a unique opportunity to study abroad for one semester at partner universities. Open to all disciplines. Application deadline: June 30, 2026. Contact the international office for more info."
-  }
-];
+import { useBanners } from "@/components/BannerContext";
 
 export function AnnouncementCarousel() {
+  const { banners, isLoaded } = useBanners();
   const [current, setCurrent] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const next = () => setCurrent((prev) => (prev + 1) % announcements.length);
-  const prev = () => setCurrent((prev) => (prev - 1 + announcements.length) % announcements.length);
-
-  // Auto-slide every 5 seconds
+  // Auto-slide every 5 seconds - must be called before early return
   useEffect(() => {
+    if (!banners || banners.length === 0) return;
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % announcements.length);
+      setCurrent((prev) => (prev + 1) % banners.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [banners.length]);
+
+  if (!isLoaded || !banners || banners.length === 0) {
+    return <div className="text-center py-8 text-muted-foreground">Loading banners...</div>;
+  }
+
+  const next = () => setCurrent((prev) => (prev + 1) % banners.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + banners.length) % banners.length);
 
   return (
     <div className="relative w-full">
       <AnnouncementBanner
-        imageUrl={announcements[current].imageUrl}
-        title={announcements[current].title}
-        description={announcements[current].description}
+        imageUrl={banners[current].imageUrl}
+        title={banners[current].title}
+        description={banners[current].description}
         onViewDetails={() => setModalOpen(true)}
       />
       {/* Carousel Controls */}
@@ -71,9 +57,9 @@ export function AnnouncementCarousel() {
             >
               &times;
             </button>
-            <h2 className="text-2xl font-bold mb-4">{announcements[current].title}</h2>
-            <img src={announcements[current].imageUrl} alt={announcements[current].title} className="w-32 h-32 object-cover rounded mb-4 mx-auto" />
-            <p className="text-gray-800 mb-4">{announcements[current].details}</p>
+            <h2 className="text-2xl font-bold mb-4">{banners[current].title}</h2>
+            <img src={banners[current].imageUrl} alt={banners[current].title} className="w-32 h-32 object-cover rounded mb-4 mx-auto" />
+            <p className="text-gray-800 mb-4">{banners[current].details}</p>
             <button
               className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition"
               onClick={() => setModalOpen(false)}
@@ -85,7 +71,7 @@ export function AnnouncementCarousel() {
       )}
       {/* Dots indicator */}
       <div className="flex justify-center gap-2 mt-4">
-        {announcements.map((_, idx) => (
+        {banners.map((_, idx) => (
           <span
             key={idx}
             className={`w-3 h-3 rounded-full ${idx === current ? 'bg-primary' : 'bg-border'} transition-all`}
