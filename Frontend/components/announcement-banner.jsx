@@ -1,5 +1,4 @@
 import Image from "next/image";
-import PropTypes from "prop-types";
 
 export function AnnouncementBanner({ imageUrl, title, description, onViewDetails }) {
   return (
@@ -53,9 +52,4 @@ export function AnnouncementBanner({ imageUrl, title, description, onViewDetails
   );
 }
 
-AnnouncementBanner.propTypes = {
-  imageUrl: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  onViewDetails: PropTypes.func.isRequired,
-};
+
