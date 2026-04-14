@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased relative min-h-screen bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]`}>
-        <div className="pointer-events-none fixed -left-[100px] -top-[100px] -z-10 h-[400px] w-[400px] rounded-full bg-[#EC4899] opacity-20 blur-[120px]" />
+        <div className="pointer-events-none fixed -left-[100px] -top-[100px] -z-10 h-[400px] w-[400px] rounded-full bg-[#3B82F6] opacity-20 blur-[120px]" />
         <div className="pointer-events-none fixed -bottom-[100px] -right-[100px] -z-10 h-[400px] w-[400px] rounded-full bg-[#A78BFA] opacity-20 blur-[120px]" />
         <div className="pointer-events-none fixed inset-0 -z-10 bg-black/40" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>

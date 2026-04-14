@@ -36,9 +36,9 @@ function Slide({ service, isActive, index }) {
             className={`absolute inset-0 transition-all duration-700 ease-out ${isActive ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
                 }`}
         >
-            <div className="h-full rounded-[28px] border border-white/20 bg-white/8 px-7 py-7 backdrop-blur-xl sm:px-8 sm:py-8 lg:px-10 lg:py-9">
+            <div className="h-full rounded-[28px] border border-black/20 bg-black/25 px-7 py-7 backdrop-blur-xl sm:px-8 sm:py-8 lg:px-10 lg:py-9">
 
-                <h3 className={`${poppins.className} mt-3 bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#EC4899] bg-clip-text text-[2rem] font-bold leading-tight tracking-tight text-transparent sm:text-[2.3rem]`}>
+                <h3 className={`${poppins.className} mt-3 bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#6366F1] bg-clip-text text-[2rem] font-bold leading-tight tracking-tight text-transparent sm:text-[2.3rem]`}>
                     {service.title}
                 </h3>
 
@@ -74,7 +74,7 @@ export function CoreServicesSlider() {
 
     return (
         <section className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]">
-            <div className="pointer-events-none absolute left-[-100px] top-[-100px] h-[400px] w-[400px] rounded-full bg-[#EC4899] opacity-20 blur-[120px]" />
+            <div className="pointer-events-none absolute left-[-100px] top-[-100px] h-[400px] w-[400px] rounded-full bg-[#3B82F6] opacity-20 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-[-100px] right-[-100px] h-[400px] w-[400px] rounded-full bg-[#A78BFA] opacity-20 blur-[120px]" />
             <div className="pointer-events-none absolute inset-0 bg-black/40" />
 
@@ -85,7 +85,7 @@ export function CoreServicesSlider() {
                         Designing For Your Next Big Move
                     </h2>
 
-                    <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-white/20 bg-white/6 sm:h-[340px] lg:h-[360px]">
+                    <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-black/20 bg-black/20 sm:h-[340px] lg:h-[360px]">
                         {SERVICES.map((service, index) => (
                             <Slide key={service.title} service={service} index={index} isActive={index === activeIndex} />
                         ))}
@@ -106,7 +106,7 @@ export function CoreServicesSlider() {
 
                     <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
                         <div
-                            className="h-full rounded-full bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#EC4899] transition-all duration-500 shadow-[0_0_16px_rgba(167,139,250,0.8)]"
+                            className="h-full rounded-full bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#6366F1] transition-all duration-500 shadow-[0_0_16px_rgba(167,139,250,0.8)]"
                             style={{ width: `${((activeIndex + 1) / SERVICES.length) * 100}%` }}
                         />
                     </div>
@@ -114,7 +114,7 @@ export function CoreServicesSlider() {
                     <div className="mt-4 flex justify-center">
                         <button
                             type="button"
-                            className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#EC4899]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
+                            className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#6366F1]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
                         >
                             WE ARE COMING SOON WITH GREAT CAREER PLANS
                         </button>
