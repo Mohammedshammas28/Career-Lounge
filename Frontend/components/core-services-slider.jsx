@@ -84,7 +84,7 @@ export function CoreServicesSlider() {
                 </div>
 
                 <h2 className={`${poppins.className} mb-4 text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl`}>
-                    Designed For Your Next Big Move
+                    Designing For Your Next Big Move
                 </h2>
 
                 <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-white/20 bg-white/6 sm:h-[340px] lg:h-[360px]">
@@ -118,7 +118,7 @@ export function CoreServicesSlider() {
                         type="button"
                         className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#EC4899]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
                     >
-                        WE ARE COMING SOON AT OUR SERVICE
+                        WE ARE COMING SOON WITH GREAT CAREER PLANS
                     </button>
                 </div>
             </div>
