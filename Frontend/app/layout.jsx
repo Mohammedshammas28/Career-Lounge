@@ -23,15 +23,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans antialiased relative`}>
-        {/* Full-page background image */}
-        <div className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')" }} />
-        {/* Optional dark overlay for readability */}
-        <div className="fixed inset-0 -z-10 bg-black/50" />
+      <body className={`font-sans antialiased relative min-h-screen bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]`}>
+        <div className="pointer-events-none fixed -left-[100px] -top-[100px] -z-10 h-[400px] w-[400px] rounded-full bg-[#EC4899] opacity-20 blur-[120px]" />
+        <div className="pointer-events-none fixed -bottom-[100px] -right-[100px] -z-10 h-[400px] w-[400px] rounded-full bg-[#A78BFA] opacity-20 blur-[120px]" />
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-black/40" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <BannerProvider>
             {PRELAUNCH_ONLY ? (
-              <main className="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-4 py-8">
+              <main className="flex min-h-screen w-full items-center justify-center">
                 <CoreServicesSlider />
               </main>
             ) : (
