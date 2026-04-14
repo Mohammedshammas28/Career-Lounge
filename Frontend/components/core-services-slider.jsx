@@ -41,15 +41,15 @@ function Slide({ service, isActive, index }) {
         >
             <div className="w-full rounded-[28px] border border-border bg-card/85 p-5 shadow-[0_20px_60px_-35px_rgba(15,23,42,0.25)] backdrop-blur-xl sm:p-7 lg:p-10">
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
+                    <p className="text-xs font-semibold italic uppercase tracking-[0.3em] text-primary">
                         Core Service {String(index + 1).padStart(2, "0")}
                     </p>
 
-                    <h3 className={`${poppins.className} mt-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-[2.2rem]`}>
+                    <h3 className={`${poppins.className} mt-2 text-2xl font-black italic tracking-tight text-foreground sm:text-3xl lg:text-[2.2rem]`}>
                         {service.title}
                     </h3>
 
-                    <p className={`${inter.className} mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base`}>
+                    <p className={`${inter.className} mt-4 max-w-2xl text-sm italic leading-7 text-muted-foreground sm:text-base`}>
                         {service.description}
                     </p>
 
@@ -87,12 +87,12 @@ export function CoreServicesSlider() {
 
             <div className="relative z-10 w-full max-w-5xl animate-fadeInUp">
                 <div className="mb-4 flex items-center justify-between gap-4">
-                    <p className={`${poppins.className} text-xs font-semibold uppercase tracking-[0.45em] text-primary sm:text-sm`}>
+                    <p className={`${poppins.className} text-xs font-semibold italic uppercase tracking-[0.45em] text-primary sm:text-sm`}>
                         Our Core Services
                     </p>
                 </div>
 
-                <h2 className={`${poppins.className} mb-4 text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl`}>
+                <h2 className={`${poppins.className} mb-4 text-2xl font-black italic tracking-tight text-foreground sm:text-3xl lg:text-4xl`}>
                     Designed For Your Next Big Move
                 </h2>
 
@@ -123,9 +123,11 @@ export function CoreServicesSlider() {
                     />
                 </div>
 
-                <p className={`${inter.className} mt-2 text-right text-xs font-semibold uppercase tracking-[0.22em] text-primary sm:text-sm`}>
-                    We are coming soon at our Service
-                </p>
+                <div className="mt-3 flex justify-end">
+                    <p className={`${inter.className} rounded-full border border-primary/40 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 px-4 py-1.5 text-right text-xs font-bold italic uppercase tracking-[0.24em] text-primary shadow-[0_0_24px_rgba(59,130,246,0.28)] sm:text-sm`}>
+                        We are coming soon at our Service
+                    </p>
+                </div>
             </div>
         </section>
     )
