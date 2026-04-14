@@ -38,7 +38,7 @@ function Slide({ service, isActive, index }) {
         >
             <div className="h-full rounded-[28px] border border-white/20 bg-white/8 px-7 py-7 backdrop-blur-xl sm:px-8 sm:py-8 lg:px-10 lg:py-9">
 
-                <h3 className={`${poppins.className} mt-3 bg-gradient-to-r from-[#d8c4ff] via-[#e0f2ff] to-[#ffc8ea] bg-clip-text text-[2rem] font-bold leading-tight tracking-tight text-transparent sm:text-[2.3rem]`}>
+                <h3 className={`${poppins.className} mt-3 bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#EC4899] bg-clip-text text-[2rem] font-bold leading-tight tracking-tight text-transparent sm:text-[2.3rem]`}>
                     {service.title}
                 </h3>
 
@@ -50,7 +50,7 @@ function Slide({ service, isActive, index }) {
                     {service.chips.map((chip) => (
                         <span
                             key={chip}
-                            className={`${inter.className} rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-semibold text-white`}
+                            className={`${inter.className} rounded-full border border-[#A78BFA]/40 bg-[#A78BFA]/12 px-4 py-1.5 text-sm font-semibold text-white`}
                         >
                             {chip}
                         </span>
