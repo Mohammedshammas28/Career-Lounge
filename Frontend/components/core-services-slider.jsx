@@ -9,27 +9,27 @@ const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] }
 const SERVICES = [
     {
         label: "CORE SERVICE 01",
-        title: "Career Counselling ",
+        title: "Career Counselling",
         description:
-            "Figure out what actually fits you - not just what sounds good.",
-        quote: "Clarity > Confusion. Always.",
-        chips: ["Career Mapping", "Interview Glow-Up", "Goal Setting (No Confusion Mode)"],
+            "Find what truly fits you — not just what sounds right.",
+        quote: "Clarity over confusion. Always.",
+        chips: ["Career Mapping", "Interview Preparation", "Goal Planning"],
     },
     {
         label: "CORE SERVICE 02",
-        title: "Domestic & Abroad Education ",
+        title: "Domestic & Abroad Education",
         description:
-            "From shortlisting colleges to landing that offer - we’ve got you.",
-        quote: "Dream college? Let’s make it real.",
-        chips: ["University Matchmaking", "Application Game Strong", "Visa, Sorted"],
+            "From shortlisting to securing admission — we guide you every step.",
+        quote: "Your dream college starts here.",
+        chips: ["University Selection", "Application Support", "Visa Assistance"],
     },
     {
         label: "CORE SERVICE 03",
-        title: "Recruitment Services ",
+        title: "Recruitment Services",
         description:
-            "We connect real talent with real opportunities - fast.",
-        quote: "Right people. Right roles. No drama.",
-        chips: ["Talent Scouting", "Role Matching", "Quick Hiring"],
+            "Connecting the right talent with the right opportunities.",
+        quote: "Right people. Right roles.",
+        chips: ["Talent Screening", "Role Matching", "Efficient Hiring"],
     },
 ]
 
@@ -78,7 +78,7 @@ export function CoreServicesSlider() {
     useEffect(() => {
         const timer = setInterval(() => {
             setActiveIndex((current) => (current + 1) % SERVICES.length)
-        }, 4200)
+        }, 6500)
 
         return () => clearInterval(timer)
     }, [])
@@ -97,7 +97,7 @@ export function CoreServicesSlider() {
                     </h2>
 
                     <p className={`${inter.className} mb-5 max-w-3xl text-sm font-medium leading-7 text-white/80 sm:text-base`}>
-                        We don’t just guide - we level up your future.
+                        We don't just guide — we help you move forward with confidence.
                     </p>
 
                     <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-black/20 bg-black/20 sm:h-[340px] lg:h-[360px]">
@@ -131,8 +131,8 @@ export function CoreServicesSlider() {
                             type="button"
                             className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#6366F1]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
                         >
-                            We’re cooking something big 👀🔥
-                            <span className="ml-2 hidden sm:inline">Launching soon - stay ready.</span>
+                            Something great is on the way 🚀
+                            <span className="ml-2 hidden sm:inline">Launching soon — stay tuned.</span>
                         </button>
                     </div>
                 </div>
