@@ -89,6 +89,15 @@ export function CoreServicesSlider() {
             <div className="relative z-10 flex min-h-screen w-full items-start justify-center px-4 py-6 sm:items-center sm:px-6 lg:px-8">
                 <div className="w-full max-w-6xl animate-fadeInUp">
 
+                    <div className="mb-4 flex justify-start sm:mb-6">
+                        <img
+                            src="/Careerlounge%20logo%20(1).png"
+                            alt="Career Lounge logo"
+                            className="h-auto w-[210px] sm:w-[290px]"
+                            style={{ filter: "brightness(1.9) contrast(1.15) saturate(1.1)" }}
+                        />
+                    </div>
+
                     <h2 className={`${poppins.className} mb-3 text-[1.75rem] font-bold tracking-tight text-white sm:text-3xl lg:text-4xl`}>
                         Designing Your Next Big Move
                     </h2>
