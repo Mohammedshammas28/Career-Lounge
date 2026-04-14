@@ -73,53 +73,52 @@ export function CoreServicesSlider() {
     }, [])
 
     return (
-        <section className="relative flex min-h-[56vh] w-full items-center justify-center overflow-hidden rounded-[28px] bg-[#020617] px-4 py-6 shadow-[0_30px_90px_-45px_rgba(124,58,237,0.45)] sm:min-h-[60vh] sm:px-6 lg:min-h-[64vh] lg:px-8">
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#7C3AED] via-[#3B82F6] to-[#EC4899] opacity-35" />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(167,139,250,0.38),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(167,139,250,0.24),transparent_44%)]" />
-            <div className="pointer-events-none absolute inset-0 bg-[#020617]/60" />
+        <section className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]">
+            <div className="pointer-events-none absolute left-[-100px] top-[-100px] h-[400px] w-[400px] rounded-full bg-[#EC4899] opacity-20 blur-[120px]" />
+            <div className="pointer-events-none absolute bottom-[-100px] right-[-100px] h-[400px] w-[400px] rounded-full bg-[#A78BFA] opacity-20 blur-[120px]" />
+            <div className="pointer-events-none absolute inset-0 bg-black/40" />
 
-            <div className="relative z-10 w-full max-w-6xl animate-fadeInUp">
-                <div className="mb-5 flex items-center justify-between gap-4">
-                    <div />
-                </div>
+            <div className="relative z-10 flex h-full w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8">
+                <div className="w-full max-w-6xl animate-fadeInUp">
 
-                <h2 className={`${poppins.className} mb-4 text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl`}>
-                    Designing For Your Next Big Move
-                </h2>
+                    <h2 className={`${poppins.className} mb-4 text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl`}>
+                        Designing For Your Next Big Move
+                    </h2>
 
-                <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-white/20 bg-white/6 sm:h-[340px] lg:h-[360px]">
-                    {SERVICES.map((service, index) => (
-                        <Slide key={service.title} service={service} index={index} isActive={index === activeIndex} />
-                    ))}
-                </div>
+                    <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-white/20 bg-white/6 sm:h-[340px] lg:h-[360px]">
+                        {SERVICES.map((service, index) => (
+                            <Slide key={service.title} service={service} index={index} isActive={index === activeIndex} />
+                        ))}
+                    </div>
 
-                <div className="mt-4 flex items-center justify-center gap-2">
-                    {SERVICES.map((service, index) => (
-                        <button
-                            key={service.title}
-                            type="button"
-                            aria-label={`Show ${service.title}`}
-                            onClick={() => setActiveIndex(index)}
-                            className={`h-2.5 rounded-full transition-all duration-300 ${index === activeIndex ? "w-10 bg-[#A78BFA] shadow-[0_0_16px_rgba(167,139,250,0.85)]" : "w-2.5 bg-white/40 hover:bg-white/65"
-                                }`}
+                    <div className="mt-4 flex items-center justify-center gap-2">
+                        {SERVICES.map((service, index) => (
+                            <button
+                                key={service.title}
+                                type="button"
+                                aria-label={`Show ${service.title}`}
+                                onClick={() => setActiveIndex(index)}
+                                className={`h-2.5 rounded-full transition-all duration-300 ${index === activeIndex ? "w-10 bg-[#A78BFA] shadow-[0_0_16px_rgba(167,139,250,0.85)]" : "w-2.5 bg-white/40 hover:bg-white/65"
+                                    }`}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+                        <div
+                            className="h-full rounded-full bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#EC4899] transition-all duration-500 shadow-[0_0_16px_rgba(167,139,250,0.8)]"
+                            style={{ width: `${((activeIndex + 1) / SERVICES.length) * 100}%` }}
                         />
-                    ))}
-                </div>
+                    </div>
 
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
-                    <div
-                        className="h-full rounded-full bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#EC4899] transition-all duration-500 shadow-[0_0_16px_rgba(167,139,250,0.8)]"
-                        style={{ width: `${((activeIndex + 1) / SERVICES.length) * 100}%` }}
-                    />
-                </div>
-
-                <div className="mt-4 flex justify-center">
-                    <button
-                        type="button"
-                        className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#EC4899]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
-                    >
-                        WE ARE COMING SOON WITH GREAT CAREER PLANS
-                    </button>
+                    <div className="mt-4 flex justify-center">
+                        <button
+                            type="button"
+                            className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#EC4899]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
+                        >
+                            WE ARE COMING SOON WITH GREAT CAREER PLANS
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
