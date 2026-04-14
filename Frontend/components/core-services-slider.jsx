@@ -41,32 +41,29 @@ function Slide({ service, isActive, index }) {
         >
             <div className="h-full rounded-[28px] border border-black/20 bg-black/25 px-7 py-7 backdrop-blur-xl sm:px-8 sm:py-8 lg:px-10 lg:py-9">
 
-                <div className={`${inter.className} text-xs font-semibold uppercase tracking-[0.28em] text-white/45`}>
-                    {service.label}
-                </div>
-
-                <h3 className={`${poppins.className} mt-3 bg-gradient-to-r from-[#7C3AED] via-[#3B82F6] to-[#6366F1] bg-clip-text text-[2rem] font-bold leading-tight tracking-tight text-transparent sm:text-[2.3rem]`}>
+                <h3 className={`${poppins.className} mt-0 text-[2rem] font-bold leading-tight tracking-tight text-white sm:text-[2.3rem]`}>
                     {service.title}
                 </h3>
 
-                <p className={`${inter.className} mt-4 max-w-3xl text-lg leading-9 text-white/72`}>
+                <p className={`${inter.className} mt-4 max-w-3xl text-lg leading-9 text-white/85`}>
                     {service.description}
                 </p>
 
-                <p className={`${inter.className} mt-4 max-w-3xl text-base font-semibold leading-8 text-white/92`}>
-                    {service.quote}
-                </p>
 
-                <div className="mt-7 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                     {service.chips.map((chip) => (
                         <span
                             key={chip}
-                            className={`${inter.className} rounded-full border border-[#A78BFA]/40 bg-[#A78BFA]/12 px-4 py-1.5 text-sm font-semibold text-white/92`}
+                            className={`${inter.className} rounded-full border border-[#A78BFA]/40 bg-[#A78BFA]/12 px-2 py-1 text-xs font-semibold text-white/95 sm:px-4 sm:py-1.5 sm:text-sm`}
                         >
                             {chip}
                         </span>
                     ))}
                 </div>
+
+                <p className={`${inter.className} mt-3 max-w-3xl text-base font-semibold leading-8 text-white`}>
+                    {service.quote}
+                </p>
             </div>
         </article>
     )
@@ -129,10 +126,10 @@ export function CoreServicesSlider() {
                     <div className="mt-4 flex justify-center">
                         <button
                             type="button"
-                            className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#6366F1]/30 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:text-sm`}
+                            className={`${inter.className} rounded-full border border-white/25 bg-gradient-to-r from-[#7C3AED]/30 via-[#3B82F6]/30 to-[#6366F1]/30 px-4 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_0_24px_rgba(167,139,250,0.55)] sm:px-6 sm:text-sm`}
                         >
-                            Something great is on the way 🚀
-                            <span className="ml-2 hidden sm:inline">Launching soon — stay tuned.</span>
+                            <div>Something great is on the way 🚀</div>
+                            <div className="text-[0.65rem] font-semibold normal-case tracking-normal sm:ml-2 sm:inline sm:text-xs">Launching soon — stay tuned.</div>
                         </button>
                     </div>
                 </div>
