@@ -187,7 +187,7 @@ export function CoreServicesSlider() {
                     <div className="mt-4 flex justify-center">
                         <button
                             type="button"
-                            className={`${inter.className} max-w-full rounded-full bg-black/40 backdrop-blur-xl border border-white/20 px-8 py-2 text-center text-[11px] font-extrabold uppercase tracking-[0.12em] text-white sm:px-16 sm:text-sm sm:tracking-[0.24em] shadow-[0_0_40px_rgba(139,92,246,0.6)]`}
+                            className={`${inter.className} max-w-full rounded-full bg-black/40 backdrop-blur-xl border border-white/20 px-8 py-2.5 text-center text-14px font-extrabold uppercase tracking-[0.12em] text-white sm:px-16 sm:text-sm sm:tracking-[0.24em] shadow-[0_0_40px_rgba(139,92,246,0.6)]`}
                         >
                             <div className="font-bold">Something great is on the way 🚀</div>
                             <div className="text-[0.95rem] font-bold normal-case tracking-normal sm:ml-2 sm:inline sm:text-base">Launching soon — stay tuned.</div>
