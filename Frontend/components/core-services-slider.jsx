@@ -39,7 +39,7 @@ function Slide({ service, isActive, index }) {
             className={`absolute inset-0 transition-all duration-700 ease-out ${isActive ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
                 }`}
         >
-            <div className="h-full rounded-[28px] border border-black/20 bg-black/25 px-7 py-7 backdrop-blur-xl sm:px-8 sm:py-8 lg:px-10 lg:py-9">
+            <div className="h-full rounded-[28px] border border-black/20 bg-black/25 pr-7 pl-9 py-7 backdrop-blur-xl sm:pr-8 sm:pl-10 sm:py-8 lg:pr-10 lg:pl-12 lg:py-9">
 
                 <h3 className={`${poppins.className} mt-0 text-[2rem] font-bold leading-tight tracking-tight text-white sm:text-[2.3rem]`}>
                     {service.title}
@@ -112,7 +112,7 @@ export function CoreServicesSlider() {
                                     (current - 1 + SERVICES.length) % SERVICES.length
                                 )
                             }
-                            className="absolute -left-4 top-1/2 z-20 h-9 w-9 -translate-y-1/2 rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75"
+                            className="absolute left-2 top-1/2 z-20 h-9 w-9 -translate-y-1/2 rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75"
                         >
                             &lt;
                         </button>
@@ -123,7 +123,7 @@ export function CoreServicesSlider() {
                             onClick={() =>
                                 setActiveIndex((current) => (current + 1) % SERVICES.length)
                             }
-                            className="absolute -right-4 top-1/2 z-20 h-9 w-9 -translate-y-1/2 rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75"
+                            className="absolute right-2 top-1/2 z-20 h-9 w-9 -translate-y-1/2 rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75"
                         >
                             &gt;
                         </button>
