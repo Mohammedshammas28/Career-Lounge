@@ -97,10 +97,36 @@ export function CoreServicesSlider() {
                         We don't just guide — we help you move forward with confidence.
                     </p>
 
-                    <div className="relative h-[320px] overflow-hidden rounded-[28px] border border-black/20 bg-black/20 sm:h-[340px] lg:h-[360px]">
-                        {SERVICES.map((service, index) => (
-                            <Slide key={service.title} service={service} index={index} isActive={index === activeIndex} />
-                        ))}
+                    <div className="relative">
+                        <div className="h-[320px] overflow-hidden rounded-[28px] border border-black/20 bg-black/20 sm:h-[340px] lg:h-[360px]">
+                            {SERVICES.map((service, index) => (
+                                <Slide key={service.title} service={service} index={index} isActive={index === activeIndex} />
+                            ))}
+                        </div>
+
+                        <button
+                            type="button"
+                            aria-label="Previous slide"
+                            onClick={() =>
+                                setActiveIndex((current) =>
+                                    (current - 1 + SERVICES.length) % SERVICES.length
+                                )
+                            }
+                            className="absolute -left-4 top-1/2 z-20 h-9 w-9 -translate-y-1/2 rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75"
+                        >
+                            &lt;
+                        </button>
+
+                        <button
+                            type="button"
+                            aria-label="Next slide"
+                            onClick={() =>
+                                setActiveIndex((current) => (current + 1) % SERVICES.length)
+                            }
+                            className="absolute -right-4 top-1/2 z-20 h-9 w-9 -translate-y-1/2 rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75"
+                        >
+                            &gt;
+                        </button>
                     </div>
 
                     <div className="mt-4 flex items-center justify-center gap-2">
