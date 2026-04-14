@@ -3,10 +3,12 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BannerProvider } from '@/components/BannerContext'
+import { CoreServicesSlider } from '@/components/core-services-slider'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const PRELAUNCH_ONLY = true
 
 export const metadata = {
   title: 'Career Lounge | Elevate Your Professional Journey',
@@ -23,14 +25,20 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased relative`}>
         {/* Full-page background image */}
-        <div className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat" style={{backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')"}} />
+        <div className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')" }} />
         {/* Optional dark overlay for readability */}
         <div className="fixed inset-0 -z-10 bg-black/50" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <BannerProvider>
-            <div className="pt-24 md:pt-0">
-              {children}
-            </div>
+            {PRELAUNCH_ONLY ? (
+              <main className="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-4 py-8">
+                <CoreServicesSlider />
+              </main>
+            ) : (
+              <div className="pt-24 md:pt-0">
+                {children}
+              </div>
+            )}
           </BannerProvider>
           <Analytics />
         </ThemeProvider>

@@ -2,7 +2,7 @@
 import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { Footer } from "@/components/footer"
-import { AnnouncementCarousel } from "@/components/announcement-carousel"
+import { CoreServicesSlider } from "@/components/core-services-slider"
 
 export default function Home() {
 
@@ -12,10 +12,10 @@ export default function Home() {
       <Header />
       {/* Gap between Header and banner */}
       <div className="h-10" />
-      {/* Announcement Carousel Banner */}
+      {/* Core Services Sliding Banner */}
       <div className="w-full flex justify-center items-center py-2 px-4 bg-transparent" id="carousel-banner">
         <div className="w-full max-w-6xl">
-          <AnnouncementCarousel />
+          <CoreServicesSlider />
         </div>
       </div>
       {/* Gap between banner and hero section */}
