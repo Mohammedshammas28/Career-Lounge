@@ -123,10 +123,13 @@ export function CoreServicesSlider() {
                     />
                 </div>
 
-                <div className="mt-3 flex justify-end">
-                    <p className={`${inter.className} rounded-full border border-primary/40 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 px-4 py-1.5 text-right text-xs font-bold italic uppercase tracking-[0.24em] text-primary shadow-[0_0_24px_rgba(59,130,246,0.28)] sm:text-sm`}>
+                <div className="mt-4 flex justify-center">
+                    <button
+                        type="button"
+                        className={`${inter.className} rounded-full border border-primary/50 bg-gradient-to-r from-primary/25 via-accent/25 to-primary/25 px-6 py-2 text-center text-xs font-extrabold uppercase tracking-[0.24em] text-primary shadow-[0_0_24px_rgba(59,130,246,0.3)] sm:text-sm`}
+                    >
                         We are coming soon at our Service
-                    </p>
+                    </button>
                 </div>
             </div>
         </section>
