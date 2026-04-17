@@ -39,18 +39,18 @@ function Slide({ service, isActive, index }) {
             className={`absolute inset-0 transition-[transform,opacity] duration-700 ease-in-out ${isActive ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"
                 }`}
         >
-            <div className="flex h-full flex-col rounded-[28px] border border-black/20 bg-black/25 pr-5 pl-7 py-5 backdrop-blur-xl sm:pr-8 sm:pl-10 sm:py-8 lg:pr-10 lg:pl-12 lg:py-9">
+            <div className="flex h-full flex-col items-center justify-center rounded-[28px] border border-black/20 bg-black/25 pr-5 pl-7 py-5 backdrop-blur-xl sm:pr-8 sm:pl-10 sm:py-8 lg:pr-10 lg:pl-12 lg:py-9">
 
-                <h3 className={`${poppins.className} mt-0 text-[1.55rem] font-bold leading-tight tracking-tight text-white sm:text-[2.15rem] lg:text-[2.3rem]`}>
+                <h3 className={`${poppins.className} mt-0 text-center text-[1.55rem] font-bold leading-tight tracking-tight text-white sm:text-[2.15rem] lg:text-[2.3rem]`}>
                     {service.title}
                 </h3>
 
-                <p className={`${inter.className} mt-3 max-w-3xl text-sm leading-7 text-white/85 sm:mt-4 sm:text-lg sm:leading-9`}>
+                <p className={`${inter.className} mt-3 max-w-3xl text-center text-sm leading-7 text-white/85 sm:mt-4 sm:text-lg sm:leading-9`}>
                     {service.description}
                 </p>
 
 
-                <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
+                <div className="mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-3 sm:gap-2">
                     {service.chips.map((chip) => (
                         <span
                             key={chip}
@@ -61,7 +61,7 @@ function Slide({ service, isActive, index }) {
                     ))}
                 </div>
 
-                <p className={`${inter.className} mt-2 max-w-3xl text-[0.92rem] font-semibold leading-6 text-white sm:mt-3 sm:text-base sm:leading-8`}>
+                <p className={`${inter.className} mt-2 max-w-3xl text-center text-[0.92rem] font-semibold leading-6 text-white sm:mt-3 sm:text-base sm:leading-8`}>
                     {service.quote}
                 </p>
             </div>
