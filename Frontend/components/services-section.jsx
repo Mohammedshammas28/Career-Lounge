@@ -57,12 +57,15 @@ export function ServicesSection() {
     <section id="services" className="py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
+          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
             What We Do
           </p>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
-            Our <span className="gradient-text">Core Services</span>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.2s both' }}>
+            Our <span className="gradient-text animate-pulse">Core Services</span>
           </h2>
+          <p className="text-muted-foreground mt-4 text-sm sm:text-base animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>
+            Comprehensive solutions tailored to accelerate your career growth
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -72,49 +75,45 @@ export function ServicesSection() {
               <button
                 key={service.title}
                 onClick={() => setActiveService(index)}
-                style={{animation: `fadeInUp 0.6s ease-out ${0.3 + index * 0.1}s both`}}
-                className={`w-full text-left p-6 rounded-xl transition-all duration-300 border group relative overflow-hidden ${
-                  activeService === index
-                    ? "bg-card border-primary/50 animate-glow-border shadow-lg scale-105"
-                    : "bg-transparent border-border hover:bg-card/50 hover:border-primary/30"
-                }`}
+                style={{ animation: `fadeInUp 0.6s ease-out ${0.3 + index * 0.1}s both` }}
+                className={`w-full text-left p-6 rounded-xl transition-all duration-300 border group relative overflow-hidden ${activeService === index
+                  ? "bg-card border-primary/50 animate-glow-border shadow-lg scale-105"
+                  : "bg-transparent border-border hover:bg-card/50 hover:border-primary/30"
+                  }`}
               >
                 {/* Animated background on hover */}
                 <div className={`absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 transition-all duration-500 ${activeService === index ? 'animate-shimmer' : 'opacity-0 group-hover:opacity-100'}`} />
-                
+
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`h-12 w-12 rounded-lg flex items-center justify-center transition-all ${
-                        activeService === index 
-                          ? "bg-primary/20 scale-110 animate-bounce-in shadow-lg shadow-primary/50" 
-                          : "bg-secondary group-hover:scale-110 group-hover:bg-primary/10"
-                      }`}
+                      className={`h-12 w-12 rounded-lg flex items-center justify-center transition-all ${activeService === index
+                        ? "bg-primary/20 scale-110 animate-bounce-in shadow-lg shadow-primary/50"
+                        : "bg-secondary group-hover:scale-110 group-hover:bg-primary/10"
+                        }`}
                     >
                       <service.icon
-                        className={`h-6 w-6 transition-all ${
-                          activeService === index 
-                            ? "text-primary animate-spin-slow" 
-                            : "text-muted-foreground group-hover:text-primary group-hover:animate-wiggle"
-                        }`}
+                        className={`h-6 w-6 transition-all ${activeService === index
+                          ? "text-primary animate-spin-slow"
+                          : "text-muted-foreground group-hover:text-primary group-hover:animate-wiggle"
+                          }`}
                       />
                     </div>
                     <h3
-                      className={`text-lg font-semibold transition-all ${
-                        activeService === index 
-                          ? "text-foreground animate-pulse-text" 
-                          : "text-muted-foreground group-hover:text-foreground"
-                      }`}
+                      className={`text-lg font-semibold transition-all animate-zoom-in-out ${activeService === index
+                        ? "text-foreground gradient-text animate-pulse-text"
+                        : "text-muted-foreground group-hover:text-foreground group-hover:gradient-text"
+                        }`}
+                      style={{ animation: `zoom-in-out 0.6s ease-out ${0.4 + index * 0.1}s both` }}
                     >
                       {service.title}
                     </h3>
                   </div>
                   <ChevronRight
-                    className={`h-5 w-5 transition-all ${
-                      activeService === index
-                        ? "text-primary rotate-90 animate-bounce"
-                        : "text-muted-foreground group-hover:text-primary"
-                    }`}
+                    className={`h-5 w-5 transition-all ${activeService === index
+                      ? "text-primary rotate-90 animate-bounce"
+                      : "text-muted-foreground group-hover:text-primary"
+                      }`}
                   />
                 </div>
               </button>
@@ -122,31 +121,31 @@ export function ServicesSection() {
           </div>
 
           {/* Service details */}
-          <div className="bg-card border border-border rounded-2xl p-8 lg:sticky lg:top-24 animate-slideInRight group overflow-hidden relative" style={{animation: 'slideInRight 0.6s ease-out 0.3s both'}} >
+          <div className="bg-card border border-border rounded-2xl p-8 lg:sticky lg:top-24 animate-slideInRight group overflow-hidden relative" style={{ animation: 'slideInRight 0.6s ease-out 0.3s both' }} >
             {/* Animated background */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-blob" />
-            
-            <div className="h-14 w-14 rounded-xl bg-primary/20 flex items-center justify-center mb-6 animate-bounce-in shadow-lg shadow-primary/20 relative z-10" style={{animation: 'bounce-in 0.6s ease-out'}}>
+
+            <div className="h-14 w-14 rounded-xl bg-primary/20 flex items-center justify-center mb-6 animate-bounce-in shadow-lg shadow-primary/20 relative z-10" style={{ animation: 'bounce-in 0.6s ease-out' }}>
               {(() => {
                 const IconComponent = services[activeService].icon
                 return <IconComponent className="h-7 w-7 text-primary animate-spin-slow" />
               })()}
             </div>
-            <h3 className="text-2xl font-bold text-foreground mb-4 animate-slideInLeft relative z-10" style={{animation: 'slideInLeft 0.6s ease-out 0.1s both'}}>
+            <h3 className="text-2xl font-bold gradient-text mb-4 animate-zoom-in-out relative z-10" style={{ animation: 'zoom-in-out 0.7s ease-out 0.15s both' }}>
               {services[activeService].title}
             </h3>
-            <p className="text-muted-foreground leading-relaxed mb-8 animate-fadeInUp relative z-10" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
+            <p className="text-muted-foreground leading-relaxed mb-8 animate-fadeInUp relative z-10" style={{ animation: 'fadeInUp 0.6s ease-out 0.2s both', opacity: 1 }}>
               {services[activeService].description}
             </p>
             <div className="space-y-3 relative z-10">
               {services[activeService].features.map((feature, idx) => (
-                <div 
-                  key={feature} 
+                <div
+                  key={feature}
                   className="flex items-center gap-3 animate-fadeInUp transition-all hover:translate-x-2 hover:text-primary group/item"
-                  style={{animation: `fadeInUp 0.6s ease-out ${0.3 + idx * 0.1}s both`}}
+                  style={{ animation: `fadeInUp 0.6s ease-out ${0.3 + idx * 0.1}s both` }}
                 >
                   <div className="h-2 w-2 rounded-full bg-primary animate-pulse group-hover/item:scale-125 transition-transform" />
-                  <span className="text-foreground group-hover/item:text-primary transition-colors">{feature}</span>
+                  <span className="text-foreground group-hover/item:text-primary transition-colors font-medium animate-slideInLeft" style={{ animation: `slideInLeft 0.5s ease-out ${0.35 + idx * 0.1}s both` }}>{feature}</span>
                 </div>
               ))}
             </div>

@@ -84,7 +84,7 @@ export function CoreServicesSlider() {
         <>
             {/* Navbar/Header */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white" style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-                <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+                <div className="mx-auto flex max-w-7xl items-center justify-center px-6 py-4 lg:px-8">
                     <div className="flex items-center">
                         <img
                             src="/Careerlounge%20logo%20(1).png"
@@ -95,9 +95,8 @@ export function CoreServicesSlider() {
                 </div>
             </nav>
 
-            <section className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]" style={{ marginTop: "70px" }}>
+            <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]" style={{ marginTop: "70px" }}>
                 <div className="pointer-events-none absolute left-[-100px] top-[-100px] h-[400px] w-[400px] rounded-full bg-[#3B82F6] opacity-20 blur-[120px]" />
-                <div className="pointer-events-none absolute bottom-[-100px] right-[-100px] h-[400px] w-[400px] rounded-full bg-[#A78BFA] opacity-20 blur-[120px]" />
                 <div className="pointer-events-none absolute inset-0 bg-black/40" />
 
                 <div className="relative z-10 flex min-h-screen w-full items-start justify-center px-4 py-6 sm:items-center sm:px-6 lg:px-8">
