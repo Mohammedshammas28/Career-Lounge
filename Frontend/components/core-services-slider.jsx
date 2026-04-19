@@ -120,11 +120,12 @@ export function CoreServicesSlider() {
                             <button
                                 type="button"
                                 aria-label="Previous slide"
-                                onClick={() =>
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     setActiveIndex((current) =>
                                         (current - 1 + SERVICES.length) % SERVICES.length
                                     )
-                                }
+                                }}
                                 className="absolute left-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75 sm:flex"
                             >
                                 &lt;
@@ -133,9 +134,10 @@ export function CoreServicesSlider() {
                             <button
                                 type="button"
                                 aria-label="Next slide"
-                                onClick={() =>
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     setActiveIndex((current) => (current + 1) % SERVICES.length)
-                                }
+                                }}
                                 className="absolute right-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-black/55 text-lg font-bold text-white backdrop-blur transition hover:bg-black/75 sm:flex"
                             >
                                 &gt;
@@ -146,11 +148,12 @@ export function CoreServicesSlider() {
                             <button
                                 type="button"
                                 aria-label="Previous slide"
-                                onClick={() =>
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     setActiveIndex((current) =>
                                         (current - 1 + SERVICES.length) % SERVICES.length
                                     )
-                                }
+                                }}
                                 className="flex h-8 w-8 items-center justify-center rounded-full border border-white/35 bg-black/55 text-base font-bold text-white backdrop-blur"
                             >
                                 &lt;
@@ -159,9 +162,10 @@ export function CoreServicesSlider() {
                             <button
                                 type="button"
                                 aria-label="Next slide"
-                                onClick={() =>
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     setActiveIndex((current) => (current + 1) % SERVICES.length)
-                                }
+                                }}
                                 className="flex h-8 w-8 items-center justify-center rounded-full border border-white/35 bg-black/55 text-base font-bold text-white backdrop-blur"
                             >
                                 &gt;
@@ -174,7 +178,10 @@ export function CoreServicesSlider() {
                                     key={service.title}
                                     type="button"
                                     aria-label={`Show ${service.title}`}
-                                    onClick={() => setActiveIndex(index)}
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        setActiveIndex(index)
+                                    }}
                                     className={`h-2.5 rounded-full transition-all duration-300 ${index === activeIndex ? "w-10 bg-[#A78BFA] shadow-[0_0_16px_rgba(167,139,250,0.85)]" : "w-2.5 bg-white/40 hover:bg-white/65"
                                         }`}
                                 />

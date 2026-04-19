@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BannerProvider } from '@/components/BannerContext'
 import { CoreServicesSlider } from '@/components/core-services-slider'
+import { LaunchScreenPopup } from '@/components/launch-screen-popup'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
         <div className="pointer-events-none fixed inset-0 -z-10 bg-black/40" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <BannerProvider>
+            <LaunchScreenPopup />
             {PRELAUNCH_ONLY ? (
               <main className="flex min-h-screen w-full items-center justify-center">
                 <CoreServicesSlider />
