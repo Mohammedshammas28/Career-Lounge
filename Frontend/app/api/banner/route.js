@@ -1,37 +1,129 @@
-import fs from "fs";
-import path from "path";
+import fs from "fs"
+import path from "path"
 
-const bannerFile = path.join(process.cwd(), "public", "banner.json");
+const bannerFile = path.join(process.cwd(), "public", "banner.json")
 
 export async function GET() {
   try {
     if (!fs.existsSync(bannerFile)) {
-      // Default banner
-      return Response.json({ text: "Welcome to Career Lounge!", image: null });
+      // Default slides
+      const defaultData = {
+        slides: [
+          {
+            id: 1,
+            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=400&fit=crop",
+            title: "Transform Your Career",
+            description: "Expert career counselling and guidance for your future",
+            ctaText: "Get Started",
+            ctaLink: "/services/career-counselling",
+          },
+          {
+            id: 2,
+            image: "https://images.unsplash.com/photo-1427504494785-405a6e7ee8fa?w=1200&h=400&fit=crop",
+            title: "Study Abroad",
+            description: "Get admission to top universities worldwide",
+            ctaText: "Explore Programs",
+            ctaLink: "/services/educational-consultancy",
+          },
+          {
+            id: 3,
+            image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&h=400&fit=crop",
+            title: "Immigrate with Confidence",
+            description: "Navigate your immigration journey with expert support",
+            ctaText: "Learn More",
+            ctaLink: "/services/immigration",
+          },
+        ],
+      }
+      return Response.json(defaultData, {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        }
+      })
     }
-    const data = fs.readFileSync(bannerFile, "utf-8");
-    let banner;
+
+    const data = fs.readFileSync(bannerFile, "utf-8")
+    let bannerData
     try {
-      banner = JSON.parse(data);
+      bannerData = JSON.parse(data)
     } catch (e) {
-      banner = { text: "Welcome to Career Lounge!", image: null };
+      // Return default if file is malformed
+      return Response.json({
+        slides: [
+          {
+            id: 1,
+            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=400&fit=crop",
+            title: "Transform Your Career",
+            description: "Expert career counselling and guidance for your future",
+            ctaText: "Get Started",
+            ctaLink: "/services/career-counselling",
+          },
+        ],
+      }, {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        }
+      })
     }
-    if (!banner.text && !banner.image) {
-      banner = { text: "Welcome to Career Lounge!", image: null };
+
+    // Ensure proper structure
+    if (!bannerData.slides || !Array.isArray(bannerData.slides)) {
+      bannerData = { slides: bannerData.slides || [] }
     }
-    return Response.json(banner);
+
+    return Response.json(bannerData, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+      }
+    })
   } catch (err) {
-    return Response.json({ error: "Failed to fetch banner" }, { status: 500 });
+    console.error("Error fetching banner:", err)
+    return Response.json({ error: "Failed to fetch banner" }, { status: 500 })
   }
 }
 
 export async function POST(req) {
   try {
-    const { text, image } = await req.json();
-    const banner = { text, image };
-    fs.writeFileSync(bannerFile, JSON.stringify(banner));
-    return Response.json({ success: true });
+    const bannerData = await req.json()
+
+    // Validate data
+    if (!bannerData.slides || !Array.isArray(bannerData.slides)) {
+      return Response.json({ error: "Invalid banner data format. Must include 'slides' array." }, { status: 400 })
+    }
+
+    // Validate each slide
+    const validSlides = bannerData.slides.every((slide) => {
+      return (
+        slide.id &&
+        slide.image &&
+        slide.title &&
+        slide.description &&
+        slide.ctaText &&
+        slide.ctaLink
+      )
+    })
+
+    if (!validSlides) {
+      return Response.json({ error: "Each slide must have: id, image, title, description, ctaText, ctaLink" }, { status: 400 })
+    }
+
+    // Write to file
+    fs.writeFileSync(bannerFile, JSON.stringify(bannerData, null, 2))
+
+    return Response.json({
+      success: true,
+      message: "Banner updated successfully",
+      data: bannerData,
+    })
   } catch (err) {
-    return Response.json({ error: "Failed to save banner" }, { status: 500 });
+    console.error("Error updating banner:", err)
+    return Response.json({ error: "Failed to save banner" }, { status: 500 })
   }
 }
+

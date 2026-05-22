@@ -2,9 +2,16 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
+import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -22,9 +29,11 @@ export function Header() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8 bg-white dark:bg-black">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105 group">
-            <span className="text-2xl font-bold tracking-tight text-foreground group-hover:animate-wave">
-              Career<span className="text-primary animate-glow ml-1 inline-block">Lounge</span>
-            </span>
+            <img
+              src="/Careerlounge logo (1).png"
+              alt="Career Lounge Logo"
+              className="h-12 w-auto"
+            />
           </Link>
         </div>
         <div className="flex lg:hidden gap-2 items-center">
@@ -41,34 +50,93 @@ export function Header() {
         <div className="hidden lg:flex lg:gap-x-10">
           {navItems.map((item, index) => {
             if (item.name === "Services") {
-              const DropdownMenu = require("@/components/ui/dropdown-menu");
               return (
-                <DropdownMenu.DropdownMenu key="Services">
-                  <DropdownMenu.DropdownMenuTrigger asChild>
-                    <span
+                <DropdownMenu key="Services">
+                  <DropdownMenuTrigger asChild>
+                    <button
                       style={{
                         animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
                       }}
-                      className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full cursor-pointer select-none"
+                      className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full cursor-pointer select-none flex items-center gap-1"
                     >
                       <span className="relative group-hover:animate-glow">Services</span>
-                    </span>
-                  </DropdownMenu.DropdownMenuTrigger>
-                  <DropdownMenu.DropdownMenuContent align="start">
-                    <DropdownMenu.DropdownMenuItem asChild>
-                      <Link href="/services/career-counselling">Career Counselling</Link>
-                    </DropdownMenu.DropdownMenuItem>
-                    <DropdownMenu.DropdownMenuItem asChild>
-                      <Link href="/services/educational-consultancy">Educational Consultancy</Link>
-                    </DropdownMenu.DropdownMenuItem>
-                    <DropdownMenu.DropdownMenuItem asChild>
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-64 overflow-visible">
+                    {/* Career Counselling with Submenu */}
+                    <div className="relative group">
+                      <button
+                        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent transition-colors"
+                      >
+                        <span>Career Counselling</span>
+                        <ChevronDown className="h-4 w-4 group-hover:rotate-90 transition-transform" />
+                      </button>
+
+                      {/* Right-side Submenu */}
+                      <div
+                        className="absolute left-full top-0 ml-2 w-56 bg-popover border border-border rounded-md shadow-lg p-1 z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                      >
+                        <Link
+                          href="/services/career-counselling/overview"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          Overview
+                        </Link>
+                        <Link
+                          href="/services/career-counselling/test-preparation"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          Test Preparation
+                        </Link>
+                        <Link
+                          href="/services/career-counselling/language-training"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          Language Training
+                        </Link>
+                      </div>
+                    </div>
+
+                    <DropdownMenuSeparator />
+
+                    {/* Educational Consultancy with Submenu */}
+                    <div className="relative group">
+                      <button
+                        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent transition-colors"
+                      >
+                        <span>Educational Consultancy</span>
+                        <ChevronDown className="h-4 w-4 group-hover:rotate-90 transition-transform" />
+                      </button>
+
+                      {/* Right-side Submenu - Always rendered, shown on hover */}
+                      <div
+                        className="absolute left-full top-0 ml-2 w-56 bg-popover border border-border rounded-md shadow-lg p-1 z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                      >
+                        <Link
+                          href="/services/educational-consultancy/domestic"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          Domestic Education
+                        </Link>
+                        <Link
+                          href="/services/educational-consultancy/overseas"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          Overseas Education
+                        </Link>
+                      </div>
+                    </div>
+
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
                       <Link href="/services/immigration">Immigration</Link>
-                    </DropdownMenu.DropdownMenuItem>
-                    <DropdownMenu.DropdownMenuItem asChild>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link href="/services/recruitment">Recruitment</Link>
-                    </DropdownMenu.DropdownMenuItem>
-                  </DropdownMenu.DropdownMenuContent>
-                </DropdownMenu.DropdownMenu>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               );
             }
             return (
@@ -107,9 +175,9 @@ export function Header() {
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <>
-          <div 
-            className="lg:hidden fixed inset-0 z-40 bg-black/50" 
-            onClick={() => setMobileMenuOpen(false)} 
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/50"
+            onClick={() => setMobileMenuOpen(false)}
           />
           <nav className="lg:hidden fixed top-16 left-0 right-0 z-50 bg-white dark:bg-black px-6 py-6 border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">

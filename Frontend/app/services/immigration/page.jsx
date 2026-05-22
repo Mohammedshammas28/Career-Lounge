@@ -5,16 +5,27 @@ import Link from "next/link"
 import { Plane, CheckCircle, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Footer } from "@/components/footer"
+import { motion } from "framer-motion"
+
+// Correct Infinity Shape using Mathematical Formula
+const infinityPath = Array.from({ length: 120 }, (_, i) => {
+  const t = (i / 120) * Math.PI * 2;
+
+  return {
+    x: 220 * Math.sin(t),
+    y: 90 * Math.sin(t) * Math.cos(t),
+  };
+});
 
 export default function ImmigrationPage() {
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="py-20 lg:py-32 relative overflow-hidden">
         {/* Background Image */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop')"
@@ -23,13 +34,48 @@ export default function ImmigrationPage() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-black/30 to-white dark:from-green-900/60 dark:via-black/50 dark:to-background z-10" />
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
-            <div className="h-16 w-16 rounded-xl bg-green-500/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
-              <Plane className="h-8 w-8 text-green-400" />
-            </div>
-            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6">
+          <div className="relative flex items-center justify-center h-[350px] overflow-hidden">
+
+            {/* Animated Plane */}
+            <motion.div
+              className="absolute text-green-400"
+              animate={{
+                x: infinityPath.map((p) => p.x),
+                y: infinityPath.map((p) => p.y),
+                rotate: infinityPath.map((_, i) => {
+                  const next = infinityPath[(i + 1) % infinityPath.length];
+                  const curr = infinityPath[i];
+
+                  return (
+                    Math.atan2(next.y - curr.y, next.x - curr.x) *
+                    (180 / Math.PI)
+                  );
+                }),
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              <Plane
+                size={40}
+                className="drop-shadow-[0_0_12px_rgba(74,222,128,0.8)]"
+              />
+            </motion.div>
+
+            {/* Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              className="text-4xl lg:text-5xl font-bold tracking-tight text-white relative z-10 text-center"
+            >
               Immigration <span className="text-green-400">Services</span>
-            </h1>
+            </motion.h1>
+          </div>
+
+          <div className="mx-auto max-w-3xl text-center">
             <p className="text-xl text-gray-200 mb-8">
               Your trusted partner for hassle-free relocation and settlement abroad.
             </p>
@@ -41,7 +87,7 @@ export default function ImmigrationPage() {
       <section className="py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
+            <div className="animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.2s both' }}>
               <h2 className="text-3xl font-bold text-foreground mb-6">Your Journey Abroad Starts Here</h2>
               <p className="text-lg text-muted-foreground mb-4">
                 Moving to a new country is a significant decision. We make the process smooth, transparent, and stress-free by providing expert guidance on visa applications, permanent residency pathways, and settling into your new home. With experience in multiple countries and immigration programs, we ensure you're well-prepared at every step.
@@ -50,8 +96,8 @@ export default function ImmigrationPage() {
                 Whether you're looking at work visas, study permits, skilled immigration programs, or family sponsorship, we have the expertise to guide you through complex immigration processes.
               </p>
             </div>
-            
-            <div className="bg-card border border-border rounded-2xl p-8 animate-slideInRight" style={{animation: 'slideInRight 0.6s ease-out 0.3s both'}}>
+
+            <div className="bg-card border border-border rounded-2xl p-8 animate-slideInRight" style={{ animation: 'slideInRight 0.6s ease-out 0.3s both' }}>
               <h3 className="text-2xl font-bold text-foreground mb-6">Key Benefits</h3>
               <div className="space-y-4">
                 {[
@@ -63,7 +109,7 @@ export default function ImmigrationPage() {
                   "End-to-end process management",
                   "Post-arrival settlement support"
                 ].map((benefit, idx) => (
-                  <div key={benefit} className="flex items-start gap-3 animate-fadeInUp" style={{animation: `fadeInUp 0.6s ease-out ${0.4 + idx * 0.05}s both`}}>
+                  <div key={benefit} className="flex items-start gap-3 animate-fadeInUp" style={{ animation: `fadeInUp 0.6s ease-out ${0.4 + idx * 0.05}s both` }}>
                     <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-1" />
                     <span className="text-foreground">{benefit}</span>
                   </div>
@@ -77,16 +123,16 @@ export default function ImmigrationPage() {
       {/* Features Section */}
       <section className="py-16 lg:py-24 relative overflow-hidden">
         {/* Background Image */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1920&h=1080&fit=crop')"
           }}
         />
-<div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
+        <div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-foreground text-center mb-16">Our Services Include</h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -117,7 +163,7 @@ export default function ImmigrationPage() {
               <div
                 key={feature.title}
                 className="bg-background border border-border rounded-xl p-6 hover:border-green-500/50 transition-all hover:shadow-lg group"
-                style={{animation: `fadeInUp 0.6s ease-out ${0.2 + idx * 0.1}s both`}}
+                style={{ animation: `fadeInUp 0.6s ease-out ${0.2 + idx * 0.1}s both` }}
               >
                 <h3 className="text-lg font-semibold text-foreground mb-3 group-hover:text-green-500 transition-colors">
                   {feature.title}
