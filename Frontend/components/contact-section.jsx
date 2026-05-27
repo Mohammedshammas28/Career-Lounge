@@ -31,7 +31,7 @@ const CONTACT_INFO = [
   {
     icon: MapPin,
     title: "Location",
-    value: "Telangana, Hyderabad, India",
+    value: "Near Pillar No. 204, Attapur, Hyderabad",
     delay: "0.3s",
   },
 ]
@@ -109,7 +109,7 @@ function SuccessDialog({ isOpen, onClose, firstName, email }) {
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogAction 
+        <AlertDialogAction
           onClick={onClose}
           className="bg-primary text-primary-foreground hover:bg-primary/90 w-full mt-6 font-semibold"
         >
@@ -155,11 +155,11 @@ export function ContactSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!validateForm()) return
 
     setIsSubmitting(true)
-    
+
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -191,16 +191,16 @@ export function ContactSection() {
   return (
     <section id="contact" className="py-24 lg:py-32 relative overflow-hidden">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1920&h=1080&fit=crop')"
         }}
       />
       {/* Overlay */}
-      <div className="absolute inset-0 bg-white/70 dark:bg-background/80 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none z-20" />
-      
+      <div className="absolute inset-0 bg-white/40 dark:bg-background/60 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/2 via-transparent to-primary/2 pointer-events-none z-20" />
+
       <div className="mx-auto max-w-4xl px-6 lg:px-8 relative z-30">
         {/* Header */}
         <div className="text-center mb-16 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
@@ -214,7 +214,7 @@ export function ContactSection() {
         </div>
 
         {/* Main Container */}
-        <div className="grid lg:grid-cols-3 gap-12">
+        <div className="grid lg:grid-cols-3 gap-12 mb-16">
           {/* Contact Info */}
           <div className="lg:col-span-1 space-y-8">
             {CONTACT_INFO.map((info) => (
@@ -284,7 +284,7 @@ export function ContactSection() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-semibold py-3 text-base animate-fadeInUp hover:shadow-lg hover:scale-[1.02] transition-all" 
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-semibold py-3 text-base animate-fadeInUp hover:shadow-lg hover:scale-[1.02] transition-all"
                 style={{ animation: 'fadeInUp 0.6s ease-out 0.65s both' }}
               >
                 {isSubmitting ? (
@@ -300,6 +300,26 @@ export function ContactSection() {
                 We respect your privacy. We&apos;ll only use your information to respond to your inquiry.
               </p>
             </form>
+          </div>
+        </div>
+
+        {/* Location Map Section */}
+        <div className="mt-16 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold text-foreground mb-2">Visit Our Office</h3>
+            <p className="text-muted-foreground text-sm mb-4">Near Pillar No. 204, beside Ramdev Granites, Attapur, Dargah Pahad, Chintalmet, Upperpally, Hyderabad, Telangana 500048</p>
+          </div>
+          <div className="relative rounded-2xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-shadow h-64 card-hover-lift">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.752!2d78.4145344!3d17.3487697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9778f5c462e9:0x1351877bc2795a1a!2sAlman%20Travel%20Services!5e0!3m2!1sen!2sin!4v1684756891234"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full"
+            />
           </div>
         </div>
 

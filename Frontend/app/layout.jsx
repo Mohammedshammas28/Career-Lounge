@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -39,7 +40,7 @@ export default function RootLayout({ children }) {
                 <CoreServicesSlider />
               </main>
             ) : (
-              <div className="pt-24 md:pt-0">
+              <div className="pt-16 md:pt-0">
                 {children}
               </div>
             )}

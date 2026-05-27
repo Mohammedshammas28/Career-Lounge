@@ -39,22 +39,22 @@ function Slide({ service, isActive, index }) {
             className={`absolute inset-0 transition-[transform,opacity] duration-700 ease-in-out ${isActive ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"
                 }`}
         >
-            <div className="flex h-full flex-col items-center justify-center rounded-[28px] border border-black/20 bg-black/25 pr-5 pl-7 py-5 backdrop-blur-xl sm:pr-8 sm:pl-10 sm:py-8 lg:pr-10 lg:pl-12 lg:py-9">
+            <div className="flex h-full flex-col items-center justify-center rounded-[28px] border border-black/20 bg-black/25 px-6 py-6 backdrop-blur-xl sm:px-10 sm:py-10 lg:px-14 lg:py-12">
 
-                <h3 className={`${poppins.className} mt-0 text-center text-[1.55rem] font-bold leading-tight tracking-tight text-white sm:text-[2.15rem] lg:text-[2.3rem]`}>
+                <h3 className={`${poppins.className} mt-0 text-center text-xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl`}>
                     {service.title}
                 </h3>
 
-                <p className={`${inter.className} mt-3 max-w-3xl text-center text-sm leading-7 text-white/85 sm:mt-4 sm:text-lg sm:leading-9`}>
+                <p className={`${inter.className} mt-3 max-w-3xl text-center text-xs leading-relaxed text-white/85 sm:mt-4 sm:text-base sm:leading-loose`}>
                     {service.description}
                 </p>
 
 
-                <div className="mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-3 sm:gap-2">
+                <div className="mt-4 flex flex-wrap justify-center gap-2 sm:mt-6 sm:gap-3">
                     {service.chips.map((chip) => (
                         <span
                             key={chip}
-                            className={`${inter.className} rounded-full border border-[#A78BFA]/40 bg-[#A78BFA]/12 px-2 py-1 text-[10px] font-semibold text-white/95 sm:px-4 sm:py-1.5 sm:text-sm`}
+                            className={`${inter.className} rounded-full bg-[#A78BFA]/12 px-2 py-1 text-[10px] font-semibold text-white/95 sm:px-4 sm:py-1.5 sm:text-sm`}
                         >
                             {chip}
                         </span>
@@ -111,7 +111,7 @@ export function CoreServicesSlider() {
                         </p>
 
                         <div className="relative">
-                            <div className="relative h-[420px] overflow-hidden rounded-[28px] border border-black/20 bg-black/20 sm:h-[360px] lg:h-[380px]">
+                            <div className="relative h-[480px] min-[400px]:h-[420px] sm:h-[360px] md:h-[340px] lg:h-[380px] overflow-hidden rounded-[28px] border border-black/20 bg-black/20">
                                 {SERVICES.map((service, index) => (
                                     <Slide key={service.title} service={service} index={index} isActive={index === activeIndex} />
                                 ))}
@@ -198,10 +198,10 @@ export function CoreServicesSlider() {
                         <div className="mt-4 flex justify-center">
                             <button
                                 type="button"
-                                className={`${inter.className} max-w-full rounded-full bg-black/40 backdrop-blur-xl border border-white/20 px-8 py-2.5 text-center text-14px font-extrabold uppercase tracking-[0.12em] text-white sm:px-16 sm:text-sm sm:tracking-[0.24em] shadow-[0_0_40px_rgba(139,92,246,0.6)]`}
+                                className={`${inter.className} max-w-full rounded-2xl sm:rounded-full bg-black/40 backdrop-blur-xl border border-white/20 px-4 py-3 sm:px-16 sm:py-2.5 text-center text-[12px] sm:text-sm font-extrabold uppercase tracking-[0.06em] sm:tracking-[0.24em] text-white shadow-[0_0_40px_rgba(139,92,246,0.6)] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-0`}
                             >
-                                <div className="font-bold">Something great is on the way 🚀</div>
-                                <div className="text-[0.95rem] font-bold normal-case tracking-normal sm:ml-2 sm:inline sm:text-base">Launching soon — stay tuned.</div>
+                                <span className="font-bold">Something great is on the way 🚀</span>
+                                <span className="text-[0.85rem] font-bold normal-case tracking-normal sm:ml-2 sm:text-base">Launching soon — stay tuned.</span>
                             </button>
                         </div>
                     </div>

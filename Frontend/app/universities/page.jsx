@@ -1,0 +1,268 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Search, MapPin, Globe, BookOpen, Users, TrendingUp, Filter, ArrowRight, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export default function UniversitiesPage() {
+  const [universities, setUniversities] = useState([]);
+  const [filteredUniversities, setFilteredUniversities] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("All Countries");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/universities");
+        const result = await response.json();
+
+        if (result.success) {
+          setUniversities(result.data);
+          setFilteredUniversities(result.data);
+
+          const uniqueCountries = [
+            ...new Set(result.data.map((uni) => uni.country)),
+          ].filter(Boolean);
+          setCountries(uniqueCountries.sort());
+        } else {
+          setError("Failed to load universities");
+        }
+      } catch (err) {
+        console.error("Error fetching universities:", err);
+        setError("Error loading universities");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUniversities();
+  }, []);
+
+  useEffect(() => {
+    let filtered = universities;
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (uni) =>
+          uni.universityName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          uni.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          uni.country?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (selectedCountry && selectedCountry !== "All Countries") {
+      filtered = filtered.filter((uni) => uni.country === selectedCountry);
+    }
+
+    setFilteredUniversities(filtered);
+  }, [searchQuery, selectedCountry, universities]);
+
+  const handleViewDetails = (slug) => {
+    router.push(`/university/${slug}`);
+  };
+
+  const handleApplyNow = (slug) => {
+    router.push(`/contact?university=${slug}`);
+  };
+
+  const getLogo = (uni) => {
+    if (!uni) return null;
+    // Prioritize the logo from database if available
+    if (uni.logo) return uni.logo;
+
+    const name = uni.universityName.toLowerCase();
+    if (name.includes("melbourne")) return "/melbourne-logo.jpg";
+    if (name.includes("arizona state") || name.includes("asu")) return "/logos/asu.png";
+    if (name.includes("birmingham")) return "/logos/birmingham.png";
+    return null;
+  };
+
+  return (
+    <main className="min-h-screen bg-white">
+      <Header />
+
+      {/* Hero Section with Wave */}
+      <section className="relative pt-32 pb-48 bg-[#1e2235] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-white text-xl md:text-3xl font-medium max-w-4xl mx-auto leading-relaxed mb-10"
+          >
+            Choose a university that fuels your passion & purpose and that quenches your academic & career pursuits.
+          </motion.h2>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Button className="bg-[#f07b4e] hover:bg-[#d96b40] text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg shadow-orange-900/20 transition-all hover:-translate-y-1">
+              Talk to an Expert
+            </Button>
+          </motion.div>
+        </div>
+
+        {/* Decorative Stars/Sparkles */}
+        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white/20 rounded-full animate-pulse" />
+        <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-white/10 rounded-full animate-bounce" />
+        <div className="absolute bottom-1/4 right-1/3 w-1.5 h-1.5 bg-white/30 rounded-full animate-pulse" />
+
+        {/* Wave Background Attachment */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 w-full bg-white transition-all overflow-hidden" style={{ borderRadius: '50% 50% 0 0 / 100% 100% 0 0' }}></div>
+      </section>
+
+      <div className="relative -mt-32 pb-20 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Centered Country Selector (Prominent) */}
+          <div className="max-w-2xl mx-auto bg-white rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-16">
+            <h3 className="text-2xl font-bold text-slate-800 text-center mb-6">Select Country</h3>
+            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+              <SelectTrigger className="w-full h-16 bg-white border-slate-200 rounded-xl shadow-sm text-lg text-slate-700 px-6 focus:ring-4 focus:ring-blue-500/10">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All Countries">All</SelectItem>
+                {countries.map((country) => (
+                  <SelectItem key={country} value={country}>
+                    {country}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Results Summary and Search Row */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+            <h4 className="text-slate-500 font-medium">
+              Showing Results in <span className="text-slate-900 font-bold">{selectedCountry}</span>
+            </h4>
+
+            <div className="relative w-full sm:w-96 group">
+              <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10 group-focus-within:text-blue-500 transition-colors" />
+              <Input
+                placeholder="Search Universities"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pr-11 h-12 bg-white border-slate-100 rounded-xl shadow-sm focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          {/* Content Grid */}
+          <AnimatePresence mode="popLayout">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-32">
+                <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4" />
+                <p className="text-slate-600 font-medium">Fetching best universities...</p>
+              </div>
+            ) : error ? (
+              <div className="bg-red-50 text-red-600 p-8 rounded-2xl text-center border border-red-100">
+                <p>{error}</p>
+                <Button
+                  onClick={() => window.location.reload()}
+                  variant="outline"
+                  className="mt-4 border-red-200 hover:bg-red-100"
+                >
+                  Retry Loading
+                </Button>
+              </div>
+            ) : filteredUniversities.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-3xl p-20 text-center shadow-sm border border-slate-100"
+              >
+                <Search className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-slate-900 mb-2">No Results Found</h3>
+                <p className="text-slate-500">Try adjusting your filters or search keywords.</p>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {filteredUniversities.map((uni, index) => (
+                  <motion.div
+                    layout
+                    key={uni._id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="bg-white rounded-[1.5rem] p-8 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col items-center text-center group"
+                  >
+                    {/* University Logo */}
+                    <div className="w-full h-32 flex items-center justify-center mb-6">
+                      {getLogo(uni) ? (
+                        <img
+                          src={getLogo(uni)}
+                          alt={uni.universityName}
+                          className="max-h-24 max-w-[80%] object-contain"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center">
+                          <Globe className="w-8 h-8 text-slate-300" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Divider (Thin) */}
+                    <div className="w-full h-px bg-slate-100 mb-6" />
+
+                    {/* Name & Location */}
+                    <h3 className="text-lg font-bold text-slate-900 mb-2 min-h-[3rem] line-clamp-2 leading-tight">
+                      {uni.universityName}
+                    </h3>
+                    <p className="text-sm text-slate-600 font-medium mb-4 h-10 line-clamp-2">
+                      {uni.city && `${uni.city}, `}{uni.country}
+                    </p>
+
+                    {/* Website */}
+                    <p className="text-[12px] text-slate-500 font-medium mb-8 truncate w-full">
+                      {uni.website ? uni.website.replace(/^https?:\/\/(www\.)?/, "") : "No website available"}
+                    </p>
+
+                    {/* Action Buttons */}
+                    <div className="grid grid-cols-2 gap-3 w-full mt-auto">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleViewDetails(uni.slug)}
+                        className="rounded-xl border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 h-11 text-xs font-bold"
+                      >
+                        Know More
+                      </Button>
+                      <Button
+                        onClick={() => handleApplyNow(uni.slug)}
+                        className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 h-11 text-xs font-bold"
+                      >
+                        Apply Now
+                      </Button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <Footer />
+    </main>
+  );
+}

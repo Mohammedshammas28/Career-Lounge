@@ -102,9 +102,9 @@ export default function BannerAdminEditor() {
               description={banner.description}
               onViewDetails={() => alert(banner.details)}
             />
-            <div className="absolute top-3 right-3 flex gap-2 z-10">
-              <button onClick={() => handleEdit(idx)} className="px-4 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/80 transition shadow border border-primary text-sm">Edit</button>
-              <button onClick={() => handleDelete(idx)} className="px-4 py-1.5 bg-destructive text-white rounded-lg hover:bg-destructive/80 transition shadow border border-destructive text-sm">Delete</button>
+            <div className="flex justify-end gap-2 z-10 mt-3 md:absolute md:top-6 md:right-6 md:mt-0">
+              <button onClick={() => handleEdit(idx)} className="px-4 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/80 transition shadow border border-primary text-sm font-semibold">Edit</button>
+              <button onClick={() => handleDelete(idx)} className="px-4 py-1.5 bg-destructive text-white rounded-lg hover:bg-destructive/80 transition shadow border border-destructive text-sm font-semibold">Delete</button>
             </div>
           </div>
         ))}

@@ -33,14 +33,14 @@ export function AnnouncementCarousel() {
       />
       {/* Carousel Controls */}
       <button
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 border border-border rounded-full p-2 shadow hover:bg-primary hover:text-primary-foreground transition z-10"
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 border border-border rounded-full p-2 shadow hover:bg-primary hover:text-primary-foreground transition z-10 hidden sm:block"
         onClick={prev}
         aria-label="Previous announcement"
       >
         &#8592;
       </button>
       <button
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 border border-border rounded-full p-2 shadow hover:bg-primary hover:text-primary-foreground transition z-10"
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 border border-border rounded-full p-2 shadow hover:bg-primary hover:text-primary-foreground transition z-10 hidden sm:block"
         onClick={next}
         aria-label="Next announcement"
       >
@@ -48,24 +48,28 @@ export function AnnouncementCarousel() {
       </button>
       {/* Modal for full announcement details */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-8 relative">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-card text-card-foreground border border-border rounded-xl shadow-2xl max-w-lg w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+              className="absolute top-3 right-3 text-muted-foreground hover:text-foreground text-2xl font-bold transition-colors"
               onClick={() => setModalOpen(false)}
               aria-label="Close"
             >
               &times;
             </button>
-            <h2 className="text-2xl font-bold mb-4">{banners[current].title}</h2>
-            <img src={banners[current].imageUrl} alt={banners[current].title} className="w-32 h-32 object-cover rounded mb-4 mx-auto" />
-            <p className="text-gray-800 mb-4">{banners[current].details}</p>
-            <button
-              className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition"
-              onClick={() => setModalOpen(false)}
-            >
-              Close
-            </button>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 pr-6 leading-tight text-foreground">{banners[current].title}</h2>
+            <div className="relative w-full h-48 sm:h-56 mb-4 rounded-lg overflow-hidden border border-border">
+              <img src={banners[current].imageUrl} alt={banners[current].title} className="w-full h-full object-cover" />
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 whitespace-pre-wrap leading-relaxed">{banners[current].details}</p>
+            <div className="flex justify-end">
+              <button
+                className="px-5 py-2 bg-primary text-primary-foreground font-semibold rounded hover:bg-primary/90 transition shadow text-sm"
+                onClick={() => setModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

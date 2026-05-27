@@ -33,22 +33,22 @@ export function WhyChooseSection() {
   return (
     <section className="py-24 lg:py-32 relative overflow-hidden">
       {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:bg-fixed z-0"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop')"
         }}
       />
       {/* Dark overlay for text readability (match About Us) */}
       <div className="absolute inset-0 bg-black/50 z-10" />
-      
+
       <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-balance animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl text-balance animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
             Why Choose <span className="gradient-text">Career Lounge?</span>
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-gray-100 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
-            We stand out as your trusted partner because we combine certified expertise, 
+          <p className="mt-6 text-lg leading-relaxed text-gray-100 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.2s both' }}>
+            We stand out as your trusted partner because we combine certified expertise,
             complete transparency, and an extensive global network to support your success.
           </p>
         </div>
@@ -60,9 +60,9 @@ export function WhyChooseSection() {
               <div
                 key={index}
                 className="relative group animate-fadeInUp card-gradient card-hover-lift"
-                style={{animation: `fadeInUp 0.6s ease-out ${0.3 + index * 0.1}s both`}}
+                style={{ animation: `fadeInUp 0.6s ease-out ${0.3 + index * 0.1}s both` }}
               >
-                <div className="h-full p-6 rounded-xl border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/20">
+                <div className="h-full p-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:shadow-primary/20">
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all group-hover:scale-125 group-hover:animate-spin-slow">
                     <Icon className="h-6 w-6 text-primary group-hover:animate-bounce" />
                   </div>
@@ -78,7 +78,7 @@ export function WhyChooseSection() {
           })}
         </div>
 
-        <div className="mt-16 card-gradient border border-border/50 rounded-xl p-8 md:p-12 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.8s both'}}>
+        <div className="mt-16 card-gradient rounded-xl p-8 md:p-12 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.8s both' }}>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="group cursor-pointer hover:scale-105 transition-transform">
               <div className="text-4xl font-bold gradient-text mb-2 group-hover:animate-bounce transition-all">500+</div>

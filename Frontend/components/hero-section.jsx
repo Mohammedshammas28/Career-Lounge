@@ -7,10 +7,10 @@ import Link from "next/link"
 export function HeroSection() {
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <section className="relative min-h-[600px] flex items-center justify-center pt-24 overflow-hidden">
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:bg-fixed z-0"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&h=1080&fit=crop')"
         }}
@@ -54,18 +54,18 @@ export function HeroSection() {
             </div>
 
             {/* Stats */}
-            <div className="mt-16 grid grid-cols-3 gap-8 border-t border-white/20 pt-8 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.5s both' }}>
-              <div className="transition-all hover:scale-110 hover:text-primary">
-                <p className="text-3xl font-bold text-primary">500+</p>
-                <p className="text-sm text-gray-300 mt-1">Careers Launched</p>
+            <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-8 border-t border-white/20 pt-8 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.5s both' }}>
+              <div className="transition-all hover:scale-105 hover:text-primary">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">500+</p>
+                <p className="text-xs sm:text-sm text-gray-300 mt-1">Careers Launched</p>
               </div>
-              <div className="transition-all hover:scale-110 hover:text-primary">
-                <p className="text-3xl font-bold text-primary">95%</p>
-                <p className="text-sm text-gray-300 mt-1">Success Rate</p>
+              <div className="transition-all hover:scale-105 hover:text-primary">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">95%</p>
+                <p className="text-xs sm:text-sm text-gray-300 mt-1">Success Rate</p>
               </div>
-              <div className="transition-all hover:scale-110 hover:text-primary">
-                <p className="text-3xl font-bold text-primary">50+</p>
-                <p className="text-sm text-gray-300 mt-1">Industry Partners</p>
+              <div className="transition-all hover:scale-105 hover:text-primary">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">50+</p>
+                <p className="text-xs sm:text-sm text-gray-300 mt-1">Partners</p>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ export function HeroSection() {
             <div className="absolute -inset-4 bg-primary/5 rounded-3xl blur-3xl animate-pulse" />
             <div className="relative">
               {/* Video Container */}
-              <div className="relative bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl overflow-hidden border border-primary/30 shadow-2xl hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-all duration-300 group">
+              <div className="relative bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl overflow-hidden shadow-2xl hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-all duration-300 group">
                 {/* Video/Image Background */}
                 <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden">
                   {/* Background Image */}
@@ -90,44 +90,44 @@ export function HeroSection() {
 
                   {/* Play button */}
                   <div className="relative z-10 flex flex-col items-center gap-4">
-                    <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-bounce border-2 border-white/40">
-                      <div className="h-16 w-16 rounded-full bg-white/30 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+                    <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-bounce">
+                      <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-white/30 flex items-center justify-center">
+                        <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white fill-current" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
                     </div>
-                    <p className="text-white font-semibold text-sm drop-shadow-lg animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>Watch Success Stories</p>
+                    <p className="text-white font-semibold text-xs sm:text-sm drop-shadow-lg animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>Watch Success Stories</p>
                   </div>
 
                   {/* Decorative circles */}
-                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full border-2 border-white/50 animate-pulse" />
-                  <div className="absolute bottom-4 left-4 w-6 h-6 rounded-full border-2 border-white/30 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full animate-pulse" />
+                  <div className="absolute bottom-4 left-4 w-6 h-6 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
                 </div>
 
                 {/* Info overlay */}
-                <div className="bg-card/80 backdrop-blur-sm border-t border-primary/20 p-6 space-y-4 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.35s both' }}>
+                <div className="bg-card/80 backdrop-blur-sm border-t border-primary/20 p-4 sm:p-6 space-y-3 sm:space-y-4 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.35s both' }}>
                   <div>
-                    <p className="text-xs font-semibold text-primary tracking-wide uppercase mb-2">Transformational Stories</p>
-                    <h3 className="text-lg font-bold text-foreground">From Career Crisis to Success</h3>
+                    <p className="text-[10px] sm:text-xs font-semibold text-primary tracking-wide uppercase mb-1 sm:mb-2">Transformational Stories</p>
+                    <h3 className="text-base sm:text-lg font-bold text-foreground">From Career Crisis to Success</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     See how professionals like you have transformed their careers with Career Lounge's personalized guidance and expert mentorship.
                   </p>
 
                   {/* Stats Row */}
-                  <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-4 border-t border-border">
                     <div className="text-center animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
-                      <p className="text-lg font-bold text-primary">500+</p>
-                      <p className="text-xs text-muted-foreground">Success Stories</p>
+                      <p className="text-sm sm:text-lg font-bold text-primary">500+</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Stories</p>
                     </div>
                     <div className="text-center animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.45s both' }}>
-                      <p className="text-lg font-bold text-primary">4.9★</p>
-                      <p className="text-xs text-muted-foreground">Rating</p>
+                      <p className="text-sm sm:text-lg font-bold text-primary">4.9★</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Rating</p>
                     </div>
                     <div className="text-center animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.5s both' }}>
-                      <p className="text-lg font-bold text-primary">30 min</p>
-                      <p className="text-xs text-muted-foreground">Avg. Video</p>
+                      <p className="text-sm sm:text-lg font-bold text-primary">30 min</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Avg. Video</p>
                     </div>
                   </div>
                 </div>

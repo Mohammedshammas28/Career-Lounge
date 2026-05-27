@@ -37,7 +37,7 @@ function ensureOffersFile() {
           primaryButtonText: "Get Started",
           primaryButtonLink: "/services/career-counselling",
           secondaryButtonText: "Learn More",
-          secondaryButtonLink: "/how-it-works",
+          secondaryButtonLink: "/services",
           stats: [
             { label: "Placements", value: "500+" },
             { label: "Avg Salary", value: "150K+" },

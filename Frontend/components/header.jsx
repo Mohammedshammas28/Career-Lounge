@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -15,12 +15,42 @@ import {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
+  const [tickerItems, setTickerItems] = useState([])
+
+  useEffect(() => {
+    const fetchTicker = async () => {
+      try {
+        const response = await fetch("/api/ticker", {
+          cache: "no-store",
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          }
+        })
+        const data = await response.json()
+        if (data.items) {
+          setTickerItems(data.items.filter(item => item.active))
+        } else if (data.text) {
+          // Fallback for transition
+          setTickerItems([{ id: "1", text: data.text, active: true }])
+        }
+      } catch (error) {
+        console.error("Error fetching ticker:", error)
+      }
+    }
+    fetchTicker()
+
+    // Auto-refresh ticker data every 30 seconds
+    const interval = setInterval(fetchTicker, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
-    { name: "How It Works", href: "/how-it-works" },
     { name: "Contact", href: "/contact" },
   ]
 
@@ -36,23 +66,18 @@ export function Header() {
             />
           </Link>
         </div>
-        <div className="flex lg:hidden gap-2 items-center">
-          <ThemeToggle />
-          <button
-            type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground transition-all hover:bg-secondary hover:scale-110"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <span className="sr-only">Open main menu</span>
-            <Menu className="h-6 w-6" aria-hidden="true" />
-          </button>
-        </div>
+
+        {/* Desktop Navigation */}
         <div className="hidden lg:flex lg:gap-x-10">
           {navItems.map((item, index) => {
             if (item.name === "Services") {
               return (
-                <DropdownMenu key="Services">
-                  <DropdownMenuTrigger asChild>
+                <DropdownMenu key="Services" open={servicesOpen} onOpenChange={setServicesOpen}>
+                  <DropdownMenuTrigger
+                    asChild
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
+                  >
                     <button
                       style={{
                         animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
@@ -63,7 +88,12 @@ export function Header() {
                       <ChevronDown className="h-4 w-4" />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-64 overflow-visible">
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-64 overflow-visible"
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
+                  >
                     {/* Career Counselling with Submenu */}
                     <div className="relative group">
                       <button
@@ -165,10 +195,23 @@ export function Header() {
       </nav>
       {/* Animated notification banner moved below navbar */}
       <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-2">
-        <div className="animate-scroll-left flex gap-8">
-          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
-          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
-          <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span></span>
+        <div className="animate-scroll-left flex gap-12 whitespace-nowrap">
+          {tickerItems.length > 0 ? (
+            // Duplicate the items logic to ensure smooth infinite scroll
+            Array(4).fill(0).map((_, i) => (
+              <div key={i} className="flex gap-12 items-center">
+                {tickerItems.map((item) => (
+                  <span key={`${i}-${item.id}`} className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">
+                    ✨ New: <span className="text-foreground font-medium">{item.text}</span>
+                  </span>
+                ))}
+              </div>
+            ))
+          ) : (
+            <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">
+              ✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span>
+            </span>
+          )}
         </div>
       </div>
 
@@ -200,17 +243,43 @@ export function Header() {
                         <summary className="block rounded-lg px-4 py-3 text-base font-semibold text-foreground hover:bg-secondary/50 transition-all cursor-pointer select-none">
                           Services
                         </summary>
-                        <div className="pl-6 flex flex-col gap-1 mt-1">
-                          <Link href="/services/career-counselling" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
-                            Career Counselling
-                          </Link>
-                          <Link href="/services/educational-consultancy" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
-                            Educational Consultancy
-                          </Link>
-                          <Link href="/services/immigration" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                        <div className="pl-6 flex flex-col gap-1 mt-1 border-l border-border/40 ml-4">
+                          {/* Career Counselling Group */}
+                          <div className="py-1">
+                            <span className="block px-2 py-1 text-xs font-semibold text-muted-foreground uppercase">Career Counselling</span>
+                            <div className="pl-2 flex flex-col gap-0.5 mt-1">
+                              <Link href="/services/career-counselling/overview" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                Overview
+                              </Link>
+                              <Link href="/services/career-counselling/test-preparation" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                Test Preparation
+                              </Link>
+                              <Link href="/services/career-counselling/language-training" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                Language Training
+                              </Link>
+                            </div>
+                          </div>
+
+                          {/* Educational Consultancy Group */}
+                          <div className="py-1 border-t border-border/20 mt-1">
+                            <span className="block px-2 py-1 text-xs font-semibold text-muted-foreground uppercase">Educational Consultancy</span>
+                            <div className="pl-2 flex flex-col gap-0.5 mt-1">
+                              <Link href="/services/educational-consultancy/domestic" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                Domestic Education
+                              </Link>
+                              <Link href="/services/educational-consultancy/overseas" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                Overseas Education
+                              </Link>
+                            </div>
+                          </div>
+
+                          {/* Immigration */}
+                          <Link href="/services/immigration" className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-secondary/50 border-t border-border/20 mt-1 pt-2 transition-all" onClick={() => setMobileMenuOpen(false)}>
                             Immigration
                           </Link>
-                          <Link href="/services/recruitment" className="block rounded-lg px-2 py-2 text-base text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+
+                          {/* Recruitment */}
+                          <Link href="/services/recruitment" className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
                             Recruitment
                           </Link>
                         </div>

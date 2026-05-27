@@ -14,8 +14,8 @@ export function SlidingBanner() {
     useEffect(() => {
         const fetchBannerData = async () => {
             try {
-                console.log("🔄 Fetching banner data from /api/banner...")
-                const response = await fetch("/api/banner", {
+                console.log("🔄 Fetching university banners from /api/banners...")
+                const response = await fetch("/api/banners", {
                     cache: "no-store",
                     headers: { "Cache-Control": "no-cache" }
                 })
@@ -24,20 +24,32 @@ export function SlidingBanner() {
                     throw new Error(`API returned status ${response.status}`)
                 }
 
-                const data = await response.json()
-                console.log("✅ Banner data received:", data)
+                const result = await response.json()
+                console.log("✅ Banner data received:", result)
 
-                if (data.slides && Array.isArray(data.slides) && data.slides.length > 0) {
-                    console.log(`📊 Loaded ${data.slides.length} banner slides`)
-                    setSlides(data.slides)
+                if (result.success && result.data && Array.isArray(result.data) && result.data.length > 0) {
+                    // Transform banners to slides format
+                    const transformedSlides = result.data.map((banner) => ({
+                        id: banner._id,
+                        title: banner.university?.universityName || "Featured University",
+                        description: banner.offerText || "Exclusive offer",
+                        offer: banner.offerPercentage || "",
+                        deadline: banner.deadlineText || "",
+                        image: banner.customBannerImage || banner.university?.bannerImage || "/placeholder.jpg",
+                        university: banner.university,
+                        ctaText: banner.buttonText || "Apply Now",
+                        ctaLink: banner.university?.slug ? `/university/${banner.university.slug}` : "/universities"
+                    }))
+                    console.log(`📊 Loaded ${transformedSlides.length} banner slides`)
+                    setSlides(transformedSlides)
                     setError(null)
                 } else {
-                    console.warn("⚠️ No slides in response")
+                    console.warn("⚠️ No banners in response")
                     setSlides([])
-                    setError("No slides available")
+                    setError("No university offers available")
                 }
             } catch (err) {
-                console.error("❌ Error fetching banner:", err)
+                console.error("❌ Error fetching banners:", err)
                 setSlides([])
                 setError(`Error: ${err.message}`)
             } finally {
@@ -57,7 +69,7 @@ export function SlidingBanner() {
         if (slides.length === 0) return
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % slides.length)
-        }, 5000)
+        }, 3000) // Increased speed to 3s
         return () => clearInterval(interval)
     }, [slides.length])
 
@@ -81,23 +93,23 @@ export function SlidingBanner() {
 
     if (loading) {
         return (
-            <section className="w-full h-[400px] bg-gray-300 rounded-lg flex items-center justify-center">
-                <p className="text-gray-700 text-lg">Loading banner...</p>
+            <section className="w-full h-[320px] sm:h-[400px] bg-gray-300 rounded-lg flex items-center justify-center">
+                <p className="text-gray-700 text-base sm:text-lg">Loading banner...</p>
             </section>
         )
     }
 
     if (error || slides.length === 0) {
         return (
-            <section className="w-full h-[400px] bg-gray-200 rounded-lg flex items-center justify-center">
-                <p className="text-gray-600 text-lg">{error || "No slides available"}</p>
+            <section className="w-full h-[320px] sm:h-[400px] bg-gray-200 rounded-lg flex items-center justify-center">
+                <p className="text-gray-600 text-base sm:text-lg">{error || "No slides available"}</p>
             </section>
         )
     }
 
     const slide = slides[currentSlide]
     return (
-        <section className="relative w-full h-[400px] overflow-hidden rounded-lg">
+        <section className="relative w-full h-[350px] sm:h-[400px] overflow-hidden rounded-lg">
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center"
@@ -108,15 +120,25 @@ export function SlidingBanner() {
             <div className="absolute inset-0 bg-black/40" />
 
             {/* Content */}
-            <div className="relative h-full flex flex-col justify-center items-start px-8 lg:px-16 z-10">
-                <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 max-w-xl">
+            <div className="relative h-full flex flex-col justify-center items-start px-6 sm:px-8 lg:px-16 z-10">
+                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4 max-w-xl leading-tight">
                     {slide.title}
                 </h2>
-                <p className="text-lg text-gray-100 mb-8 max-w-lg">
+                <p className="text-sm sm:text-base md:text-lg text-gray-100 mb-2 sm:mb-3 max-w-lg">
                     {slide.description}
                 </p>
+                {slide.offer && (
+                    <p className="text-lg sm:text-2xl font-bold text-yellow-300 mb-3 sm:mb-4">
+                        {slide.offer}
+                    </p>
+                )}
+                {slide.deadline && (
+                    <p className="text-xs sm:text-sm text-red-200 mb-5 sm:mb-8 font-semibold">
+                        Apply by: {slide.deadline}
+                    </p>
+                )}
                 <Link href={slide.ctaLink}>
-                    <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg">
+                    <Button className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 sm:px-8 sm:py-3 text-sm sm:text-lg rounded-md">
                         {slide.ctaText}
                     </Button>
                 </Link>
@@ -125,27 +147,27 @@ export function SlidingBanner() {
             {/* Navigation Buttons */}
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 p-2 rounded-full transition-all"
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 p-1.5 sm:p-2 rounded-full transition-all hidden sm:block"
                 aria-label="Previous slide"
             >
-                <ChevronLeft className="w-6 h-6 text-white" />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </button>
 
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 p-2 rounded-full transition-all"
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-white/30 hover:bg-white/50 p-1.5 sm:p-2 rounded-full transition-all hidden sm:block"
                 aria-label="Next slide"
             >
-                <ChevronRight className="w-6 h-6 text-white" />
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </button>
 
             {/* Dots Indicator */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
                 {slides.map((_, idx) => (
                     <button
                         key={idx}
                         onClick={() => setCurrentSlide(idx)}
-                        className={`h-3 rounded-full transition-all ${idx === currentSlide ? "bg-white w-8" : "bg-white/50 w-3"
+                        className={`h-2 sm:h-3 rounded-full transition-all ${idx === currentSlide ? "bg-white w-6 sm:w-8" : "bg-white/50 w-2 sm:w-3"
                             }`}
                         aria-label={`Go to slide ${idx + 1}`}
                     />

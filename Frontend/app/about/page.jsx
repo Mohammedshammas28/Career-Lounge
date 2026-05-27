@@ -1,6 +1,7 @@
 import { Header } from "@/components/header"
 import { AboutSection } from "@/components/about-section"
 import { WhyChooseSection } from "@/components/why-choose-section"
+import { ProcessSection } from "@/components/process-section"
 import { Footer } from "@/components/footer"
 
 export const metadata = {
@@ -14,6 +15,7 @@ export default function AboutPage() {
       <Header />
       <AboutSection />
       <WhyChooseSection />
+      <ProcessSection />
       <Footer />
     </main>
   )
