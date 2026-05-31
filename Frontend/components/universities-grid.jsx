@@ -140,34 +140,14 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
                   </p>
                 )}
 
-                {/* Stats */}
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  {university.ranking && (
-                    <div className="flex items-center gap-2 p-2 bg-secondary/50 rounded text-xs">
-                      <span className="font-medium text-foreground">#{university.ranking}</span>
-                      <span className="text-muted-foreground">Ranking</span>
+                {/* Ranking Card */}
+                {university.ranking && (
+                  <div className="mb-4">
+                    <div className="inline-flex items-center rounded-md border-2 border-blue-700 bg-blue-50 px-3 py-2">
+                      <span className="text-sm font-bold text-blue-800">#{String(university.ranking).replace(/\D/g, "") || university.ranking}</span>
                     </div>
-                  )}
-                  {university.visaSuccessRate && (
-                    <div className="flex items-center gap-2 p-2 bg-secondary/50 rounded text-xs">
-                      <span className="text-green-500 font-medium">{university.visaSuccessRate}</span>
-                      <span className="text-muted-foreground">Visa</span>
-                    </div>
-                  )}
-                  {university.studentsEnrolled && (
-                    <div className="flex items-center gap-2 p-2 bg-secondary/50 rounded text-xs">
-                      <span className="font-medium text-foreground">{university.studentsEnrolled}</span>
-                      <span className="text-muted-foreground">Students</span>
-                    </div>
-                  )}
-                  {university.website && (
-                    <div className="flex items-center justify-center p-2 bg-secondary/50 rounded text-xs">
-                      <button className="text-primary font-medium hover:underline" onClick={(e) => e.preventDefault()}>
-                        Visit
-                      </button>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex gap-2 mt-auto">

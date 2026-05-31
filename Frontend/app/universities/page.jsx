@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Search, MapPin, Globe, BookOpen, Users, TrendingUp, Filter, ArrowRight, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ export default function UniversitiesPage() {
   const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -57,6 +59,13 @@ export default function UniversitiesPage() {
   }, []);
 
   useEffect(() => {
+    const countryParam = searchParams.get("country");
+    if (countryParam) {
+      setSelectedCountry(countryParam);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     let filtered = universities;
 
     if (searchQuery) {
@@ -69,7 +78,16 @@ export default function UniversitiesPage() {
     }
 
     if (selectedCountry && selectedCountry !== "All Countries") {
-      filtered = filtered.filter((uni) => uni.country === selectedCountry);
+      filtered = filtered.filter((uni) => {
+        const universityCountry = (uni.country || "").toLowerCase();
+        const selected = selectedCountry.toLowerCase();
+
+        return (
+          universityCountry === selected ||
+          universityCountry.includes(selected) ||
+          selected.includes(universityCountry)
+        );
+      });
     }
 
     setFilteredUniversities(filtered);

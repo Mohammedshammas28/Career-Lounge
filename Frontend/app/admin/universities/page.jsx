@@ -28,7 +28,8 @@ import {
     ArrowLeft,
     ArrowRight,
     Trash,
-    Sparkles
+    Sparkles,
+    UploadCloud
 } from "lucide-react";
 import {
     Table,
@@ -38,6 +39,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { getIntakeStatus } from "@/lib/intake-status";
 
 // Safe date formatter for HTML date input YYYY-MM-DD
 const formatDateForInput = (dateVal) => {
@@ -59,6 +61,8 @@ export default function UniversitiesAdminPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [activeFormTab, setActiveFormTab] = useState("basic");
+    const [uploading, setUploading] = useState({ logo: false, bannerImage: false });
+    const [uploadError, setUploadError] = useState("");
 
     const [formData, setFormData] = useState({
         universityName: "",
@@ -125,9 +129,11 @@ export default function UniversitiesAdminPage() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        const normalizedValue =
+            name === "ranking" ? value.replace(/\D/g, "").slice(0, 4) : value;
         setFormData((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: normalizedValue,
         }));
     };
 
@@ -141,13 +147,46 @@ export default function UniversitiesAdminPage() {
         }));
     };
 
+    const uploadImageForField = async (file, fieldName) => {
+        if (!file) return;
+
+        setUploadError("");
+        setUploading((prev) => ({ ...prev, [fieldName]: true }));
+
+        try {
+            const body = new FormData();
+            body.append("file", file);
+            body.append("folder", "universities");
+
+            const response = await fetch("/api/upload-image", {
+                method: "POST",
+                body,
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.url) {
+                throw new Error(result.error || "Upload failed");
+            }
+
+            setFormData((prev) => ({
+                ...prev,
+                [fieldName]: result.url,
+            }));
+        } catch (error) {
+            console.error("University image upload failed:", error);
+            setUploadError(error.message || "Could not upload image");
+        } finally {
+            setUploading((prev) => ({ ...prev, [fieldName]: false }));
+        }
+    };
+
     // Course dynamic list helpers
-    const addCourse = () => {
+    const addCourse = (level = "Undergraduate") => {
         setFormData((prev) => ({
             ...prev,
             courses: [
                 ...prev.courses,
-                { courseName: "", level: "Undergraduate", duration: "", fees: "" },
+                { courseName: "", level, duration: "", fees: "" },
             ],
         }));
     };
@@ -166,6 +205,16 @@ export default function UniversitiesAdminPage() {
             return { ...prev, courses: updated };
         });
     };
+
+    const undergraduateCourses = formData.courses.filter((course) => {
+        const level = (course.level || "").toLowerCase();
+        return level.includes("under");
+    });
+
+    const postgraduateCourses = formData.courses.filter((course) => {
+        const level = (course.level || "").toLowerCase();
+        return !level.includes("under");
+    });
 
     // Scholarship dynamic list helpers
     const addScholarship = () => {
@@ -230,6 +279,7 @@ export default function UniversitiesAdminPage() {
         if (!finalFormData.bannerImage?.trim()) {
             finalFormData.bannerImage = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1920&h=1080&fit=crop";
         }
+        finalFormData.ranking = (finalFormData.ranking || "").replace(/\D/g, "").slice(0, 4);
 
         try {
             const url = editingId
@@ -485,10 +535,11 @@ export default function UniversitiesAdminPage() {
 
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">QS World / Global Ranking</label>
+                                                    <label className="text-xs font-bold text-slate-700">University Rank</label>
                                                     <Input
                                                         name="ranking"
-                                                        placeholder="e.g., #84 QS World Ranking"
+                                                        placeholder="e.g., 84"
+                                                        inputMode="numeric"
                                                         value={formData.ranking}
                                                         onChange={handleInputChange}
                                                         className="rounded-lg border-slate-200"
@@ -521,34 +572,88 @@ export default function UniversitiesAdminPage() {
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
                                                     <div className="flex justify-between items-center">
-                                                        <label className="text-xs font-bold text-slate-700">Logo Image URL</label>
+                                                        <label className="text-xs font-bold text-slate-700">Logo Image</label>
                                                         <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-black uppercase">500 x 500 px (Square)</span>
                                                     </div>
-                                                    <Input
-                                                        name="logo"
-                                                        placeholder="https://example.com/logo.png"
-                                                        value={formData.logo}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
+                                                    <input
+                                                        id="university-logo-upload"
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={(e) => uploadImageForField(e.target.files?.[0], "logo")}
                                                     />
+                                                    <div
+                                                        className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/70 p-4 text-center"
+                                                        onDragOver={(e) => e.preventDefault()}
+                                                        onDrop={(e) => {
+                                                            e.preventDefault();
+                                                            uploadImageForField(e.dataTransfer.files?.[0], "logo");
+                                                        }}
+                                                    >
+                                                        <UploadCloud className="w-5 h-5 text-slate-500 mx-auto mb-2" />
+                                                        <p className="text-xs text-slate-600 mb-2">Drop logo image here</p>
+                                                        <Button
+                                                            type="button"
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => document.getElementById("university-logo-upload")?.click()}
+                                                            disabled={uploading.logo}
+                                                        >
+                                                            {uploading.logo ? "Uploading..." : "Browse Image"}
+                                                        </Button>
+                                                    </div>
+                                                    {formData.logo && (
+                                                        <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 bg-white">
+                                                            <img src={formData.logo} alt="University logo" className="w-full h-28 object-contain p-2" />
+                                                        </div>
+                                                    )}
                                                     <p className="text-[10px] text-slate-400">If left blank, a gorgeous premium default crest is automatically supplied.</p>
                                                 </div>
 
                                                 <div className="space-y-2">
                                                     <div className="flex justify-between items-center">
-                                                        <label className="text-xs font-bold text-slate-700">Banner Image URL</label>
+                                                        <label className="text-xs font-bold text-slate-700">Banner Image</label>
                                                         <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-black uppercase">1920 x 1080 px (Wide)</span>
                                                     </div>
-                                                    <Input
-                                                        name="bannerImage"
-                                                        placeholder="https://example.com/banner.jpg"
-                                                        value={formData.bannerImage}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
+                                                    <input
+                                                        id="university-banner-upload"
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={(e) => uploadImageForField(e.target.files?.[0], "bannerImage")}
                                                     />
+                                                    <div
+                                                        className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/70 p-4 text-center"
+                                                        onDragOver={(e) => e.preventDefault()}
+                                                        onDrop={(e) => {
+                                                            e.preventDefault();
+                                                            uploadImageForField(e.dataTransfer.files?.[0], "bannerImage");
+                                                        }}
+                                                    >
+                                                        <UploadCloud className="w-5 h-5 text-slate-500 mx-auto mb-2" />
+                                                        <p className="text-xs text-slate-600 mb-2">Drop banner image here</p>
+                                                        <Button
+                                                            type="button"
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => document.getElementById("university-banner-upload")?.click()}
+                                                            disabled={uploading.bannerImage}
+                                                        >
+                                                            {uploading.bannerImage ? "Uploading..." : "Browse Image"}
+                                                        </Button>
+                                                    </div>
+                                                    {formData.bannerImage && (
+                                                        <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 bg-white">
+                                                            <img src={formData.bannerImage} alt="University banner" className="w-full h-28 object-cover" />
+                                                        </div>
+                                                    )}
                                                     <p className="text-[10px] text-slate-400">If left blank, a high-resolution landscape campus banner is automatically supplied.</p>
                                                 </div>
                                             </div>
+
+                                            {uploadError && (
+                                                <p className="text-xs font-semibold text-rose-600">{uploadError}</p>
+                                            )}
 
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-1.5">
@@ -592,7 +697,7 @@ export default function UniversitiesAdminPage() {
                                         <div className="space-y-6 animate-in fade-in duration-200">
                                             {/* Sub-section: Costs */}
                                             <div className="space-y-4">
-                                                <h3 className="text-xs font-black uppercase tracking-wider text-emerald-600 border-b pb-2 flex items-center gap-1.5">
+                                                <h3 className="text-xs font-black uppercase tracking-wider text-blue-600 border-b pb-2 flex items-center gap-1.5">
                                                     <DollarSign className="w-4 h-4" /> Average Annual Costs & Accommodation
                                                 </h3>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -688,85 +793,163 @@ export default function UniversitiesAdminPage() {
                                                     <h3 className="text-sm font-black uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
                                                         <BookOpen className="w-4 h-4" /> Academic Course Portfolio
                                                     </h3>
-                                                    <p className="text-[10px] text-slate-400 mt-0.5">Catalog individual majors, credentials, durations, and annual fees.</p>
+                                                    <p className="text-[10px] text-slate-400 mt-0.5">Separate undergraduate and postgraduate pathways for cleaner publishing.</p>
                                                 </div>
-                                                <Button
-                                                    type="button"
-                                                    onClick={addCourse}
-                                                    size="sm"
-                                                    className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-700 font-bold border border-indigo-200 rounded-lg gap-1"
-                                                >
-                                                    <Plus className="w-4 h-4" /> Add Course Row
-                                                </Button>
                                             </div>
 
-                                            {formData.courses.length === 0 ? (
-                                                <div className="p-8 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium">
-                                                    📖 No courses listed. Click "Add Course Row" to add academic pathways.
-                                                </div>
-                                            ) : (
-                                                <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-1">
-                                                    {formData.courses.map((course, idx) => (
-                                                        <div key={idx} className="p-4 bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-indigo-200 rounded-xl transition-all shadow-[0_2px_6px_rgba(0,0,0,0.01)] flex flex-col gap-3 relative group">
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => removeCourse(idx)}
-                                                                className="absolute top-3 right-3 text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-rose-50 transition-all"
-                                                                title="Delete Course"
-                                                            >
-                                                                <Trash className="w-4 h-4" />
-                                                            </button>
+                                            <div className="space-y-6">
+                                                <div className="space-y-3">
+                                                    <div className="flex items-center justify-between gap-4">
+                                                        <h4 className="text-xs font-black uppercase tracking-wider text-indigo-700">Undergraduate Courses</h4>
+                                                        <Button
+                                                            type="button"
+                                                            onClick={() => addCourse("Undergraduate")}
+                                                            size="sm"
+                                                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-700 font-bold border border-indigo-200 rounded-lg gap-1"
+                                                        >
+                                                            <Plus className="w-4 h-4" /> Add Undergraduate Course
+                                                        </Button>
+                                                    </div>
 
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
-                                                                <div className="space-y-1">
-                                                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Course Name</label>
-                                                                    <Input
-                                                                        placeholder="e.g., B.Sc. Computer Science"
-                                                                        value={course.courseName}
-                                                                        onChange={(e) => handleCourseChange(idx, "courseName", e.target.value)}
-                                                                        required
-                                                                        className="h-9 text-xs rounded-lg border-slate-200"
-                                                                    />
-                                                                </div>
-                                                                <div className="space-y-1">
-                                                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Degree Level</label>
-                                                                    <select
-                                                                        value={course.level}
-                                                                        onChange={(e) => handleCourseChange(idx, "level", e.target.value)}
-                                                                        className="flex h-9 w-full rounded-lg border border-slate-200 bg-background px-3 py-1.5 text-xs ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                                                    >
-                                                                        <option value="Undergraduate">Undergraduate</option>
-                                                                        <option value="Postgraduate">Postgraduate</option>
-                                                                        <option value="Doctorate">Doctorate</option>
-                                                                        <option value="Diploma/Certificate">Diploma/Certificate</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
-                                                                <div className="space-y-1">
-                                                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Duration</label>
-                                                                    <Input
-                                                                        placeholder="e.g., 3 Years, 2 Years"
-                                                                        value={course.duration}
-                                                                        onChange={(e) => handleCourseChange(idx, "duration", e.target.value)}
-                                                                        className="h-9 text-xs rounded-lg border-slate-200"
-                                                                    />
-                                                                </div>
-                                                                <div className="space-y-1">
-                                                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Annual Tuition Fees</label>
-                                                                    <Input
-                                                                        placeholder="e.g., £26,500 / Year"
-                                                                        value={course.fees}
-                                                                        onChange={(e) => handleCourseChange(idx, "fees", e.target.value)}
-                                                                        className="h-9 text-xs rounded-lg border-slate-200"
-                                                                    />
-                                                                </div>
-                                                            </div>
+                                                    {undergraduateCourses.length === 0 ? (
+                                                        <div className="p-6 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium text-sm">
+                                                            No undergraduate courses listed yet.
                                                         </div>
-                                                    ))}
+                                                    ) : (
+                                                        <div className="space-y-4 max-h-[32vh] overflow-y-auto pr-1">
+                                                            {undergraduateCourses.map((course) => {
+                                                                const courseIndex = formData.courses.indexOf(course);
+                                                                return (
+                                                                    <div key={`ug-${courseIndex}`} className="p-4 bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-indigo-200 rounded-xl transition-all shadow-[0_2px_6px_rgba(0,0,0,0.01)] flex flex-col gap-3 relative group">
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => removeCourse(courseIndex)}
+                                                                            className="absolute top-3 right-3 text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-rose-50 transition-all"
+                                                                            title="Delete Course"
+                                                                        >
+                                                                            <Trash className="w-4 h-4" />
+                                                                        </button>
+
+                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Course Name</label>
+                                                                                <Input
+                                                                                    placeholder="e.g., B.Sc. Computer Science"
+                                                                                    value={course.courseName}
+                                                                                    onChange={(e) => handleCourseChange(courseIndex, "courseName", e.target.value)}
+                                                                                    required
+                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                />
+                                                                            </div>
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Level</label>
+                                                                                <Input value="Undergraduate" disabled className="h-9 text-xs rounded-lg border-slate-200 bg-slate-100 text-slate-500" />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Duration</label>
+                                                                                <Input
+                                                                                    placeholder="e.g., 3 Years"
+                                                                                    value={course.duration}
+                                                                                    onChange={(e) => handleCourseChange(courseIndex, "duration", e.target.value)}
+                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                />
+                                                                            </div>
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Annual Tuition Fees</label>
+                                                                                <Input
+                                                                                    placeholder="e.g., £26,500 / Year"
+                                                                                    value={course.fees}
+                                                                                    onChange={(e) => handleCourseChange(courseIndex, "fees", e.target.value)}
+                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
+
+                                                <div className="space-y-3">
+                                                    <div className="flex items-center justify-between gap-4">
+                                                        <h4 className="text-xs font-black uppercase tracking-wider text-indigo-700">Postgraduate Courses</h4>
+                                                        <Button
+                                                            type="button"
+                                                            onClick={() => addCourse("Postgraduate")}
+                                                            size="sm"
+                                                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-700 font-bold border border-indigo-200 rounded-lg gap-1"
+                                                        >
+                                                            <Plus className="w-4 h-4" /> Add Postgraduate Course
+                                                        </Button>
+                                                    </div>
+
+                                                    {postgraduateCourses.length === 0 ? (
+                                                        <div className="p-6 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium text-sm">
+                                                            No postgraduate courses listed yet.
+                                                        </div>
+                                                    ) : (
+                                                        <div className="space-y-4 max-h-[32vh] overflow-y-auto pr-1">
+                                                            {postgraduateCourses.map((course) => {
+                                                                const courseIndex = formData.courses.indexOf(course);
+                                                                return (
+                                                                    <div key={`pg-${courseIndex}`} className="p-4 bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-indigo-200 rounded-xl transition-all shadow-[0_2px_6px_rgba(0,0,0,0.01)] flex flex-col gap-3 relative group">
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => removeCourse(courseIndex)}
+                                                                            className="absolute top-3 right-3 text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-rose-50 transition-all"
+                                                                            title="Delete Course"
+                                                                        >
+                                                                            <Trash className="w-4 h-4" />
+                                                                        </button>
+
+                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Course Name</label>
+                                                                                <Input
+                                                                                    placeholder="e.g., M.Sc. Data Science"
+                                                                                    value={course.courseName}
+                                                                                    onChange={(e) => handleCourseChange(courseIndex, "courseName", e.target.value)}
+                                                                                    required
+                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                />
+                                                                            </div>
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Level</label>
+                                                                                <Input value={course.level || "Postgraduate"} disabled className="h-9 text-xs rounded-lg border-slate-200 bg-slate-100 text-slate-500" />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Duration</label>
+                                                                                <Input
+                                                                                    placeholder="e.g., 2 Years"
+                                                                                    value={course.duration}
+                                                                                    onChange={(e) => handleCourseChange(courseIndex, "duration", e.target.value)}
+                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                />
+                                                                            </div>
+                                                                            <div className="space-y-1">
+                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Annual Tuition Fees</label>
+                                                                                <Input
+                                                                                    placeholder="e.g., £26,500 / Year"
+                                                                                    value={course.fees}
+                                                                                    onChange={(e) => handleCourseChange(courseIndex, "fees", e.target.value)}
+                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
 
@@ -797,40 +980,50 @@ export default function UniversitiesAdminPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="space-y-3 max-h-[22vh] overflow-y-auto pr-1">
-                                                        {formData.intakes.map((intake, idx) => (
-                                                            <div key={idx} className="flex gap-3 items-center bg-slate-50 p-3 rounded-lg border border-slate-100 relative group pr-10">
-                                                                <div className="grid grid-cols-2 gap-3 flex-1">
-                                                                    <div className="space-y-1">
-                                                                        <label className="text-[9px] font-black text-slate-400 uppercase">Intake Term</label>
-                                                                        <Input
-                                                                            placeholder="e.g., Fall 2026 (August)"
-                                                                            value={intake.intakeName}
-                                                                            onChange={(e) => handleIntakeChange(idx, "intakeName", e.target.value)}
-                                                                            required
-                                                                            className="h-8 text-xs rounded-md border-slate-200"
-                                                                        />
+                                                        {formData.intakes.map((intake, idx) => {
+                                                            const intakeStatus = getIntakeStatus(intake);
+
+                                                            return (
+                                                                <div key={idx} className="flex gap-3 items-center bg-slate-50 p-3 rounded-lg border border-slate-100 relative group pr-10">
+                                                                    <div className="grid grid-cols-2 gap-3 flex-1">
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[9px] font-black text-slate-400 uppercase">Intake Term</label>
+                                                                            <Input
+                                                                                placeholder="e.g., Fall 2026 (August)"
+                                                                                value={intake.intakeName}
+                                                                                onChange={(e) => handleIntakeChange(idx, "intakeName", e.target.value)}
+                                                                                required
+                                                                                className="h-8 text-xs rounded-md border-slate-200"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[9px] font-black text-slate-400 uppercase">Application Deadline</label>
+                                                                            <Input
+                                                                                type="date"
+                                                                                value={intake.applyDeadline}
+                                                                                onChange={(e) => handleIntakeChange(idx, "applyDeadline", e.target.value)}
+                                                                                required
+                                                                                className="h-8 text-xs rounded-md border-slate-200"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-2 flex items-center justify-between rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-[10px] font-semibold text-slate-600">
+                                                                            <span>Public status preview</span>
+                                                                            <span className={`rounded-full px-2 py-1 ${intakeStatus === "Closed" ? "bg-slate-100 text-slate-500" : "bg-blue-100 text-blue-700"}`}>
+                                                                                {intakeStatus}
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="space-y-1">
-                                                                        <label className="text-[9px] font-black text-slate-400 uppercase">Application Deadline</label>
-                                                                        <Input
-                                                                            type="date"
-                                                                            value={intake.applyDeadline}
-                                                                            onChange={(e) => handleIntakeChange(idx, "applyDeadline", e.target.value)}
-                                                                            required
-                                                                            className="h-8 text-xs rounded-md border-slate-200"
-                                                                        />
-                                                                    </div>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => removeIntake(idx)}
+                                                                        className="absolute right-2 text-slate-400 hover:text-rose-500 p-1.5 rounded"
+                                                                        title="Remove Intake"
+                                                                    >
+                                                                        <Trash className="w-3.5 h-3.5" />
+                                                                    </button>
                                                                 </div>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => removeIntake(idx)}
-                                                                    className="absolute right-2 text-slate-400 hover:text-rose-500 p-1.5 rounded"
-                                                                    title="Remove Intake"
-                                                                >
-                                                                    <Trash className="w-3.5 h-3.5" />
-                                                                </button>
-                                                            </div>
-                                                        ))}
+                                                            );
+                                                        })}
                                                     </div>
                                                 )}
                                             </div>
@@ -840,14 +1033,14 @@ export default function UniversitiesAdminPage() {
                                                 <div className="flex justify-between items-center border-b pb-2">
                                                     <div>
                                                         <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                                                            <GraduationCap className="w-4 h-4 text-amber-500" /> Scholarships & Financial Grants
+                                                            <GraduationCap className="w-4 h-4 text-blue-500" /> Scholarships & Financial Grants
                                                         </h3>
                                                     </div>
                                                     <Button
                                                         type="button"
                                                         onClick={addScholarship}
                                                         size="sm"
-                                                        className="bg-amber-50 hover:bg-amber-100 text-amber-600 font-bold border border-amber-100 rounded-lg gap-1 h-8"
+                                                        className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold border border-blue-100 rounded-lg gap-1 h-8"
                                                     >
                                                         <Plus className="w-3.5 h-3.5" /> Add Scholarship
                                                     </Button>
@@ -1014,13 +1207,13 @@ export default function UniversitiesAdminPage() {
                                             </span>
                                         </TableCell>
                                         <TableCell className="text-slate-600 py-4">
-                                            <span className="inline-flex items-center gap-1 font-semibold text-slate-800 bg-slate-50 border border-slate-100 px-2.5 py-0.5 rounded-full text-xs">
-                                                <Award className="w-3.5 h-3.5 text-amber-500" />
-                                                {university.ranking || "N/A"}
+                                            <span className="inline-flex min-w-[88px] h-8 items-center justify-center gap-1 rounded-md border-2 border-blue-700 bg-blue-50 px-2.5 text-xs font-normal text-black">
+                                                <Award className="w-3.5 h-3.5 text-blue-600" />
+                                                {university.ranking ? `#${String(university.ranking).replace(/\D/g, "")}` : "N/A"}
                                             </span>
                                         </TableCell>
                                         <TableCell className="text-slate-600 py-4">
-                                            <span className="font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100/50 px-2.5 py-0.5 rounded-full text-xs">
+                                            <span className="font-semibold text-blue-700 bg-blue-50 border border-blue-100/50 px-2.5 py-0.5 rounded-full text-xs">
                                                 {university.visaSuccessRate || "N/A"}
                                             </span>
                                         </TableCell>

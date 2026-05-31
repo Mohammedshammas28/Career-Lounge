@@ -13,7 +13,8 @@ export async function GET() {
           {
             id: "1",
             text: "Study In Abroad Programs - Explore Global Opportunities",
-            active: true
+            active: true,
+            isNew: false
           }
         ]
       }
@@ -35,10 +36,18 @@ export async function GET() {
           {
             id: "1",
             text: tickerData.text,
-            active: tickerData.active ?? true
+            active: tickerData.active ?? true,
+            isNew: false
           }
         ]
       }
+    }
+
+    if (Array.isArray(tickerData.items)) {
+      tickerData.items = tickerData.items.map((item) => ({
+        ...item,
+        isNew: Boolean(item.isNew),
+      }))
     }
 
     return Response.json(tickerData, {
@@ -61,9 +70,18 @@ export async function POST(req) {
       return Response.json({ error: "Invalid ticker data format. Must include 'items' array." }, { status: 400 })
     }
 
-    fs.writeFileSync(tickerFile, JSON.stringify(tickerData, null, 2))
+    const normalizedData = {
+      items: tickerData.items.map((item) => ({
+        id: item.id,
+        text: item.text,
+        active: item.active ?? true,
+        isNew: Boolean(item.isNew),
+      })),
+    }
 
-    return Response.json({ message: "Ticker updated successfully", data: tickerData })
+    fs.writeFileSync(tickerFile, JSON.stringify(normalizedData, null, 2))
+
+    return Response.json({ message: "Ticker updated successfully", data: normalizedData })
   } catch (err) {
     console.error("Error updating ticker:", err)
     return Response.json({ error: "Failed to update ticker" }, { status: 500 })

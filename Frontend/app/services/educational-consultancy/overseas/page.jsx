@@ -6,12 +6,17 @@ import { Globe, CheckCircle, Plane } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Footer } from "@/components/footer"
 import { MapPin } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export default function OverseasEducationPage() {
   const [universities, setUniversities] = useState([])
+  const [filteredUniversities, setFilteredUniversities] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [activeCountry, setActiveCountry] = useState("All Countries")
+  const universitiesSectionRef = useRef(null)
+  const searchParams = useSearchParams()
 
   const features = [
     {
@@ -49,6 +54,7 @@ export default function OverseasEducationPage() {
         const result = await response.json()
         const data = result.data || result.universities || []
         setUniversities(data)
+        setFilteredUniversities(data)
       } catch (err) {
         console.error("Error fetching universities:", err)
       } finally {
@@ -58,6 +64,36 @@ export default function OverseasEducationPage() {
 
     fetchUniversities()
   }, [])
+
+  useEffect(() => {
+    const country = searchParams.get("country") || "All Countries"
+    setActiveCountry(country)
+  }, [searchParams])
+
+  useEffect(() => {
+    let filtered = universities
+
+    if (activeCountry !== "All Countries") {
+      filtered = filtered.filter((university) => {
+        const universityCountry = (university.country || "").toLowerCase()
+        const selectedCountry = activeCountry.toLowerCase()
+
+        return (
+          universityCountry === selectedCountry ||
+          universityCountry.includes(selectedCountry) ||
+          selectedCountry.includes(universityCountry)
+        )
+      })
+    }
+
+    setFilteredUniversities(filtered)
+  }, [universities, activeCountry])
+
+  useEffect(() => {
+    if (searchParams.get("country") && universitiesSectionRef.current) {
+      universitiesSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }, [searchParams, filteredUniversities])
 
   return (
     <main className="min-h-screen bg-background">
@@ -143,12 +179,14 @@ export default function OverseasEducationPage() {
       </section>
 
       {/* Countries & Universities - Simple Preview */}
-      <section className="py-16 lg:py-24">
+      <section id="universities" ref={universitiesSectionRef} className="py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Our Partner Universities</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Explore our network of prestigious universities across the globe
+              {activeCountry !== "All Countries"
+                ? `Showing universities in ${activeCountry}`
+                : "Explore our network of prestigious universities across the globe"}
             </p>
           </div>
 
@@ -169,14 +207,18 @@ export default function OverseasEducationPage() {
                 </div>
               ))}
             </div>
-          ) : universities.length === 0 ? (
+          ) : filteredUniversities.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-lg text-muted-foreground mb-4">No universities available at the moment</p>
+              <p className="text-lg text-muted-foreground mb-4">
+                {activeCountry !== "All Countries"
+                  ? `No universities found for ${activeCountry}`
+                  : "No universities available at the moment"}
+              </p>
             </div>
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-8">
-                {universities.slice(0, 4).map((uni, index) => (
+                {filteredUniversities.slice(0, 4).map((uni, index) => (
                   <div
                     key={uni._id || uni.slug}
                     className="bg-white rounded-[1.5rem] p-8 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col items-center text-center group"

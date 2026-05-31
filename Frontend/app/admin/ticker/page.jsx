@@ -32,7 +32,8 @@ export default function TickerAdminPage() {
   }
 
   const handleAddItem = () => {
-    setItems([...items, { id: Date.now().toString(), text: "", active: true }])
+    const updatedItems = items.map((item) => ({ ...item, isNew: false }))
+    setItems([...updatedItems, { id: Date.now().toString(), text: "", active: true, isNew: true }])
   }
 
   const handleRemoveItem = (id) => {
@@ -124,9 +125,9 @@ export default function TickerAdminPage() {
                         className="bg-background/80"
                       />
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="mt-5 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
                       onClick={() => handleRemoveItem(item.id)}
                     >
@@ -142,8 +143,8 @@ export default function TickerAdminPage() {
                 {message}
               </div>
               <div className="flex gap-4">
-                <Button 
-                  onClick={handleSave} 
+                <Button
+                  onClick={handleSave}
                   disabled={saving || items.length === 0}
                   className="bg-primary hover:bg-primary/90 gap-2 px-8"
                 >
@@ -169,7 +170,13 @@ export default function TickerAdminPage() {
                   <div key={i} className="flex gap-12">
                     {items.map((item) => (
                       <span key={item.id} className="text-sm font-semibold text-primary flex items-center gap-2">
-                        ✨ New: <span className="text-foreground font-medium">{item.text || "..."}</span>
+                        {item.isNew ? (
+                          <>
+                            ✨ New: <span className="text-foreground font-medium">{item.text || "..."}</span>
+                          </>
+                        ) : (
+                          <span className="text-foreground font-medium">{item.text || "..."}</span>
+                        )}
                       </span>
                     ))}
                   </div>

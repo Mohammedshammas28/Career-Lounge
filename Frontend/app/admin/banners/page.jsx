@@ -18,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Plus, Edit2, Trash2, GripVertical, CheckCircle, Circle } from "lucide-react";
+import { Plus, Edit2, Trash2, GripVertical, CheckCircle, Circle, UploadCloud } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -37,6 +37,8 @@ export default function BannersAdminPage() {
     const [editingId, setEditingId] = useState(null);
     const [draggedId, setDraggedId] = useState(null);
     const [previewData, setPreviewData] = useState(null);
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [uploadError, setUploadError] = useState("");
 
     const [formData, setFormData] = useState({
         university: "",
@@ -109,6 +111,44 @@ export default function BannersAdminPage() {
         setFormData(newData);
         if (selectedUni) {
             setPreviewData({ ...newData, university: selectedUni });
+        }
+    };
+
+    const uploadCustomBannerImage = async (file) => {
+        if (!file) return;
+
+        setUploadError("");
+        setIsUploadingImage(true);
+
+        try {
+            const body = new FormData();
+            body.append("file", file);
+            body.append("folder", "premium-banners");
+
+            const response = await fetch("/api/upload-image", {
+                method: "POST",
+                body,
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.url) {
+                throw new Error(result.error || "Upload failed");
+            }
+
+            const newData = { ...formData, customBannerImage: result.url };
+            setFormData(newData);
+
+            if (formData.university) {
+                const selectedUni = universities.find((u) => u._id === formData.university);
+                if (selectedUni) {
+                    setPreviewData({ ...newData, university: selectedUni });
+                }
+            }
+        } catch (error) {
+            console.error("Premium banner image upload failed:", error);
+            setUploadError(error.message || "Could not upload image");
+        } finally {
+            setIsUploadingImage(false);
         }
     };
 
@@ -372,13 +412,46 @@ export default function BannersAdminPage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Custom Banner Image URL</label>
-                                            <Input
-                                                name="customBannerImage"
-                                                value={formData.customBannerImage}
-                                                onChange={handleInputChange}
-                                                placeholder="https://..."
+                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Custom Banner Image</label>
+                                            <input
+                                                id="premium-banner-upload"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => uploadCustomBannerImage(e.target.files?.[0])}
                                             />
+                                            <div
+                                                className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 text-center"
+                                                onDragOver={(e) => e.preventDefault()}
+                                                onDrop={(e) => {
+                                                    e.preventDefault();
+                                                    uploadCustomBannerImage(e.dataTransfer.files?.[0]);
+                                                }}
+                                            >
+                                                <UploadCloud className="w-5 h-5 mx-auto text-gray-500 mb-2" />
+                                                <p className="text-sm text-gray-600 mb-2">Drop image here</p>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => document.getElementById("premium-banner-upload")?.click()}
+                                                    disabled={isUploadingImage}
+                                                >
+                                                    {isUploadingImage ? "Uploading..." : "Browse Image"}
+                                                </Button>
+                                            </div>
+                                            {formData.customBannerImage && (
+                                                <div className="mt-3 rounded-lg overflow-hidden border border-gray-200">
+                                                    <img
+                                                        src={formData.customBannerImage}
+                                                        alt="Custom banner"
+                                                        className="w-full h-36 object-cover"
+                                                    />
+                                                </div>
+                                            )}
+                                            {uploadError && (
+                                                <p className="text-xs font-semibold text-rose-600 mt-2">{uploadError}</p>
+                                            )}
                                         </div>
 
                                         <div>

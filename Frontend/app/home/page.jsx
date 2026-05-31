@@ -3,6 +3,7 @@ import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { Footer } from "@/components/footer"
 import { PremiumOffersSlider } from "@/components/premium-offers-slider"
+import { CountryScrollCards } from "@/components/country-scroll-cards"
 
 export default function HomePage() {
   return (
@@ -15,6 +16,8 @@ export default function HomePage() {
           <PremiumOffersSlider />
         </div>
       </section>
+
+      <CountryScrollCards />
 
       <HeroSection />
       <Footer />

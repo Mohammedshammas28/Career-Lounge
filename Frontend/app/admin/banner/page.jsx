@@ -7,13 +7,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
-import { Trash2, Plus } from "lucide-react"
+import { Trash2, Plus, UploadCloud } from "lucide-react"
 
 export default function BannerAdminPage() {
   const [slides, setSlides] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState("")
+  const [uploadingByIndex, setUploadingByIndex] = useState({})
+  const [uploadError, setUploadError] = useState("")
 
   useEffect(() => {
     fetchBannerData()
@@ -52,6 +54,36 @@ export default function BannerAdminPage() {
 
   const handleDeleteSlide = (idx) => {
     setSlides(slides.filter((_, i) => i !== idx))
+  }
+
+  const uploadSlideImage = async (file, idx) => {
+    if (!file) return
+
+    setUploadError("")
+    setUploadingByIndex((prev) => ({ ...prev, [idx]: true }))
+
+    try {
+      const body = new FormData()
+      body.append("file", file)
+      body.append("folder", "banner")
+
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        body,
+      })
+
+      const result = await response.json()
+      if (!response.ok || !result.url) {
+        throw new Error(result.error || "Upload failed")
+      }
+
+      handleSlideChange(idx, "image", result.url)
+    } catch (error) {
+      console.error("Banner image upload failed:", error)
+      setUploadError(error.message || "Could not upload image")
+    } finally {
+      setUploadingByIndex((prev) => ({ ...prev, [idx]: false }))
+    }
   }
 
   const handleSave = async () => {
@@ -94,7 +126,7 @@ export default function BannerAdminPage() {
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      
+
       <section className="py-16 lg:py-24">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Banner Manager</h1>
@@ -121,16 +153,36 @@ export default function BannerAdminPage() {
                   </Button>
                 </div>
 
-                {/* Image URL */}
+                {/* Image Upload */}
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Image URL</label>
-                  <Input
-                    type="text"
-                    placeholder="https://example.com/image.jpg"
-                    value={slide.image}
-                    onChange={(e) => handleSlideChange(idx, "image", e.target.value)}
-                    className="w-full"
+                  <label className="block text-sm font-medium text-foreground mb-2">Image</label>
+                  <input
+                    id={`banner-upload-${idx}`}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => uploadSlideImage(e.target.files?.[0], idx)}
                   />
+                  <div
+                    className="w-full rounded-lg border-2 border-dashed border-border bg-muted/40 p-4 text-center"
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault()
+                      uploadSlideImage(e.dataTransfer.files?.[0], idx)
+                    }}
+                  >
+                    <UploadCloud className="w-5 h-5 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground mb-2">Drop image here</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById(`banner-upload-${idx}`)?.click()}
+                      disabled={Boolean(uploadingByIndex[idx])}
+                    >
+                      {uploadingByIndex[idx] ? "Uploading..." : "Browse Image"}
+                    </Button>
+                  </div>
                   {slide.image && (
                     <div className="mt-3">
                       <img
@@ -144,6 +196,10 @@ export default function BannerAdminPage() {
 
                 {/* Title */}
                 <div>
+
+                  {uploadError && (
+                    <p className="text-sm font-medium text-red-600">{uploadError}</p>
+                  )}
                   <label className="block text-sm font-medium text-foreground mb-2">Title</label>
                   <Input
                     type="text"

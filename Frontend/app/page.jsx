@@ -3,6 +3,9 @@ import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { Footer } from "@/components/footer"
 import PremiumOfferSlider from "@/components/university-banner-slider"
+import { CountryScrollCards } from "@/components/country-scroll-cards"
+import PopularCoursesCarousel from "@/components/popular-courses-carousel"
+import TestPreparationCarousel from "@/components/test-preparation-carousel"
 
 export default function Home() {
   return (
@@ -17,6 +20,13 @@ export default function Home() {
       </section>
 
       <HeroSection />
+
+      <CountryScrollCards />
+
+      <TestPreparationCarousel />
+
+      <PopularCoursesCarousel />
+
       <Footer />
     </main>
   )

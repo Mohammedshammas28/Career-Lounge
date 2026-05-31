@@ -7,7 +7,7 @@ import Link from "next/link"
 export function HeroSection() {
 
   return (
-    <section className="relative min-h-[600px] flex items-center justify-center pt-24 overflow-hidden">
+    <section className="relative min-h-[470px] flex items-center justify-center pt-16 overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:bg-fixed z-0"
@@ -22,21 +22,21 @@ export function HeroSection() {
       {/* Animated gradient overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent z-20 animate-pulse" />
 
-      <div className="relative z-30 mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-30 mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-16">
+        <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
           <div className="text-center lg:text-left">
             <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-slideInLeft" style={{ animation: 'slideInLeft 0.6s ease-out 0.1s both' }}>
               Your Career Partner
             </p>
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl text-balance animate-slideInLeft" style={{ animation: 'slideInLeft 0.6s ease-out 0.2s both' }}>
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-[3.2rem] text-balance animate-slideInLeft" style={{ animation: 'slideInLeft 0.6s ease-out 0.2s both' }}>
               Where ambition meets{" "}
               <span className="text-primary inline-block animate-float">opportunity</span>
             </h1>
-            <p className="mt-6 text-lg leading-relaxed text-gray-200 max-w-xl mx-auto lg:mx-0 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>
+            <p className="mt-3 text-sm sm:text-base leading-relaxed text-gray-200 max-w-xl mx-auto lg:mx-0 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>
               We help professionals navigate their career journey with expert coaching,
               strategic guidance, and personalized support. Transform your potential into success.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
               <Link href="/services">
                 <Button
                   size="lg"
@@ -54,28 +54,28 @@ export function HeroSection() {
             </div>
 
             {/* Stats */}
-            <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-8 border-t border-white/20 pt-8 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.5s both' }}>
+            <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-5 border-t border-white/20 pt-5 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.5s both' }}>
               <div className="transition-all hover:scale-105 hover:text-primary">
-                <p className="text-2xl sm:text-3xl font-bold text-primary">500+</p>
+                <p className="text-lg sm:text-xl font-bold text-primary">500+</p>
                 <p className="text-xs sm:text-sm text-gray-300 mt-1">Careers Launched</p>
               </div>
               <div className="transition-all hover:scale-105 hover:text-primary">
-                <p className="text-2xl sm:text-3xl font-bold text-primary">95%</p>
+                <p className="text-lg sm:text-xl font-bold text-primary">95%</p>
                 <p className="text-xs sm:text-sm text-gray-300 mt-1">Success Rate</p>
               </div>
               <div className="transition-all hover:scale-105 hover:text-primary">
-                <p className="text-2xl sm:text-3xl font-bold text-primary">50+</p>
+                <p className="text-lg sm:text-xl font-bold text-primary">50+</p>
                 <p className="text-xs sm:text-sm text-gray-300 mt-1">Partners</p>
               </div>
             </div>
           </div>
 
           {/* Right side video/image showcase */}
-          <div className="relative animate-slideInRight mt-12 lg:mt-0" style={{ animation: 'slideInRight 0.6s ease-out 0.2s both' }}>
+          <div className="relative animate-slideInRight mt-10 lg:mt-0" style={{ animation: 'slideInRight 0.6s ease-out 0.2s both' }}>
             <div className="absolute -inset-4 bg-primary/5 rounded-3xl blur-3xl animate-pulse" />
             <div className="relative">
               {/* Video Container */}
-              <div className="relative bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl overflow-hidden shadow-2xl hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-all duration-300 group">
+              <div className="relative bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl overflow-hidden shadow-2xl hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-all duration-300 group max-w-[520px] mx-auto">
                 {/* Video/Image Background */}
                 <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden">
                   {/* Background Image */}
@@ -106,17 +106,17 @@ export function HeroSection() {
                 </div>
 
                 {/* Info overlay */}
-                <div className="bg-card/80 backdrop-blur-sm border-t border-primary/20 p-4 sm:p-6 space-y-3 sm:space-y-4 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.35s both' }}>
+                <div className="bg-card/80 backdrop-blur-sm border-t border-primary/20 p-4 sm:p-4 space-y-3 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.35s both' }}>
                   <div>
                     <p className="text-[10px] sm:text-xs font-semibold text-primary tracking-wide uppercase mb-1 sm:mb-2">Transformational Stories</p>
-                    <h3 className="text-base sm:text-lg font-bold text-foreground">From Career Crisis to Success</h3>
+                    <h3 className="text-sm sm:text-base font-bold text-foreground">From Career Crisis to Success</h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-[11px] sm:text-sm text-muted-foreground leading-relaxed">
                     See how professionals like you have transformed their careers with Career Lounge's personalized guidance and expert mentorship.
                   </p>
 
                   {/* Stats Row */}
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-4 border-t border-border">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3 border-t border-border">
                     <div className="text-center animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
                       <p className="text-sm sm:text-lg font-bold text-primary">500+</p>
                       <p className="text-[10px] sm:text-xs text-muted-foreground">Stories</p>

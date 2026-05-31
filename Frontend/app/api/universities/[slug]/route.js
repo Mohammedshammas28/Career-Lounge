@@ -1,6 +1,8 @@
 import { connectToDatabase } from "@/lib/db/connect";
 import University from "@/models/University";
 
+const normalizeRanking = (value) => (value || "").toString().replace(/\D/g, "").slice(0, 4);
+
 export async function GET(req, { params }) {
     try {
         await connectToDatabase();
@@ -44,8 +46,12 @@ export async function PATCH(req, { params }) {
 
         const { slug } = await params;
         const body = await req.json();
+        const normalizedBody = {
+            ...body,
+            ranking: normalizeRanking(body.ranking),
+        };
 
-        const university = await University.findOneAndUpdate({ slug }, body, {
+        const university = await University.findOneAndUpdate({ slug }, normalizedBody, {
             new: true,
             runValidators: true,
         });

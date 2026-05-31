@@ -1,41 +1,59 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function AdminLayout({ children }) {
+    const pathname = usePathname();
+    const router = useRouter();
+    const isLoginPage = pathname === "/admin/login";
+
+    async function handleLogout() {
+        await fetch("/api/admin/logout", { method: "POST" });
+        router.replace("/admin/login");
+        router.refresh();
+    }
+
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Navigation Bar */}
-            <div className="bg-white shadow sticky top-0 z-50">
-                <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
-                    <Link href="/admin" className="flex items-center gap-2 font-bold text-lg">
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg" />
-                        Admin Panel
-                    </Link>
+            {!isLoginPage ? (
+                <>
+                    {/* Navigation Bar */}
+                    <div className="sticky top-0 z-50 bg-white shadow">
+                        <div className="mx-auto flex max-w-6xl items-center justify-between px-8 py-4">
+                            <Link href="/admin" className="flex items-center gap-2 text-lg font-bold">
+                                <div className="h-8 w-8 rounded-lg bg-blue-600" />
+                                Admin Panel
+                            </Link>
 
-                    <div className="flex gap-4">
-                        <Link href="/">
-                            <Button variant="outline" size="sm">
-                                <ChevronLeft className="w-4 h-4 mr-2" />
-                                Back to Site
-                            </Button>
-                        </Link>
+                            <div className="flex gap-3">
+                                <Button variant="outline" size="sm" onClick={handleLogout}>
+                                    Logout
+                                </Button>
+                                <Link href="/">
+                                    <Button variant="outline" size="sm">
+                                        <ChevronLeft className="mr-2 h-4 w-4" />
+                                        Back to Site
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            {/* Breadcrumb Navigation */}
-            <div className="bg-white border-b">
-                <div className="max-w-6xl mx-auto px-8 py-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Link href="/admin" className="hover:text-blue-600">
-                            Dashboard
-                        </Link>
+                    {/* Breadcrumb Navigation */}
+                    <div className="border-b bg-white">
+                        <div className="mx-auto max-w-6xl px-8 py-4">
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Link href="/admin" className="hover:text-blue-600">
+                                    Dashboard
+                                </Link>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </>
+            ) : null}
 
             {/* Main Content */}
             {children}

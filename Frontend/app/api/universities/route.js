@@ -1,6 +1,8 @@
 import { connectToDatabase } from "@/lib/db/connect";
 import University from "@/models/University";
 
+const normalizeRanking = (value) => (value || "").toString().replace(/\D/g, "").slice(0, 4);
+
 export async function GET(req) {
     try {
         await connectToDatabase();
@@ -31,18 +33,22 @@ export async function POST(req) {
         await connectToDatabase();
 
         const body = await req.json();
+        const normalizedBody = {
+            ...body,
+            ranking: normalizeRanking(body.ranking),
+        };
 
         // Generate slug from university name
         const slug =
-            body.slug ||
-            body.universityName
+            normalizedBody.slug ||
+            normalizedBody.universityName
                 .toLowerCase()
                 .replace(/\s+/g, "-")
                 .replace(/[^\w-]/g, "");
 
         // Check if university already exists
         const existingUniversity = await University.findOne({
-            $or: [{ slug }, { universityName: body.universityName }],
+            $or: [{ slug }, { universityName: normalizedBody.universityName }],
         });
 
         if (existingUniversity) {
@@ -56,7 +62,7 @@ export async function POST(req) {
         }
 
         const university = new University({
-            ...body,
+            ...normalizedBody,
             slug,
         });
 

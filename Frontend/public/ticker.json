@@ -3,12 +3,20 @@
     {
       "id": "1",
       "text": "Study In Abroad Programs - Explore Global Opportunities",
-      "active": true
+      "active": true,
+      "isNew": false
     },
     {
       "id": "1779799496486",
       "text": "WELCOME TO CAREER LOUNGE 💖🎶",
-      "active": true
+      "active": true,
+      "isNew": false
+    },
+    {
+      "id": "1780252908605",
+      "text": "Yooooooooooo Guyzzzzzzzzzzzzzzz Wassupp!!!!!!!!!!!!!!!!!!!!!",
+      "active": true,
+      "isNew": true
     }
   ]
 }

@@ -347,15 +347,7 @@ export default function PremiumOfferSlider() {
                 </div>
             )}
 
-            {/* Auto-play Indicator Overlay */}
-            {isAutoPlay && banners.length > 1 && (
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-                    <div className="flex items-center gap-1.5 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full border border-white/5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-[10px] text-white/50 font-bold uppercase tracking-widest leading-none">Auto-Playing</span>
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 }

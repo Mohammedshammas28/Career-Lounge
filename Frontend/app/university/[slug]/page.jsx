@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { getIntakeStatus } from "@/lib/intake-status";
 
 export default function UniversityDetailsPage() {
     const params = useParams();
@@ -18,6 +19,8 @@ export default function UniversityDetailsPage() {
     const [error, setError] = useState(null);
     const [activeSection, setActiveSection] = useState("overview");
     const [showStickyNav, setShowStickyNav] = useState(false);
+    const undergraduateRailRef = useRef(null);
+    const postgraduateRailRef = useRef(null);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -49,6 +52,37 @@ export default function UniversityDetailsPage() {
         if (name.includes("arizona state") || name.includes("asu")) return "/logos/asu.png";
         if (name.includes("birmingham")) return "/logos/birmingham.png";
         return uni.image;
+    };
+
+    const scrollCourseRail = (railRef, direction) => {
+        const rail = railRef.current;
+        if (!rail) return;
+
+        const scrollAmount = Math.max(rail.clientWidth * 0.7, 280);
+        rail.scrollBy({
+            left: direction === "left" ? -scrollAmount : scrollAmount,
+            behavior: "smooth",
+        });
+    };
+
+    const getDisplayedIntakes = () => {
+        if (Array.isArray(university?.intakes) && university.intakes.length > 0) {
+            return university.intakes.map((intake) => ({
+                name: intake.intakeName || intake.name || "Intake",
+                status: getIntakeStatus(intake),
+            }));
+        }
+
+        return [
+            {
+                name: "Fall Intake (August)",
+                status: getIntakeStatus({ intakeName: "Fall Intake (August)" }),
+            },
+            {
+                name: "Spring Intake (January)",
+                status: getIntakeStatus({ intakeName: "Spring Intake (January)" }),
+            },
+        ];
     };
 
     useEffect(() => {
@@ -134,6 +168,16 @@ export default function UniversityDetailsPage() {
             </div>
         );
     }
+
+    const allCourses = Array.isArray(university.courses) ? university.courses : [];
+    const undergradCourses = allCourses.filter((course) => {
+        const level = (course?.level || "").toLowerCase();
+        return level.includes("under");
+    });
+    const postgradCourses = allCourses.filter((course) => {
+        const level = (course?.level || "").toLowerCase();
+        return level.includes("post") || level.includes("master") || level.includes("mba") || level.includes("doctor") || level.includes("phd");
+    });
 
     return (
         <main className="min-h-screen bg-gray-50">
@@ -303,29 +347,25 @@ export default function UniversityDetailsPage() {
                             </section>
 
                             {/* Ranking Section */}
-                            <section id="ranking" className="scroll-mt-[180px] bg-white rounded-3xl shadow-sm border p-8 sm:p-10">
-                                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 flex items-center gap-4">
-                                    <div className="p-3 bg-orange-100 rounded-2xl">
-                                        <Award className="w-8 h-8 text-orange-600" />
+                            <section id="ranking" className="scroll-mt-[180px]">
+                                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-4">
+                                    <div className="p-3 bg-blue-100 rounded-2xl">
+                                        <Award className="w-8 h-8 text-blue-600" />
                                     </div>
-                                    {university.universityName} Rankings
+                                    Ranking
                                 </h3>
-                                <p className="text-gray-600 mb-10 leading-relaxed max-w-2xl">
-                                    Consistently recognized among the world's elite institutions for teaching excellence and research impact.
-                                </p>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                                     {[
                                         { label: "QSWR", value: `#${university.ranking || '500'}`, icon: "/icons/qs.png" },
                                         { label: "Times Higher Education", value: "301 - 350", icon: "/icons/the.png" },
                                         { label: "U.S. News & World Report", value: "#70", icon: "/icons/usnews.png" }
                                     ].map((rank, i) => (
-                                        <div key={i} className="p-8 bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group hover:border-orange-200 transition-all">
-                                            <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                                <Award className="w-8 h-8 text-orange-400" />
+                                        <div key={i} className="h-[250px] sm:h-[280px] p-6 sm:p-8 bg-white rounded-3xl border-2 border-blue-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:border-blue-600 transition-all">
+                                            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                                <Award className="w-8 h-8 text-blue-600" />
                                             </div>
-                                            <span className="text-3xl font-black text-gray-900 mb-2">{rank.value}</span>
-                                            <span className="text-sm font-medium text-gray-400 uppercase tracking-tighter">{rank.label}</span>
+                                            <span className="text-3xl font-normal text-black mb-2">{rank.value}</span>
+                                            <span className="text-sm font-normal text-black uppercase tracking-tight leading-snug">{rank.label}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -344,21 +384,22 @@ export default function UniversityDetailsPage() {
                                 </p>
 
                                 <div className="space-y-4">
-                                    {[
-                                        { name: "Fall Intake (August)", status: "Applications Open" },
-                                        { name: "Spring Intake (January)", status: "Closing Soon" }
-                                    ].map((intake, i) => (
-                                        <div key={i} className="group p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-blue-200 hover:bg-white transition-all flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center group-hover:bg-blue-50">
+                                    {getDisplayedIntakes().map((intake, i) => (
+                                        <div key={i} className="group p-5 sm:p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-blue-200 hover:bg-white transition-all flex items-center justify-between gap-4">
+                                            <div className="flex items-center gap-4 min-w-0">
+                                                <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center group-hover:bg-blue-50 shrink-0">
                                                     <Calendar className="w-6 h-6 text-blue-600" />
                                                 </div>
-                                                <div>
-                                                    <h4 className="font-bold text-gray-900 text-lg">{intake.name}</h4>
-                                                    <p className="text-sm text-gray-500 font-medium">{intake.status}</p>
+                                                <div className="min-w-0">
+                                                    <h4 className="font-bold text-gray-900 text-base sm:text-lg truncate">{intake.name}</h4>
+                                                    <p className={`text-sm font-semibold ${intake.status === "Closed" ? "text-slate-400" : "text-blue-600"}`}>
+                                                        {intake.status}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-blue-600 transition-colors" />
+                                            <span className={`inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-semibold border ${intake.status === "Closed" ? "border-slate-200 bg-slate-50 text-slate-500" : "border-blue-200 bg-blue-50 text-blue-700"}`}>
+                                                {intake.status}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
@@ -376,29 +417,119 @@ export default function UniversityDetailsPage() {
                                     Explore a wide range of undergraduate and postgraduate programs designed to prepare you for global career success.
                                 </p>
 
-                                <div className="grid grid-cols-1 gap-4">
-                                    {university.courses && university.courses.length > 0 ? (
-                                        university.courses.map((course, idx) => (
-                                            <div key={idx} className="p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group">
-                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                                    <div className="flex-1">
-                                                        <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{course.courseName}</h4>
-                                                        <div className="flex flex-wrap gap-4 mt-2">
-                                                            <div className="flex items-center gap-1.5 text-sm text-gray-500">
-                                                                <Award className="w-4 h-4" /> {course.level}
-                                                            </div>
-                                                            <div className="flex items-center gap-1.5 text-sm text-gray-500">
-                                                                <Calendar className="w-4 h-4" /> {course.duration}
-                                                            </div>
+                                <div className="space-y-10">
+                                    {allCourses.length > 0 ? (
+                                        <>
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <h4 className="text-base sm:text-lg font-semibold text-indigo-700">Undergraduate Courses</h4>
+                                                    {undergradCourses.length > 2 && (
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                type="button"
+                                                                aria-label="Scroll undergraduate courses left"
+                                                                onClick={() => scrollCourseRail(undergraduateRailRef, "left")}
+                                                                className="h-9 w-9 rounded-full border border-indigo-200 bg-white text-indigo-700 shadow-sm hover:bg-indigo-50 transition-colors"
+                                                            >
+                                                                <ChevronRight className="h-4 w-4 rotate-180 mx-auto" />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                aria-label="Scroll undergraduate courses right"
+                                                                onClick={() => scrollCourseRail(undergraduateRailRef, "right")}
+                                                                className="h-9 w-9 rounded-full border border-indigo-200 bg-white text-indigo-700 shadow-sm hover:bg-indigo-50 transition-colors"
+                                                            >
+                                                                <ChevronRight className="h-4 w-4 mx-auto" />
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
-                                                        <div className="text-indigo-600 font-black text-lg">{course.fees}</div>
-                                                        <div className="text-[10px] text-indigo-400 font-black uppercase tracking-widest">ANNUAL FEE</div>
-                                                    </div>
+                                                    )}
+                                                </div>
+                                                <div ref={undergraduateRailRef} className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2">
+                                                    {undergradCourses.length > 0 ? (
+                                                        undergradCourses.map((course, idx) => (
+                                                            <div key={`ug-${idx}`} className="min-w-[280px] sm:min-w-[320px] p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group flex-shrink-0">
+                                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                                    <div className="flex-1">
+                                                                        <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{course.courseName}</h4>
+                                                                        <div className="flex flex-wrap gap-4 mt-2">
+                                                                            <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                                                                                <Award className="w-4 h-4" /> {course.level}
+                                                                            </div>
+                                                                            <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                                                                                <Calendar className="w-4 h-4" /> {course.duration}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
+                                                                        <div className="text-indigo-600 font-semibold text-base">{course.fees}</div>
+                                                                        <div className="text-[10px] text-indigo-400 font-semibold uppercase tracking-widest">ANNUAL FEE</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="p-6 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200 w-full">
+                                                            <p className="text-gray-400">No undergraduate courses listed.</p>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
-                                        ))
+
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <h4 className="text-base sm:text-lg font-semibold text-indigo-700">Postgraduate Courses</h4>
+                                                    {postgradCourses.length > 2 && (
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                type="button"
+                                                                aria-label="Scroll postgraduate courses left"
+                                                                onClick={() => scrollCourseRail(postgraduateRailRef, "left")}
+                                                                className="h-9 w-9 rounded-full border border-indigo-200 bg-white text-indigo-700 shadow-sm hover:bg-indigo-50 transition-colors"
+                                                            >
+                                                                <ChevronRight className="h-4 w-4 rotate-180 mx-auto" />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                aria-label="Scroll postgraduate courses right"
+                                                                onClick={() => scrollCourseRail(postgraduateRailRef, "right")}
+                                                                className="h-9 w-9 rounded-full border border-indigo-200 bg-white text-indigo-700 shadow-sm hover:bg-indigo-50 transition-colors"
+                                                            >
+                                                                <ChevronRight className="h-4 w-4 mx-auto" />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div ref={postgraduateRailRef} className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2">
+                                                    {postgradCourses.length > 0 ? (
+                                                        postgradCourses.map((course, idx) => (
+                                                            <div key={`pg-${idx}`} className="min-w-[280px] sm:min-w-[320px] p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group flex-shrink-0">
+                                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                                    <div className="flex-1">
+                                                                        <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{course.courseName}</h4>
+                                                                        <div className="flex flex-wrap gap-4 mt-2">
+                                                                            <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                                                                                <Award className="w-4 h-4" /> {course.level}
+                                                                            </div>
+                                                                            <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                                                                                <Calendar className="w-4 h-4" /> {course.duration}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
+                                                                        <div className="text-indigo-600 font-semibold text-base">{course.fees}</div>
+                                                                        <div className="text-[10px] text-indigo-400 font-semibold uppercase tracking-widest">ANNUAL FEE</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="p-6 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200 w-full">
+                                                            <p className="text-gray-400">No postgraduate courses listed.</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </>
                                     ) : (
                                         <div className="p-10 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
                                             <p className="text-gray-400 font-medium">Contact our counselors for the latest course catalog and fee structure.</p>
@@ -421,32 +552,32 @@ export default function UniversityDetailsPage() {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-6">
-                                        <h4 className="font-black text-gray-900 flex items-center gap-2 text-sm uppercase tracking-widest text-emerald-600">
-                                            <span className="w-8 h-px bg-emerald-200" /> Average Tuition
+                                        <h4 className="font-black text-gray-900 flex items-center gap-2 text-sm uppercase tracking-widest text-blue-600">
+                                            <span className="w-8 h-px bg-blue-200" /> Average Tuition
                                         </h4>
                                         <div className="space-y-3">
-                                            <div className="flex justify-between items-center p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50/30 transition-colors">
                                                 <span className="text-gray-600 font-medium">Undergraduate</span>
-                                                <span className="font-black text-gray-900 text-lg">{university.tuitionFees?.undergraduate || '$25k - $45k'}</span>
+                                                <span className="font-normal text-sm sm:text-base leading-snug text-gray-900 text-left sm:text-right break-words">{university.tuitionFees?.undergraduate || '$25k - $45k'}</span>
                                             </div>
-                                            <div className="flex justify-between items-center p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50/30 transition-colors">
                                                 <span className="text-gray-600 font-medium">Postgraduate</span>
-                                                <span className="font-black text-gray-900 text-lg">{university.tuitionFees?.postgraduate || '$30k - $50k'}</span>
+                                                <span className="font-normal text-sm sm:text-base leading-snug text-gray-900 text-left sm:text-right break-words">{university.tuitionFees?.postgraduate || '$30k - $50k'}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="space-y-6">
-                                        <h4 className="font-black text-gray-900 flex items-center gap-2 text-sm uppercase tracking-widest text-orange-600">
-                                            <span className="w-8 h-px bg-orange-200" /> Living Estimates
+                                        <h4 className="font-black text-gray-900 flex items-center gap-2 text-sm uppercase tracking-widest text-blue-600">
+                                            <span className="w-8 h-px bg-blue-200" /> Living Estimates
                                         </h4>
                                         <div className="space-y-3">
-                                            <div className="flex justify-between items-center p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-orange-50/30 transition-colors">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50/30 transition-colors">
                                                 <span className="text-gray-600 font-medium">Accommodation</span>
-                                                <span className="font-black text-gray-900 text-lg">{university.accommodation?.startingPrice || '$250/wk'}</span>
+                                                <span className="font-normal text-sm sm:text-base leading-snug text-gray-900 text-left sm:text-right break-words">{university.accommodation?.startingPrice || '$250/wk'}</span>
                                             </div>
-                                            <div className="flex justify-between items-center p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-orange-50/30 transition-colors">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50/30 transition-colors">
                                                 <span className="text-gray-600 font-medium">Food & Misc</span>
-                                                <span className="font-black text-gray-900 text-lg">$15k - $18k/yr</span>
+                                                <span className="font-normal text-sm sm:text-base leading-snug text-gray-900 text-left sm:text-right break-words">$15k - $18k/yr</span>
                                             </div>
                                         </div>
                                     </div>
@@ -457,8 +588,8 @@ export default function UniversityDetailsPage() {
                             <section id="scholarships" className="scroll-mt-[180px] space-y-8">
                                 <div className="bg-white rounded-3xl shadow-sm border p-8 sm:p-10">
                                     <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 flex items-center gap-4">
-                                        <div className="p-3 bg-amber-100 rounded-2xl">
-                                            <GraduationCap className="w-8 h-8 text-amber-600" />
+                                        <div className="p-3 bg-blue-100 rounded-2xl">
+                                            <GraduationCap className="w-8 h-8 text-blue-600" />
                                         </div>
                                         Scholarships
                                     </h3>
@@ -469,28 +600,27 @@ export default function UniversityDetailsPage() {
                                     {university.scholarships && university.scholarships.length > 0 ? (
                                         <div className="grid grid-cols-1 gap-6">
                                             {university.scholarships.map((scholarship, idx) => (
-                                                <div key={idx} className="bg-gradient-to-br from-gray-900 to-slate-800 rounded-3xl p-8 text-white relative overflow-hidden group">
+                                                <div key={idx} className="bg-gradient-to-br from-blue-900 to-slate-800 rounded-3xl p-8 text-white relative overflow-hidden group">
                                                     <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                                         <div className="flex-1">
                                                             <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
-                                                                <GraduationCap className="w-6 h-6 text-amber-400" />
+                                                                <GraduationCap className="w-6 h-6 text-blue-300" />
                                                             </div>
                                                             <h3 className="text-2xl font-black mb-2">{scholarship.title}</h3>
                                                             <p className="text-gray-400 text-lg leading-relaxed mb-6 max-w-xl">
                                                                 Exclusively for students entering the {new Date().getFullYear()} intake.
                                                             </p>
                                                             <div className="flex items-center gap-3">
-                                                                <div className="px-4 py-1.5 bg-amber-500/20 border border-amber-500/30 rounded-full text-amber-400 font-bold text-sm uppercase tracking-wider">
+                                                                <div className="px-4 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-200 font-bold text-sm uppercase tracking-wider">
                                                                     Value: {scholarship.amount}
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <Button className="bg-white text-gray-900 hover:bg-amber-400 hover:text-white font-black px-10 h-14 rounded-2xl transition-all shadow-xl shadow-black/50">
+                                                        <Button className="bg-white text-gray-900 hover:bg-blue-600 hover:text-white font-black px-10 h-14 rounded-2xl transition-all shadow-xl shadow-black/50">
                                                             Apply Now
                                                         </Button>
                                                     </div>
-                                                    {/* Decorative background glass */}
-                                                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-amber-500/20 transition-all" />
+                                                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-blue-500/20 transition-all" />
                                                 </div>
                                             ))}
                                         </div>
@@ -501,7 +631,7 @@ export default function UniversityDetailsPage() {
                                                 <p className="text-blue-100 text-lg leading-relaxed mb-10 max-w-2xl">
                                                     Up to 25% tuition fee reduction available for high-achieving international applicants. Contact us to check your eligibility profile.
                                                 </p>
-                                                <Button className="bg-white text-blue-900 hover:bg-orange-500 hover:text-white font-black px-12 h-16 rounded-2xl transition-all shadow-2xl">
+                                                <Button className="bg-white text-blue-900 hover:bg-blue-600 hover:text-white font-black px-12 h-16 rounded-2xl transition-all shadow-2xl">
                                                     Check Eligibility
                                                 </Button>
                                             </div>
@@ -514,8 +644,8 @@ export default function UniversityDetailsPage() {
                             {/* Admission Section */}
                             <section id="admission" className="scroll-mt-[180px] bg-white rounded-3xl shadow-sm border p-8 sm:p-10">
                                 <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 flex items-center gap-4">
-                                    <div className="p-3 bg-red-100 rounded-2xl">
-                                        <CheckCircle2 className="w-8 h-8 text-red-600" />
+                                    <div className="p-3 bg-blue-100 rounded-2xl">
+                                        <CheckCircle2 className="w-8 h-8 text-blue-600" />
                                     </div>
                                     Admissions
                                 </h3>
@@ -526,7 +656,7 @@ export default function UniversityDetailsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100 relative group overflow-hidden">
                                         <h4 className="font-black text-gray-900 mb-6 relative z-10 flex items-center gap-3">
-                                            <span className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-red-600"><Globe className="w-5 h-5" /></span>
+                                            <span className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600"><Globe className="w-5 h-5" /></span>
                                             English Language
                                         </h4>
                                         <div className="space-y-4 relative z-10">
@@ -541,23 +671,23 @@ export default function UniversityDetailsPage() {
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-red-500/10 transition-all pointer-events-none" />
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-blue-500/10 transition-all pointer-events-none" />
                                     </div>
 
                                     <div className="p-8 bg-black rounded-3xl border border-gray-800 relative group overflow-hidden flex flex-col justify-center">
                                         <div className="relative z-10">
                                             <h4 className="text-white font-black mb-4 flex items-center gap-2">
-                                                <Badge className="bg-red-600 text-[10px] font-black animate-pulse">FREE SERVICE</Badge>
+                                                <Badge className="bg-blue-600 text-[10px] font-black animate-pulse">FREE SERVICE</Badge>
                                                 Visa Support
                                             </h4>
                                             <p className="text-gray-400 text-sm leading-relaxed mb-6">
                                                 Our expert visa team handles everything from GTE documentation to visa filing with a high success rate.
                                             </p>
                                             <div className="flex items-center gap-2 text-white font-black text-sm">
-                                                <CheckCircle2 className="w-5 h-5 text-red-500" /> COMPLETE VISA ASSISTANCE
+                                                <CheckCircle2 className="w-5 h-5 text-blue-500" /> COMPLETE VISA ASSISTANCE
                                             </div>
                                         </div>
-                                        <div className="absolute bottom-0 right-0 w-48 h-48 bg-red-600/10 rounded-full -mr-24 -mb-24 blur-3xl pointer-events-none" />
+                                        <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-600/10 rounded-full -mr-24 -mb-24 blur-3xl pointer-events-none" />
                                     </div>
                                 </div>
                             </section>

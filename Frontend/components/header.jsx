@@ -21,7 +21,9 @@ export function Header() {
   useEffect(() => {
     const fetchTicker = async () => {
       try {
-        const response = await fetch("/api/ticker", {
+        const origin = typeof window !== "undefined" ? window.location.origin : ""
+        const url = `${origin}/api/ticker`
+        const response = await fetch(url, {
           cache: "no-store",
           headers: {
             'Cache-Control': 'no-cache',
@@ -29,12 +31,16 @@ export function Header() {
             'Expires': '0',
           }
         })
+        if (!response.ok) {
+          console.error("Ticker fetch returned non-OK status:", response.status, response.statusText)
+          return
+        }
         const data = await response.json()
         if (data.items) {
           setTickerItems(data.items.filter(item => item.active))
         } else if (data.text) {
           // Fallback for transition
-          setTickerItems([{ id: "1", text: data.text, active: true }])
+          setTickerItems([{ id: "1", text: data.text, active: true, isNew: false }])
         }
       } catch (error) {
         console.error("Error fetching ticker:", error)
@@ -202,7 +208,13 @@ export function Header() {
               <div key={i} className="flex gap-12 items-center">
                 {tickerItems.map((item) => (
                   <span key={`${i}-${item.id}`} className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">
-                    ✨ New: <span className="text-foreground font-medium">{item.text}</span>
+                    {item.isNew ? (
+                      <>
+                        ✨ New: <span className="text-foreground font-medium">{item.text}</span>
+                      </>
+                    ) : (
+                      <span className="text-foreground font-medium">{item.text}</span>
+                    )}
                   </span>
                 ))}
               </div>
