@@ -6,6 +6,7 @@ import PremiumOfferSlider from "@/components/university-banner-slider"
 import { CountryScrollCards } from "@/components/country-scroll-cards"
 import PopularCoursesCarousel from "@/components/popular-courses-carousel"
 import TestPreparationCarousel from "@/components/test-preparation-carousel"
+import CareerGuidanceCarousel from "@/components/career-guidance-carousel"
 
 export default function Home() {
   return (
@@ -20,6 +21,8 @@ export default function Home() {
       </section>
 
       <HeroSection />
+
+      <CareerGuidanceCarousel />
 
       <CountryScrollCards />
 

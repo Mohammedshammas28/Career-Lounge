@@ -1,6 +1,6 @@
 import { connectToDatabase } from "@/lib/db/connect";
 import Banner from "@/models/Banner";
-import University from "@/models/University";
+// University model not used directly here; Banner documents store university refs
 
 export async function GET(req) {
     try {

@@ -3,7 +3,7 @@ import University from "@/models/University";
 
 const normalizeRanking = (value) => (value || "").toString().replace(/\D/g, "").slice(0, 4);
 
-export async function GET(req) {
+export async function GET() {
     try {
         await connectToDatabase();
 

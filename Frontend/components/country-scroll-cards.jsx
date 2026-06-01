@@ -114,11 +114,11 @@ export function CountryScrollCards() {
                   >
                     <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-blue-500/0 via-purple-500/0 to-blue-500/0 transition-all duration-400 group-hover:from-blue-500/10 group-hover:via-purple-500/5 group-hover:to-blue-500/10" />
                     <div className="relative z-10 flex h-full flex-col items-center text-center">
-                      <div className="flag flex h-[104px] w-[104px] items-center justify-center rounded-full bg-white/85 shadow-[0_10px_24px_rgba(59,130,246,0.12)] backdrop-blur transition-all duration-400 group-hover:scale-[1.14] group-hover:shadow-[0_16px_32px_rgba(59,130,246,0.22)]">
+                      <div className="flag flex h-[104px] w-full items-center justify-center overflow-hidden rounded-2xl bg-white/85 shadow-[0_10px_24px_rgba(59,130,246,0.12)] backdrop-blur transition-all duration-400 group-hover:shadow-[0_16px_32px_rgba(59,130,246,0.22)]">
                         <img
                           src={country.flag}
                           alt={`${country.name} flag`}
-                          className="h-[64px] w-[64px] rounded-full object-cover transition-transform duration-400 group-hover:scale-[1.08] group-hover:rotate-3"
+                          className="h-full w-full object-cover object-center transition-transform duration-400 group-hover:scale-[1.04]"
                         />
                       </div>
 
