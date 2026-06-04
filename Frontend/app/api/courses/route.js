@@ -1,0 +1,308 @@
+import { connectToDatabase } from "@/lib/db/connect";
+import Course from "@/models/Course";
+
+const DEFAULT_COURSES = [
+    {
+        title: "Allied Health",
+        desc: "Patient care, clinical practice, and health sciences.",
+        img: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=60",
+        duration: "3-4 Years",
+        fees: "$12,000 / Year",
+        level: "Undergraduate",
+        overview: "Allied Health sciences encompass a broad range of health professions that are distinct from medicine and nursing. Professionals in this field work in patient care, clinical practice, diagnostics, and therapy. This program provides students with the critical skills required to support healthcare systems and improve patient outcomes.",
+        requirements: "High school diploma or equivalent with minimum 60% grade. Core subjects in Biology and Chemistry recommended.",
+        opportunities: "Healthcare Assistant, Clinical Lab Technician, Physical Therapy Aide, Health Educator, Diagnostic Specialist.",
+        subjects: ["Human Anatomy", "Physiology", "Clinical Biochemistry", "Healthcare Ethics", "Pathology"],
+        subCourses: [
+            {
+                name: "Nursing",
+                duration: "4 Years",
+                fees: "$12,000 / Year",
+                overview: "A comprehensive course focusing on nursing ethics, clinical practice, pharmacology, and critical patient care.",
+                careerOutcomes: "Registered Nurse, Nurse Administrator, Critical Care Specialist"
+            },
+            {
+                name: "Physiotherapy",
+                duration: "4.5 Years",
+                fees: "$13,000 / Year",
+                overview: "Covers rehabilitation techniques, muscle anatomy, sports physiology, and physical exercises.",
+                careerOutcomes: "Physiotherapist, Sports Injury Consultant, Rehabilitation Specialist"
+            },
+            {
+                name: "Medical Laboratory Technology",
+                duration: "3 Years",
+                fees: "$10,500 / Year",
+                overview: "Training in diagnostic testing, clinical chemistry, hematology, and microscopic analysis of specimens.",
+                careerOutcomes: "Lab Technician, Pathologist Assistant, Quality Control Officer"
+            }
+        ],
+        isActive: true
+    },
+    {
+        title: "Commerce",
+        desc: "Business, trade, accounting, and finance fundamentals.",
+        img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=60",
+        duration: "3 Years",
+        fees: "$10,000 / Year",
+        level: "Undergraduate",
+        overview: "The Commerce program is designed to provide a comprehensive understanding of business operations, financial accounting, commerce laws, trade principles, and economics. Students learn to analyze business trends, manage financial books, and develop strategic plans for business growth in local and global markets.",
+        requirements: "High school completion with mathematics/business studies background preferred.",
+        opportunities: "Accountant, Financial Analyst, Auditor, Business Developer, Tax Consultant.",
+        subjects: ["Financial Accounting", "Micro & Macro Economics", "Business Law", "Auditing", "Corporate Finance"],
+        subCourses: [
+            {
+                name: "B.Com in Accounting & Finance",
+                duration: "3 Years",
+                fees: "$10,000 / Year",
+                overview: "Specialization in auditing standards, financial statements reporting, taxation laws, and risk assessment.",
+                careerOutcomes: "Chartered Accountant (CA) aspirant, Auditor, Tax Consultant"
+            },
+            {
+                name: "B.Com in Banking & Insurance",
+                duration: "3 Years",
+                fees: "$9,500 / Year",
+                overview: "Covers commercial banking, loan management, underwriting standards, and actuarial basics.",
+                careerOutcomes: "Credit Officer, Insurance Broker, Investment Advisor"
+            }
+        ],
+        isActive: true
+    },
+    {
+        title: "Engineering",
+        desc: "Design, innovation, and real-world problem solving.",
+        img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=60",
+        duration: "4 Years",
+        fees: "$15,000 / Year",
+        level: "Undergraduate",
+        overview: "Engineering focuses on applying scientific and mathematical principles to design, manufacture, and maintain complex structures, machines, devices, systems, and processes. It is a highly analytical and creative field that drives technological advancement and solves real-world challenges.",
+        requirements: "High school completion with strong performance in Physics, Chemistry, and Advanced Mathematics.",
+        opportunities: "Software Engineer, Civil Engineer, Mechanical Engineer, Project Manager, Research Scientist.",
+        subjects: ["Engineering Mathematics", "Applied Physics", "Systems Design", "Thermodynamics", "Computer Programming"],
+        subCourses: [
+            {
+                name: "Computer Science Engineering",
+                duration: "4 Years",
+                fees: "$16,500 / Year",
+                overview: "Focuses on software engineering, computer networks, algorithms, databases, web technologies, and artificial intelligence.",
+                careerOutcomes: "Software Architect, Cloud Engineer, Full Stack Developer, Systems Analyst"
+            },
+            {
+                name: "Mechanical Engineering",
+                duration: "4 Years",
+                fees: "$14,500 / Year",
+                overview: "Specialization in computer-aided design (CAD), fluid dynamics, manufacturing engineering, and robotics.",
+                careerOutcomes: "Robotics Engineer, Automotive Designer, Aerospace Technician"
+            },
+            {
+                name: "Civil Engineering",
+                duration: "4 Years",
+                fees: "$14,000 / Year",
+                overview: "Covers highway engineering, structural analysis, geology, building designs, and environmental safety.",
+                careerOutcomes: "Structural Engineer, Site Manager, Urban Planner"
+            }
+        ],
+        isActive: true
+    },
+    {
+        title: "Management",
+        desc: "Strategy, operations, and data-driven decision making.",
+        img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=60",
+        duration: "2-3 Years",
+        fees: "$14,000 / Year",
+        level: "Postgraduate",
+        overview: "The Management program focuses on leadership development, strategic planning, operations management, and data-driven decision making. It prepares students for managerial and executive roles in corporate, non-profit, and public organizations by building skills in negotiation, project coordination, and team building.",
+        requirements: "Bachelor's degree in any discipline with a minimum GPA of 2.8. GMAT/GRE scores optional but preferred.",
+        opportunities: "Operations Manager, Management Consultant, HR Specialist, Business Strategist, Product Manager.",
+        subjects: ["Organizational Behavior", "Strategic Management", "Marketing Operations", "Data Analytics", "Human Resource Management"],
+        subCourses: [
+            {
+                name: "Business Management (MBA)",
+                duration: "2 Years",
+                fees: "$14,000 / Year",
+                overview: "Covers entrepreneurship, digital marketing, supply chain management, and advanced leadership skills.",
+                careerOutcomes: "Operations Manager, Management Consultant, Product Owner"
+            },
+            {
+                name: "Hotel & Hospitality Management",
+                duration: "3 Years",
+                fees: "$12,500 / Year",
+                overview: "Focuses on guest relations, food and beverage operations, resort management, and events organization.",
+                careerOutcomes: "Hotel General Manager, Event Manager, Guest Relations Director"
+            },
+            {
+                name: "Hospital & Healthcare Management",
+                duration: "2 Years",
+                fees: "$13,000 / Year",
+                overview: "Deals with hospital operations, health insurance policies, medical record systems, and health law compliance.",
+                careerOutcomes: "Hospital Administrator, Health Program Coordinator, Clinic Operations Lead"
+            }
+        ],
+        isActive: true
+    },
+    {
+        title: "Medicine",
+        desc: "Clinical science, diagnosis, and patient care.",
+        img: "https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=800",
+        duration: "5-6 Years",
+        fees: "$25,000 / Year",
+        level: "Undergraduate",
+        overview: "Medicine is a rigorous professional program that covers clinical science, pathology, pharmacology, and patient diagnosis. Students receive intensive hands-on clinical training, enabling them to diagnose illnesses, prescribe treatments, and perform medical procedures to ensure human health and well-being.",
+        requirements: "Excellent academic scores in Biology, Chemistry, and Physics. Medical entrance test clearance.",
+        opportunities: "General Practitioner, Resident Doctor, Medical Researcher, Hospital Administrator, Healthcare Consultant.",
+        subjects: ["Anatomy & Histology", "Medical Biochemistry", "Pharmacology", "General Pathology", "Clinical Medicine"],
+        subCourses: [
+            {
+                name: "General Medicine (MBBS)",
+                duration: "5.5 Years",
+                fees: "$26,000 / Year",
+                overview: "Complete study of human anatomy, clinical diagnosis, pathology, obstetrics, and medical therapeutics.",
+                careerOutcomes: "General Practitioner, Resident Medical Officer, Clinical Researcher"
+            },
+            {
+                name: "Dental Surgery (BDS)",
+                duration: "4 Years",
+                fees: "$22,000 / Year",
+                overview: "Specialized training in oral medicine, orthodontics, oral pathology, dental implants, and hygiene.",
+                careerOutcomes: "Dentist, Dental Surgeon, Orthodontist Practitioner"
+            }
+        ],
+        isActive: true
+    },
+    {
+        title: "Science",
+        desc: "Core scientific principles, research, and discovery.",
+        img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=60",
+        duration: "3 Years",
+        fees: "$9,000 / Year",
+        level: "Undergraduate",
+        overview: "The Science program offers a comprehensive study of fundamental sciences, fostering critical thinking, research skills, and scientific discovery. Students can choose to specialize in Biology, Chemistry, Physics, or Mathematics, conducting laboratory work and field research to expand theoretical and practical knowledge.",
+        requirements: "High school completion with science subjects (Physics, Chemistry, Biology/Maths).",
+        opportunities: "Research Analyst, Laboratory Manager, Quality Controller, Scientific Writer, Academician.",
+        subjects: ["Scientific Method", "Applied Statistics", "Laboratory Practices", "Advanced Specialization Core", "Environmental Science"],
+        subCourses: [
+            {
+                name: "B.Sc in Biotechnology",
+                duration: "3 Years",
+                fees: "$9,500 / Year",
+                overview: "Study of molecular biology, genetics, immunology, industrial biotechnology, and chemical engineering processes.",
+                careerOutcomes: "Research Assistant, Biochemist, Quality Assurance Officer"
+            },
+            {
+                name: "B.Sc in Computer Science",
+                duration: "3 Years",
+                fees: "$9,000 / Year",
+                overview: "Focuses on mathematical modeling, system theory, programming, cybersecurity, and cloud structures.",
+                careerOutcomes: "Network Analyst, IT Consultant, Systems Manager"
+            }
+        ],
+        isActive: true
+    }
+];
+
+export async function GET(req) {
+    try {
+        await connectToDatabase();
+
+        const { searchParams } = new URL(req.url);
+        const includeInactive = searchParams.get("all") === "true";
+
+        let courses = [];
+        if (includeInactive) {
+            courses = await Course.find().sort({ createdAt: -1 });
+        } else {
+            courses = await Course.find({ isActive: true }).sort({ createdAt: -1 });
+        }
+
+        // If no courses exist, seed with default courses
+        if (courses.length === 0) {
+            console.log("🌱 No courses found. Seeding default courses with sub-courses...");
+            const seeded = [];
+            for (const item of DEFAULT_COURSES) {
+                const slug = item.title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w-]/g, "");
+                
+                const course = new Course({
+                    ...item,
+                    slug,
+                });
+                await course.save();
+                seeded.push(course);
+            }
+            courses = seeded.sort((a, b) => b.createdAt - a.createdAt);
+        }
+
+        return Response.json(
+            {
+                success: true,
+                data: courses,
+            },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        return Response.json(
+            {
+                success: false,
+                error: error.message,
+            },
+            { status: 500 }
+        );
+    }
+}
+
+export async function POST(req) {
+    try {
+        await connectToDatabase();
+
+        const body = await req.json();
+
+        // Generate slug from title
+        const slug =
+            body.slug ||
+            body.title
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^\w-]/g, "");
+
+        // Check if course already exists
+        const existingCourse = await Course.findOne({
+            $or: [{ slug }, { title: body.title }],
+        });
+
+        if (existingCourse) {
+            return Response.json(
+                {
+                    success: false,
+                    error: "Course with this title or slug already exists",
+                },
+                { status: 400 }
+            );
+        }
+
+        const course = new Course({
+            ...body,
+            slug,
+        });
+
+        await course.save();
+
+        return Response.json(
+            {
+                success: true,
+                data: course,
+            },
+            { status: 201 }
+        );
+    } catch (error) {
+        console.error("Error creating course:", error);
+        return Response.json(
+            {
+                success: false,
+                error: error.message,
+            },
+            { status: 500 }
+        );
+    }
+}

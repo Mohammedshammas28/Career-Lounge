@@ -24,9 +24,9 @@ export default function Home() {
 
       <CareerGuidanceCarousel />
 
-      <CountryScrollCards />
-
       <TestPreparationCarousel />
+
+      <CountryScrollCards />
 
       <PopularCoursesCarousel />
 

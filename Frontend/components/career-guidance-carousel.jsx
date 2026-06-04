@@ -8,9 +8,6 @@ import {
     ArrowRight,
     UserRoundSearch,
     FileText,
-    GraduationCap,
-    NotebookPen,
-    School2,
     ClipboardList,
 } from "lucide-react"
 
@@ -34,15 +31,6 @@ const services = [
         cta: "Evaluate Profile",
     },
     {
-        title: "SOP & LOR Guidance",
-        desc: "Craft compelling statements and strong recommendation letters that stand out.",
-        image:
-            "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80",
-        icon: NotebookPen,
-        accent: "from-emerald-500/30 via-teal-400/10 to-transparent",
-        cta: "Improve Docs",
-    },
-    {
         title: "Resume Building",
         desc: "Build a polished resume that presents your strengths with clarity and impact.",
         image:
@@ -51,38 +39,20 @@ const services = [
         accent: "from-amber-500/30 via-orange-400/10 to-transparent",
         cta: "Polish Resume",
     },
-    {
-        title: "University Shortlisting",
-        desc: "Match your profile with the right universities, countries, and intake options.",
-        image:
-            "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&q=80",
-        icon: School2,
-        accent: "from-blue-500/30 via-indigo-400/10 to-transparent",
-        cta: "Shortlist Now",
-    },
-    {
-        title: "Application Assistance",
-        desc: "Stay on track with document preparation, form filing, and deadline support.",
-        image:
-            "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1200&q=80",
-        icon: GraduationCap,
-        accent: "from-rose-500/30 via-pink-400/10 to-transparent",
-        cta: "Apply Now",
-    },
 ]
 
 export default function CareerGuidanceCarousel() {
     const railRef = useRef(null)
     const autoplayRef = useRef(null)
     const pauseTimeoutRef = useRef(null)
-    const [visibleCount, setVisibleCount] = useState(4)
+    const [visibleCount, setVisibleCount] = useState(3)
     const [currentPage, setCurrentPage] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
 
     useEffect(() => {
         const calc = () => {
             const width = window.innerWidth
-            if (width >= 1024) setVisibleCount(4)
+            if (width >= 1024) setVisibleCount(3)
             else if (width >= 768) setVisibleCount(2)
             else setVisibleCount(1)
         }
@@ -205,14 +175,16 @@ export default function CareerGuidanceCarousel() {
                 </div>
 
                 <div className="relative">
-                    <button
-                        type="button"
-                        aria-label="Scroll guidance cards left"
-                        onClick={goLeft}
-                        className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white/90 text-foreground shadow-sm backdrop-blur transition-all hover:scale-105 hover:bg-white sm:inline-flex"
-                    >
-                        <ChevronLeft className="h-6 w-6" />
-                    </button>
+                    {pages > 1 && (
+                        <button
+                            type="button"
+                            aria-label="Scroll guidance cards left"
+                            onClick={goLeft}
+                            className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white/90 text-foreground shadow-sm backdrop-blur transition-all hover:scale-105 hover:bg-white sm:inline-flex"
+                        >
+                            <ChevronLeft className="h-6 w-6" />
+                        </button>
+                    )}
 
                     <div className="overflow-hidden">
                         <div
@@ -228,7 +200,7 @@ export default function CareerGuidanceCarousel() {
                                         key={service.title}
                                         whileHover={{ y: -10 }}
                                         transition={{ duration: 0.3, ease: "easeOut" }}
-                                        className="min-w-[100%] sm:min-w-[48%] md:min-w-[48%] lg:min-w-[23%] flex-shrink-0"
+                                        className="min-w-[100%] sm:min-w-[48%] md:min-w-[48%] lg:min-w-[31.5%] flex-shrink-0"
                                     >
                                         <div className="group relative h-full overflow-hidden rounded-[28px] border border-border/40 bg-transparent p-4 sm:p-5 shadow-none transition-all duration-300">
                                             <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${service.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
@@ -293,31 +265,35 @@ export default function CareerGuidanceCarousel() {
                         </div>
                     </div>
 
-                    <button
-                        type="button"
-                        aria-label="Scroll guidance cards right"
-                        onClick={goRight}
-                        className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white/90 text-foreground shadow-sm backdrop-blur transition-all hover:scale-105 hover:bg-white sm:inline-flex"
-                    >
-                        <ChevronRight className="h-6 w-6" />
-                    </button>
+                    {pages > 1 && (
+                        <button
+                            type="button"
+                            aria-label="Scroll guidance cards right"
+                            onClick={goRight}
+                            className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white/90 text-foreground shadow-sm backdrop-blur transition-all hover:scale-105 hover:bg-white sm:inline-flex"
+                        >
+                            <ChevronRight className="h-6 w-6" />
+                        </button>
+                    )}
 
-                    <div className="mt-6 flex items-center justify-center gap-2">
-                        {Array.from({ length: pages }).map((_, pageIndex) => (
-                            <button
-                                key={pageIndex}
-                                type="button"
-                                aria-label={`Go to page ${pageIndex + 1}`}
-                                className={`h-2 w-8 rounded-full transition-all ${pageIndex === currentPage ? "bg-foreground" : "bg-border/50"}`}
-                                onClick={() => {
-                                    const rail = railRef.current
-                                    if (!rail) return
-                                    const cardWidth = Math.floor(rail.clientWidth / visibleCount)
-                                    rail.scrollTo({ left: pageIndex * cardWidth, behavior: "smooth" })
-                                }}
-                            />
-                        ))}
-                    </div>
+                    {pages > 1 && (
+                        <div className="mt-6 flex items-center justify-center gap-2">
+                            {Array.from({ length: pages }).map((_, pageIndex) => (
+                                <button
+                                    key={pageIndex}
+                                    type="button"
+                                    aria-label={`Go to page ${pageIndex + 1}`}
+                                    className={`h-2 w-8 rounded-full transition-all ${pageIndex === currentPage ? "bg-foreground" : "bg-border/50"}`}
+                                    onClick={() => {
+                                        const rail = railRef.current
+                                        if (!rail) return
+                                        const cardWidth = Math.floor(rail.clientWidth / visibleCount)
+                                        rail.scrollTo({ left: pageIndex * cardWidth, behavior: "smooth" })
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Book, Image, Type } from "lucide-react";
+import { Book, Image, Type, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
@@ -11,7 +11,7 @@ export default function AdminDashboard() {
       <div className="bg-white shadow">
         <div className="max-w-6xl mx-auto px-8 py-6">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-1">Manage universities and banners</p>
+          <p className="text-gray-600 mt-1">Manage universities, banners, and courses</p>
         </div>
       </div>
 
@@ -63,6 +63,31 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-2">
                 <Button variant="outline" className="w-full">
                   Manage Banners
+                </Button>
+              </div>
+            </div>
+          </Link>
+
+          {/* Courses Card */}
+          <Link href="/admin/courses">
+            <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-8 cursor-pointer h-full">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Courses
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Create, edit, and manage dynamic courses featured on the homepage. Edit course overviews, fee structures, requirements, and banner images.
+                  </p>
+                </div>
+                <div className="p-3 bg-rose-100 rounded-lg">
+                  <BookOpen className="w-6 h-6 text-rose-600" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="w-full">
+                  Manage Courses
                 </Button>
               </div>
             </div>

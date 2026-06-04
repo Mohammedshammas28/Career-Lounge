@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/db/connect";
 import Banner from "@/models/Banner";
+import University from "@/models/University"; // Required to register the schema for population
 
 export async function GET(req, { params }) {
     try {
