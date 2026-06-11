@@ -2,33 +2,56 @@
 
 import { Header } from "@/components/header"
 import Link from "next/link"
-import { Users, CheckCircle, ArrowRight } from "lucide-react"
+import { Users, CheckCircle, ArrowRight, Briefcase } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Footer } from "@/components/footer"
+import { useState, useEffect } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { JobCard } from "@/components/job-card"
 
 export default function RecruitmentPage() {
+  const [jobs, setJobs] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setIsLoading(true)
+        const response = await fetch("/api/jobs", {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-cache" },
+        })
+        if (!response.ok) throw new Error("Failed to fetch jobs")
+        const result = await response.json()
+        const data = result.data || []
+        setJobs(data)
+      } catch (err) {
+        console.error("Error fetching jobs:", err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchJobs()
+  }, [])
+
   return (
     <main className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
       <section className="py-20 lg:py-32 relative overflow-hidden">
-        {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&h=1080&fit=crop')"
-          }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&h=1080&fit=crop')" }}
         />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-900/40 via-black/30 to-white dark:from-orange-900/60 dark:via-black/50 dark:to-background z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 via-black/30 to-white dark:from-blue-900/60 dark:via-black/50 dark:to-background z-10" />
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
-            <div className="h-16 w-16 rounded-xl bg-orange-500/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
-              <Users className="h-8 w-8 text-orange-400" />
+          <div className="mx-auto max-w-3xl text-center" style={{animation: 'fadeInUp 0.6s ease-out 0.1s both'}}>
+            <div className="h-16 w-16 rounded-xl bg-blue-500/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
+              <Users className="h-8 w-8 text-blue-400" />
             </div>
             <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6">
-              Recruitment <span className="text-orange-400">Services</span>
+              Recruitment <span className="text-blue-400">Services</span>
             </h1>
             <p className="text-xl text-gray-200 mb-8">
               Connecting exceptional talent with the right opportunities for mutual success.
@@ -41,17 +64,17 @@ export default function RecruitmentPage() {
       <section className="py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
+            <div style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
               <h2 className="text-3xl font-bold text-foreground mb-6">Bridge Talent with Opportunity</h2>
               <p className="text-lg text-muted-foreground mb-4">
-                Our recruitment services are designed to help job seekers find roles that match their skills and aspirations, while helping employers identify the perfect candidates for their organizations. We understand that every placement is a relationship that should benefit both parties.
+                Our recruitment services are designed to help job seekers find roles that match their skills and aspirations, while helping employers identify the perfect candidates for their organizations.
               </p>
               <p className="text-lg text-muted-foreground">
                 Whether you're a fresher stepping into the professional world or an experienced professional seeking new challenges, we have the expertise and networks to help you succeed.
               </p>
             </div>
             
-            <div className="bg-card border border-border rounded-2xl p-8 animate-slideInRight" style={{animation: 'slideInRight 0.6s ease-out 0.3s both'}}>
+            <div className="bg-card border border-border rounded-2xl p-8" style={{animation: 'slideInRight 0.6s ease-out 0.3s both'}}>
               <h3 className="text-2xl font-bold text-foreground mb-6">Key Benefits</h3>
               <div className="space-y-4">
                 {[
@@ -63,8 +86,8 @@ export default function RecruitmentPage() {
                   "Placement with best-fit companies",
                   "Post-placement support and guidance"
                 ].map((benefit, idx) => (
-                  <div key={benefit} className="flex items-start gap-3 animate-fadeInUp" style={{animation: `fadeInUp 0.6s ease-out ${0.4 + idx * 0.05}s both`}}>
-                    <CheckCircle className="h-5 w-5 text-orange-500 flex-shrink-0 mt-1" />
+                  <div key={benefit} className="flex items-start gap-3" style={{animation: `fadeInUp 0.6s ease-out ${0.4 + idx * 0.05}s both`}}>
+                    <CheckCircle className="h-5 w-5 text-blue-500 flex-shrink-0 mt-1" />
                     <span className="text-foreground">{benefit}</span>
                   </div>
                 ))}
@@ -76,70 +99,107 @@ export default function RecruitmentPage() {
 
       {/* Features Section */}
       <section className="py-16 lg:py-24 relative overflow-hidden">
-        {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop')"
-          }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop')" }}
         />
-<div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
+        <div className="absolute inset-0 bg-white/70 dark:bg-card/85 z-10" />
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-foreground text-center mb-16">Our Services Include</h2>
-          
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              {
-                title: "Job Placement",
-                description: "Placement services for freshers and experienced professionals across various industries and sectors."
-              },
-              {
-                title: "Resume Building",
-                description: "Expert assistance in creating compelling resumes that showcase your skills and achievements effectively."
-              },
-              {
-                title: "Interview Coaching",
-                description: "Comprehensive interview preparation including mock interviews, tips, and personalized feedback."
-              },
-              {
-                title: "Career Transition",
-                description: "Support for professionals looking to switch industries or roles with strategic guidance and planning."
-              },
-              {
-                title: "Employer Connections",
-                description: "Direct connections with leading companies seeking talented professionals in your field."
-              },
-              {
-                title: "Recruitment Support",
-                description: "For employers: comprehensive recruitment solutions to find and hire top-tier candidates."
-              }
+              { title: "Job Placement", description: "Placement services for freshers and experienced professionals across various industries and sectors." },
+              { title: "Resume Building", description: "Expert assistance in creating compelling resumes that showcase your skills and achievements effectively." },
+              { title: "Interview Coaching", description: "Comprehensive interview preparation including mock interviews, tips, and personalized feedback." },
+              { title: "Career Transition", description: "Support for professionals looking to switch industries or roles with strategic guidance and planning." },
+              { title: "Employer Connections", description: "Direct connections with leading companies seeking talented professionals in your field." },
+              { title: "Recruitment Support", description: "For employers: comprehensive recruitment solutions to find and hire top-tier candidates." }
             ].map((feature, idx) => (
               <div
                 key={feature.title}
-                className="bg-background border border-border rounded-xl p-6 hover:border-orange-500/50 transition-all hover:shadow-lg group"
+                className="bg-background border border-border rounded-xl p-6 hover:border-blue-500/50 transition-all hover:shadow-lg group"
                 style={{animation: `fadeInUp 0.6s ease-out ${0.2 + idx * 0.1}s both`}}
               >
-                <h3 className="text-lg font-semibold text-foreground mb-3 group-hover:text-orange-500 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
-                </p>
+                <h3 className="text-lg font-semibold text-foreground mb-3 group-hover:text-blue-500 transition-colors">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Job Opportunities Section */}
       <section className="py-16 lg:py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Current Job Opportunities</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Explore our latest openings and find the role that's right for you
+            </p>
+          </div>
+
+          {isLoading ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="rounded-2xl border border-border overflow-hidden bg-card p-6 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="h-14 w-14 rounded-xl" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-5/6" />
+                  <div className="flex gap-2 pt-2">
+                    <Skeleton className="h-8 flex-1" />
+                    <Skeleton className="h-8 flex-1" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : jobs.length === 0 ? (
+            <div className="text-center py-16">
+              <Briefcase className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+              <p className="text-lg text-muted-foreground">No job opportunities available at the moment. Check back soon!</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+                {jobs.slice(0, 3).map((job, index) => (
+                  <div
+                    key={job._id || job.slug}
+                    style={{animation: `fadeInUp 0.6s ease-out ${0.1 + index * 0.1}s both`}}
+                    className="h-full"
+                  >
+                    <JobCard job={job} />
+                  </div>
+                ))}
+              </div>
+
+              {/* View All Jobs Button */}
+              <div className="flex justify-center">
+                <Link href="/jobs">
+                  <Button variant="outline" size="lg" className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-400">
+                    View All Jobs
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 lg:py-24 bg-card/50">
         <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-foreground mb-6">Ready to Find Your Perfect Role?</h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Let us help you land your dream job. Connect with our recruitment specialists today.
           </p>
           <Link href="/contact">
-            <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-6 text-lg">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
               Connect with Us <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>

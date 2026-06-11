@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Book, Image, Type, BookOpen } from "lucide-react";
+import { Book, Image, Type, BookOpen, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
@@ -113,6 +113,31 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-2">
                 <Button variant="outline" className="w-full">
                   Manage Ticker
+                </Button>
+              </div>
+            </div>
+          </Link>
+
+          {/* Jobs Card */}
+          <Link href="/admin/jobs">
+            <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-8 cursor-pointer h-full">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Jobs
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Add, edit, and manage job opportunities. Store all job details including requirements, responsibilities, salary, and company logo.
+                  </p>
+                </div>
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <Briefcase className="w-6 h-6 text-blue-600" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="w-full">
+                  Manage Jobs
                 </Button>
               </div>
             </div>
