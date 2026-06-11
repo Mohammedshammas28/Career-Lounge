@@ -7,11 +7,11 @@ export const metadata = {
   description: 'Get in touch with Career Lounge. Fill out our contact form or reach us directly via email, phone, or visit our office.',
 }
 
-export default function ContactPage() {
+export default function ContactPage({ searchParams }) {
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      <ContactSection />
+      <ContactSection searchParams={searchParams} />
       <Footer />
     </main>
   )

@@ -93,6 +93,19 @@ const universitySchema = new mongoose.Schema(
                 answer: String,
             },
         ],
+
+        // Courses offered for filtering (broad categories like Engineering, Medicine, etc.)
+        coursesOffered: {
+            type: [String],
+            default: [],
+        },
+
+        // Category for Educational Consultancy Domestic/Overseas division
+        category: {
+            type: String,
+            enum: ["Domestic", "Overseas"],
+            default: "Domestic",
+        },
     },
     {
         timestamps: true,

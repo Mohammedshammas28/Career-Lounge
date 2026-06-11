@@ -177,7 +177,7 @@ export default function TestPreparationPage() {
                     <p className="text-xl text-muted-foreground mb-8">
                         Connect with our expert trainers and achieve your target scores with personalized coaching and comprehensive support.
                     </p>
-                    <Link href="/contact">
+                    <Link href={`/contact?service=${encodeURIComponent("Career Counselling")}`}>
                         <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg">
                             Schedule Free Consultation
                         </Button>

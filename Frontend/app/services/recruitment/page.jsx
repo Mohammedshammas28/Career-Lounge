@@ -60,8 +60,51 @@ export default function RecruitmentPage() {
         </div>
       </section>
 
+      {/* Two Recruitment Tracks */}
+      <section className="py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-foreground mb-3">Our Recruitment Services</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">Choose the recruitment track that best matches your career goals.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Domestic */}
+            <Link href="/services/recruitment/domestic" className="group">
+              <div className="bg-card border-2 border-border rounded-2xl p-8 hover:border-emerald-400 hover:shadow-xl transition-all h-full">
+                <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-5 group-hover:bg-emerald-500/20 transition-colors">
+                  <span className="text-3xl">🏠</span>
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-emerald-600 transition-colors">Domestic Recruitment</h3>
+                <p className="text-muted-foreground mb-5">
+                  Local job placement across the UAE and GCC region. We connect you with top employers in healthcare, finance, technology, and more.
+                </p>
+                <span className="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm group-hover:translate-x-1 transition-transform">
+                  View Domestic Jobs <ArrowRight className="w-4 h-4" />
+                </span>
+              </div>
+            </Link>
+
+            {/* Overseas */}
+            <Link href="/services/recruitment/overseas" className="group">
+              <div className="bg-card border-2 border-border rounded-2xl p-8 hover:border-violet-400 hover:shadow-xl transition-all h-full">
+                <div className="h-14 w-14 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-5 group-hover:bg-violet-500/20 transition-colors">
+                  <span className="text-3xl">✈️</span>
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-violet-600 transition-colors">Overseas Recruitment</h3>
+                <p className="text-muted-foreground mb-5">
+                  International placements across the UK, Canada, Australia, Europe, and more. Full visa and documentation support included.
+                </p>
+                <span className="inline-flex items-center gap-2 text-violet-600 font-bold text-sm group-hover:translate-x-1 transition-transform">
+                  View Overseas Jobs <ArrowRight className="w-4 h-4" />
+                </span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Overview Section */}
-      <section className="py-16 lg:py-24">
+      <section className="py-8 lg:py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div style={{animation: 'fadeInUp 0.6s ease-out 0.2s both'}}>
@@ -198,7 +241,7 @@ export default function RecruitmentPage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Let us help you land your dream job. Connect with our recruitment specialists today.
           </p>
-          <Link href="/contact">
+          <Link href={`/contact?service=${encodeURIComponent("Recruitment Services")}`}>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
               Connect with Us <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

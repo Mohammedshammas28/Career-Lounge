@@ -2,44 +2,57 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
-import {
+import Link from "next/link"
+import * as LucideIcons from "lucide-react"
+
+const {
     ChevronLeft,
     ChevronRight,
     ArrowRight,
     UserRoundSearch,
     FileText,
     ClipboardList,
-} from "lucide-react"
+} = LucideIcons
 
-const services = [
+const getIconComponent = (name) => {
+    if (!name) return UserRoundSearch;
+    const Icon = LucideIcons[name];
+    return Icon || UserRoundSearch;
+};
+
+const ACCENTS = [
+    "from-sky-500/30 via-cyan-400/10 to-transparent",
+    "from-violet-500/30 via-fuchsia-400/10 to-transparent",
+    "from-amber-500/30 via-orange-400/10 to-transparent",
+    "from-emerald-500/30 via-teal-400/10 to-transparent",
+];
+
+const STATIC_SERVICES = [
     {
         title: "Career Counselling",
-        desc: "Personalized guidance to align your goals, profile, and study destination.",
-        image:
-            "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
-        icon: UserRoundSearch,
-        accent: "from-sky-500/30 via-cyan-400/10 to-transparent",
-        cta: "Book Session",
+        description: "Personalized guidance to align your goals, profile, and study destination.",
+        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
+        iconName: "UserRoundSearch",
+        buttonText: "Book Session",
+        buttonLink: "/services/career-counselling",
     },
     {
         title: "Profile Evaluation",
-        desc: "Get a clear assessment of your academics, experience, and improvement areas.",
-        image:
-            "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=80",
-        icon: FileText,
-        accent: "from-violet-500/30 via-fuchsia-400/10 to-transparent",
-        cta: "Evaluate Profile",
+        description: "Get a clear assessment of your academics, experience, and improvement areas.",
+        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=80",
+        iconName: "FileText",
+        buttonText: "Evaluate Profile",
+        buttonLink: "/services/career-counselling",
     },
     {
         title: "Resume Building",
-        desc: "Build a polished resume that presents your strengths with clarity and impact.",
-        image:
-            "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&q=80",
-        icon: ClipboardList,
-        accent: "from-amber-500/30 via-orange-400/10 to-transparent",
-        cta: "Polish Resume",
+        description: "Build a polished resume that presents your strengths with clarity and impact.",
+        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&q=80",
+        iconName: "ClipboardList",
+        buttonText: "Polish Resume",
+        buttonLink: "/services/career-counselling",
     },
-]
+];
 
 export default function CareerGuidanceCarousel() {
     const railRef = useRef(null)
@@ -48,6 +61,28 @@ export default function CareerGuidanceCarousel() {
     const [visibleCount, setVisibleCount] = useState(3)
     const [currentPage, setCurrentPage] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
+    const [services, setServices] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const response = await fetch("/api/homepage-cards?type=career-counselling")
+                const result = await response.json()
+                if (result.success && result.data && result.data.length > 0) {
+                    setServices(result.data)
+                } else {
+                    setServices(STATIC_SERVICES)
+                }
+            } catch (error) {
+                console.error("Error fetching career guidance cards:", error)
+                setServices(STATIC_SERVICES)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        fetchServices()
+    }, [])
 
     useEffect(() => {
         const calc = () => {
@@ -193,17 +228,18 @@ export default function CareerGuidanceCarousel() {
                             style={{ marginBottom: "-16px" }}
                         >
                             {services.map((service, index) => {
-                                const Icon = service.icon
+                                const Icon = getIconComponent(service.iconName)
+                                const accent = ACCENTS[index % ACCENTS.length]
 
                                 return (
                                     <motion.article
-                                        key={service.title}
+                                        key={service._id || service.title || index}
                                         whileHover={{ y: -10 }}
                                         transition={{ duration: 0.3, ease: "easeOut" }}
                                         className="min-w-[100%] sm:min-w-[48%] md:min-w-[48%] lg:min-w-[31.5%] flex-shrink-0"
                                     >
                                         <div className="group relative h-full overflow-hidden rounded-[28px] border border-border/40 bg-transparent p-4 sm:p-5 shadow-none transition-all duration-300">
-                                            <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${service.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
+                                            <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
                                             <div className="relative overflow-hidden rounded-[24px] bg-slate-100 shadow-[0_10px_24px_rgba(59,130,246,0.12)]">
                                                 <motion.img
@@ -218,7 +254,7 @@ export default function CareerGuidanceCarousel() {
 
                                                 <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white shadow-lg backdrop-blur-md">
                                                     <Icon className="h-3.5 w-3.5" />
-                                                    Premium
+                                                    {service.subtitle || "Premium"}
                                                 </div>
 
                                                 <div className="absolute bottom-4 right-4 rounded-full border border-white/20 bg-white/20 px-3 py-1 text-[11px] font-semibold text-white shadow-lg backdrop-blur-md">
@@ -241,19 +277,19 @@ export default function CareerGuidanceCarousel() {
                                                 </h3>
 
                                                 <p className="mt-2 max-w-[28ch] text-sm leading-6 text-muted-foreground">
-                                                    {service.desc}
+                                                    {service.description}
                                                 </p>
 
-                                                <div className="mt-5 flex items-center justify-between gap-3">
-                                                    <button className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95">
-                                                        {service.cta}
+                                                <div className="mt-5 flex items-center justify-between gap-3 w-full">
+                                                    <Link href={service.buttonLink || "/services/career-counselling"} className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95">
+                                                        {service.buttonText || "Book Session"}
                                                         <ArrowRight className="h-4 w-4" />
-                                                    </button>
+                                                    </Link>
 
-                                                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-transform duration-300 group-hover:translate-x-1">
+                                                    <Link href={service.buttonLink || "/services/career-counselling"} className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-transform duration-300 group-hover:translate-x-1">
                                                         Explore
                                                         <span aria-hidden="true">→</span>
-                                                    </div>
+                                                    </Link>
                                                 </div>
                                             </div>
 

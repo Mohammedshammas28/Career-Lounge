@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Book, Image, Type, BookOpen, Briefcase } from "lucide-react";
+import { Book, Image, Type, BookOpen, Briefcase, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
@@ -138,6 +138,31 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-2">
                 <Button variant="outline" className="w-full">
                   Manage Jobs
+                </Button>
+              </div>
+            </div>
+          </Link>
+
+          {/* Home Page Cards */}
+          <Link href="/admin/homepage-cards">
+            <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-8 cursor-pointer h-full">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Home Page Cards
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Manage Career Guidance, Test Prep, Study Destinations, and Popular Courses cards displayed on the homepage.
+                  </p>
+                </div>
+                <div className="p-3 bg-amber-100 rounded-lg animate-pulse">
+                  <Sparkles className="w-6 h-6 text-amber-600" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="w-full">
+                  Manage Home Page Cards
                 </Button>
               </div>
             </div>

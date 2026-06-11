@@ -240,7 +240,7 @@ export default function UniversityDetailsPage() {
                             {/* Mobile Apply Button (Call to Action) */}
                             <div className="hidden md:flex items-center ml-8">
                                 <Link
-                                    href="/contact"
+                                    href={`/contact?service=${encodeURIComponent("Educational Consultancy")}&university=${encodeURIComponent(university.universityName)}&country=${encodeURIComponent(university.country)}&sourcePage=${encodeURIComponent(`University Page - ${university.universityName}`)}`}
                                     className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5"
                                 >
                                     Apply Now

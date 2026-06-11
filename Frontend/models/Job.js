@@ -53,9 +53,18 @@ const jobSchema = new mongoose.Schema(
             type: String, // Company logo image URL
             trim: true,
         },
+        category: {
+            type: String, // "Domestic" or "Overseas"
+            enum: ["Domestic", "Overseas"],
+            default: "Domestic",
+        },
         isActive: {
             type: Boolean,
             default: true,
+        },
+        isFeatured: {
+            type: Boolean,
+            default: false,
         },
     },
     {

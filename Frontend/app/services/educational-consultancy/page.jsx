@@ -138,7 +138,7 @@ export default function EducationalConsultancyPage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Get expert guidance for your educational journey. Schedule a consultation with our education experts today.
           </p>
-          <Link href="/contact">
+          <Link href={`/contact?service=${encodeURIComponent("Educational Consultancy")}`}>
             <Button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg">
               Consult an Expert <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

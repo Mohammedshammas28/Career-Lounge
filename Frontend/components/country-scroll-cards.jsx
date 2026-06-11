@@ -3,13 +3,43 @@
 import { useRef, useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { countries } from "../data/countries"
+import Link from "next/link"
+
+// Fallback static data (same countries as before)
+const STATIC_DESTINATIONS = [
+  { title: "Australia", image: "https://flagcdn.com/w320/au.png", buttonLink: "/universities?country=Australia", description: "Top academic programs with pathways to permanent residency and work permits.", totalUniversities: 43 },
+  { title: "Canada", image: "https://flagcdn.com/w320/ca.png", buttonLink: "/universities?country=Canada", description: "World-class education with affordable tuition fees and post-study work options.", totalUniversities: 96 },
+  { title: "United Kingdom", image: "https://flagcdn.com/w320/gb.png", buttonLink: "/universities?country=UK", description: "Prestigious universities with high-quality education and graduate visa options.", totalUniversities: 160 },
+  { title: "United States", image: "https://flagcdn.com/w320/us.png", buttonLink: "/universities?country=USA", description: "Unmatched research opportunities and diverse academic programs.", totalUniversities: 4000 },
+  { title: "Germany", image: "https://flagcdn.com/w320/de.png", buttonLink: "/universities?country=Germany", description: "World-leading engineering courses with little to no tuition fees.", totalUniversities: 380 },
+]
 
 export function CountryScrollCards() {
   const railRef = useRef(null)
   const autoplayRef = useRef(null)
   const interactionTimeoutRef = useRef(null)
   const [isPaused, setIsPaused] = useState(false)
+  const [destinations, setDestinations] = useState(STATIC_DESTINATIONS)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Fetch study-destination cards from API
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        const res = await fetch("/api/homepage-cards?type=study-destination")
+        const result = await res.json()
+        if (result.success && result.data && result.data.length > 0) {
+          setDestinations(result.data)
+        }
+      } catch (err) {
+        console.error("Error fetching study destinations:", err)
+        // silently fall back to static data
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchDestinations()
+  }, [])
 
   const scroll = (direction) => {
     if (!railRef.current) return
@@ -17,10 +47,6 @@ export function CountryScrollCards() {
       left: direction === "left" ? -340 : 340,
       behavior: "smooth",
     })
-  }
-
-  const goToCountry = (country) => {
-    window.location.href = `/universities?country=${encodeURIComponent(country.filterValue)}`
   }
 
   useEffect(() => {
@@ -36,9 +62,9 @@ export function CountryScrollCards() {
         if (isPaused || !rail) return
         const maxScrollLeft = rail.scrollWidth - rail.clientWidth
         if (rail.scrollLeft >= maxScrollLeft - 10) {
-          rail.scrollTo({ left: 0, behavior: 'smooth' })
+          rail.scrollTo({ left: 0, behavior: "smooth" })
         } else {
-          rail.scrollBy({ left: step, behavior: 'smooth' })
+          rail.scrollBy({ left: step, behavior: "smooth" })
         }
       }, intervalMs)
     }
@@ -59,20 +85,20 @@ export function CountryScrollCards() {
       interactionTimeoutRef.current = setTimeout(() => setIsPaused(false), 3000)
     }
 
-    rail.addEventListener('mouseenter', handleMouseEnter)
-    rail.addEventListener('mouseleave', handleMouseLeave)
-    rail.addEventListener('touchstart', handleUserInteraction, { passive: true })
-    rail.addEventListener('scroll', handleUserInteraction, { passive: true })
+    rail.addEventListener("mouseenter", handleMouseEnter)
+    rail.addEventListener("mouseleave", handleMouseLeave)
+    rail.addEventListener("touchstart", handleUserInteraction, { passive: true })
+    rail.addEventListener("scroll", handleUserInteraction, { passive: true })
 
     startAutoplay()
 
     return () => {
       stopAutoplay()
       if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current)
-      rail.removeEventListener('mouseenter', handleMouseEnter)
-      rail.removeEventListener('mouseleave', handleMouseLeave)
-      rail.removeEventListener('touchstart', handleUserInteraction)
-      rail.removeEventListener('scroll', handleUserInteraction)
+      rail.removeEventListener("mouseenter", handleMouseEnter)
+      rail.removeEventListener("mouseleave", handleMouseLeave)
+      rail.removeEventListener("touchstart", handleUserInteraction)
+      rail.removeEventListener("scroll", handleUserInteraction)
     }
   }, [isPaused])
 
@@ -86,7 +112,6 @@ export function CountryScrollCards() {
               Countries You Can Study In
             </h2>
           </div>
-
         </div>
 
         <div className="flex items-center gap-3">
@@ -100,50 +125,61 @@ export function CountryScrollCards() {
           </button>
 
           <div className="flex flex-1 overflow-hidden">
-            <div ref={railRef} className="flex gap-6 overflow-x-auto pb-6 scroll-smooth no-scrollbar" style={{ marginBottom: '-16px' }}>
-              {countries.map((country) => (
+            <div
+              ref={railRef}
+              className="flex gap-5 overflow-x-auto pb-4 scroll-smooth no-scrollbar"
+            >
+              {destinations.map((dest, idx) => (
                 <div
-                  key={country.name}
-                  className="min-w-[100%] md:min-w-[calc(33.333%-16px)] lg:min-w-[calc(20%-19px)] flex-shrink-0"
+                  key={dest._id || dest.title}
+                  className="min-w-[85%] sm:min-w-[calc(50%-10px)] md:min-w-[calc(33.333%-14px)] lg:min-w-[calc(20%-16px)] flex-shrink-0"
                 >
                   <motion.article
-                    whileHover={{ y: -12 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    onClick={() => goToCountry(country)}
-                    className="group relative h-full cursor-pointer rounded-[28px] bg-transparent p-4 sm:p-5 border border-border/40"
+                    whileHover={{ y: -10 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    className="group relative flex h-full flex-col cursor-pointer rounded-[24px] bg-white border border-border/40 shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+                    onClick={() => dest.buttonLink && (window.location.href = dest.buttonLink)}
                   >
-                    <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-blue-500/0 via-purple-500/0 to-blue-500/0 transition-all duration-400 group-hover:from-blue-500/10 group-hover:via-purple-500/5 group-hover:to-blue-500/10" />
-                    <div className="relative z-10 flex h-full flex-col items-center text-center">
-                      <div className="flag flex h-[104px] w-full items-center justify-center overflow-hidden rounded-2xl bg-white/85 shadow-[0_10px_24px_rgba(59,130,246,0.12)] backdrop-blur transition-all duration-400 group-hover:shadow-[0_16px_32px_rgba(59,130,246,0.22)]">
-                        <img
-                          src={country.flag}
-                          alt={`${country.name} flag`}
-                          className="h-full w-full object-cover object-center transition-transform duration-400 group-hover:scale-[1.04]"
-                        />
-                      </div>
+                    {/* Flag image — fixed height, object-cover */}
+                    <div className="relative h-[140px] w-full overflow-hidden bg-slate-100 flex-shrink-0">
+                      <img
+                        src={dest.image}
+                        alt={`${dest.title} flag`}
+                        className="h-full w-full object-cover object-center transition-transform duration-400 group-hover:scale-[1.05]"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none"
+                        }}
+                      />
+                      {/* Gradient overlay */}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                    </div>
 
-                      <h3 className="mt-5 text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-blue-700">
-                        {country.name}
+                    {/* Card body */}
+                    <div className="flex flex-1 flex-col items-center text-center p-5">
+                      <h3 className="text-base font-bold text-foreground transition-colors duration-300 group-hover:text-primary leading-tight">
+                        {dest.title}
                       </h3>
 
-                      <div className="mt-4 flex flex-wrap justify-center gap-2">
-                        {country.highlights.map((highlight) => (
-                          <span
-                            key={highlight}
-                            className="rounded-full border border-border/60 bg-white/70 px-3 py-1 text-[11px] font-medium text-slate-700"
-                          >
-                            {highlight}
-                          </span>
-                        ))}
-                      </div>
+                      {dest.totalUniversities > 0 && (
+                        <span className="mt-1.5 text-xs font-semibold text-muted-foreground">
+                          {dest.totalUniversities.toLocaleString()}+ Universities
+                        </span>
+                      )}
 
-                      <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-transform duration-300 group-hover:translate-x-1">
-                        Explore Programs
+                      {dest.description && (
+                        <p className="mt-3 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+                          {dest.description}
+                        </p>
+                      )}
+
+                      <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-primary transition-transform duration-300 group-hover:translate-x-1">
+                        {dest.buttonText || "Explore Programs"}
                         <span aria-hidden="true">→</span>
                       </div>
                     </div>
 
-                    <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-border/50 transition-all duration-400 group-hover:ring-primary/30" />
+                    {/* Hover ring */}
+                    <div className="pointer-events-none absolute inset-0 rounded-[24px] ring-1 ring-border/30 transition-all duration-300 group-hover:ring-primary/30" />
                   </motion.article>
                 </div>
               ))}

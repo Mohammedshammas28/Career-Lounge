@@ -184,7 +184,7 @@ export default function ImmigrationPage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Let our immigration experts assess your options and guide you through the process.
           </p>
-          <Link href="/contact">
+          <Link href={`/contact?service=${encodeURIComponent("Immigration Services")}`}>
             <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg">
               Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

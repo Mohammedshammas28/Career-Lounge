@@ -2,11 +2,16 @@
 
 import { Header } from "@/components/header"
 import Link from "next/link"
-import { GraduationCap, CheckCircle, ArrowRight, Globe, Home } from "lucide-react"
+import { GraduationCap, CheckCircle, ArrowRight, Home, MapPin, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Footer } from "@/components/footer"
+import { useEffect, useState } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function DomesticEducationPage() {
+    const [universities, setUniversities] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
     const features = [
         {
             title: "Wide Range of Programs",
@@ -24,6 +29,37 @@ export default function DomesticEducationPage() {
             icon: ArrowRight
         }
     ]
+
+    useEffect(() => {
+        const fetchUniversities = async () => {
+            try {
+                setIsLoading(true)
+                const response = await fetch("/api/universities", {
+                    cache: "no-store",
+                    headers: {
+                        "Cache-Control": "no-cache",
+                        "Pragma": "no-cache",
+                        "Expires": "0",
+                    },
+                })
+
+                if (!response.ok) throw new Error("Failed to fetch universities")
+
+                const result = await response.json()
+                const data = result.data || result.universities || []
+                
+                // Filter out only Domestic Universities
+                const domesticUnis = data.filter(uni => uni.category === "Domestic")
+                setUniversities(domesticUnis)
+            } catch (err) {
+                console.error("Error fetching universities:", err)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchUniversities()
+    }, [])
 
     return (
         <main className="min-h-screen bg-background">
@@ -108,8 +144,103 @@ export default function DomesticEducationPage() {
                 </div>
             </section>
 
-            {/* Programs Section */}
+            {/* Top Universities Dynamic Section */}
             <section className="py-16 lg:py-24">
+                <div className="mx-auto max-w-7xl px-6 lg:px-8">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold text-foreground mb-4">India's Top Universities</h2>
+                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                            We help students explore opportunities at India's leading universities, ensuring the best academic pathway for a successful future.
+                        </p>
+                    </div>
+
+                    {isLoading ? (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <div key={i} className="rounded-[1.5rem] border border-border overflow-hidden bg-white shadow-sm p-8">
+                                    <Skeleton className="h-24 w-24 rounded-full mx-auto mb-6" />
+                                    <Skeleton className="h-6 w-3/4 mx-auto mb-4" />
+                                    <Skeleton className="h-4 w-2/3 mx-auto mb-8" />
+                                    <div className="flex gap-2">
+                                        <Skeleton className="h-11 flex-1 rounded-xl" />
+                                        <Skeleton className="h-11 flex-1 rounded-xl" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : universities.length === 0 ? (
+                        <div className="text-center py-16 bg-secondary/20 rounded-2xl border border-border/50">
+                            <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                            <h3 className="text-xl font-semibold text-foreground mb-2">No Universities Currently Available</h3>
+                            <p className="text-muted-foreground max-w-md mx-auto">
+                                We are currently updating our partner institutions in India. Please contact us directly for opportunities.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            {universities.map((uni) => (
+                                <div
+                                    key={uni._id || uni.slug}
+                                    className="bg-white rounded-[1.5rem] p-8 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col items-center text-center group"
+                                >
+                                    {/* University Logo */}
+                                    <div className="w-full h-32 flex items-center justify-center mb-6">
+                                        {uni.logo ? (
+                                            <img
+                                                src={uni.logo}
+                                                alt={uni.universityName}
+                                                className="max-h-24 max-w-[80%] object-contain"
+                                            />
+                                        ) : (
+                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center">
+                                                <Home className="w-8 h-8 text-slate-300" />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Divider (Thin) */}
+                                    <div className="w-full h-px bg-slate-100 mb-6" />
+
+                                    {/* Name & Location */}
+                                    <h3 className="text-lg font-bold text-slate-900 mb-2 min-h-[3rem] line-clamp-2 leading-tight">
+                                        {uni.universityName}
+                                    </h3>
+                                    <p className="text-sm text-slate-600 font-medium mb-4 h-10 line-clamp-2">
+                                        {uni.city && `${uni.city}, `}{uni.country}
+                                    </p>
+
+                                    {/* Website */}
+                                    <p className="text-[12px] text-slate-500 font-medium mb-8 truncate w-full">
+                                        {uni.website ? uni.website.replace(/^https?:\/\/(www\.)?/, "") : "No website available"}
+                                    </p>
+
+                                    {/* Action Buttons */}
+                                    <div className="grid grid-cols-2 gap-3 w-full mt-auto">
+                                        <Link href={`/university/${uni.slug || uni._id}`} className="w-full">
+                                            <Button
+                                                variant="outline"
+                                                className="w-full rounded-xl border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 h-11 text-xs font-bold"
+                                            >
+                                                Know More
+                                            </Button>
+                                        </Link>
+                                        <Link href={`/contact?service=${encodeURIComponent("Domestic Education")}&university=${encodeURIComponent(uni.universityName)}&country=${encodeURIComponent(uni.country || "India")}&sourcePage=${encodeURIComponent(`University Listing - ${uni.universityName}`)}`} className="w-full">
+                                            <Button
+                                                className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 h-11 text-xs font-bold"
+                                            >
+                                                Apply Now
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* Programs Section */}
+            <section className="py-16 lg:py-24 bg-secondary/30">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <h2 className="text-3xl font-bold text-foreground mb-12 text-center">Programs We Support</h2>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -125,37 +256,10 @@ export default function DomesticEducationPage() {
                         ].map((program, index) => (
                             <div
                                 key={index}
-                                className="flex items-center p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-all"
+                                className="flex items-center p-4 rounded-lg bg-background hover:bg-secondary/50 transition-all border border-border hover:border-primary/50"
                             >
                                 <CheckCircle className="h-5 w-5 text-blue-400 mr-3 flex-shrink-0" />
                                 <span className="text-foreground">{program}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Top Universities Section */}
-            <section className="py-16 lg:py-24 bg-secondary/30">
-                <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                    <h2 className="text-3xl font-bold text-foreground mb-12 text-center">India's Top Universities</h2>
-                    <p className="text-lg text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
-                        We also help students explore opportunities at India's top universities as well as international university campuses located in India, ensuring the best academic pathway for a successful future.
-                    </p>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {[
-                            "IIT Delhi",
-                            "IIT Mumbai",
-                            "Delhi University",
-                            "Mumbai University",
-                            "Bangalore University",
-                            "Anna University"
-                        ].map((university, index) => (
-                            <div
-                                key={index}
-                                className="p-6 rounded-lg border border-border hover:border-primary/50 transition-all hover:shadow-lg bg-background"
-                            >
-                                <h3 className="font-semibold text-foreground">{university}</h3>
                             </div>
                         ))}
                     </div>
@@ -170,7 +274,7 @@ export default function DomesticEducationPage() {
                         Connect with our educational consultants to explore your options and secure admission in your dream college.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/contact">
+                        <Link href={`/contact?service=${encodeURIComponent("Domestic Education")}`}>
                             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg">
                                 Schedule Consultation
                             </Button>

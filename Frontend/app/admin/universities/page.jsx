@@ -66,6 +66,7 @@ export default function UniversitiesAdminPage() {
 
     const [formData, setFormData] = useState({
         universityName: "",
+        category: "Overseas",
         country: "",
         city: "",
         overview: "",
@@ -94,6 +95,7 @@ export default function UniversitiesAdminPage() {
         scholarships: [],
         intakes: [],
         courses: [],
+        coursesOffered: [],
     });
 
     // Fetch universities
@@ -345,6 +347,7 @@ export default function UniversitiesAdminPage() {
                 applyDeadline: formatDateForInput(intake.applyDeadline),
             })),
             courses: university.courses || [],
+            coursesOffered: university.coursesOffered || [],
         });
         setActiveFormTab("basic");
         setIsDialogOpen(true);
@@ -400,6 +403,7 @@ export default function UniversitiesAdminPage() {
             scholarships: [],
             intakes: [],
             courses: [],
+            coursesOffered: [],
         });
         setActiveFormTab("basic");
     };
@@ -487,7 +491,19 @@ export default function UniversitiesAdminPage() {
                                                 />
                                             </div>
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-700">Category</label>
+                                                    <select
+                                                        name="category"
+                                                        value={formData.category}
+                                                        onChange={handleInputChange}
+                                                        className="w-full h-10 px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                    >
+                                                        <option value="Overseas">Overseas</option>
+                                                        <option value="Domestic">Domestic</option>
+                                                    </select>
+                                                </div>
                                                 <div className="space-y-1.5">
                                                     <label className="text-xs font-bold text-slate-700">Country</label>
                                                     <Input
@@ -555,6 +571,42 @@ export default function UniversitiesAdminPage() {
                                                         className="rounded-lg border-slate-200"
                                                     />
                                                 </div>
+                                            </div>
+
+                                            {/* Courses Offered — Tags Input */}
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold text-slate-700">
+                                                    Courses Offered{" "}
+                                                    <span className="text-slate-400 font-normal">(used for filtering — e.g. Engineering, Medicine)</span>
+                                                </label>
+                                                <div className="flex flex-wrap gap-2 p-3 min-h-[44px] rounded-lg border border-slate-200 bg-white">
+                                                    {(formData.coursesOffered || []).map((course, i) => (
+                                                        <span key={i} className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1 text-xs font-semibold">
+                                                            {course}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setFormData((prev) => ({ ...prev, coursesOffered: prev.coursesOffered.filter((_, ci) => ci !== i) }))}
+                                                                className="ml-0.5 text-blue-400 hover:text-rose-500 transition-colors"
+                                                            >✕</button>
+                                                        </span>
+                                                    ))}
+                                                    <input
+                                                        type="text"
+                                                        placeholder={formData.coursesOffered?.length > 0 ? "Add more..." : "Type and press Enter (e.g. Engineering)"}
+                                                        className="flex-1 min-w-[140px] outline-none text-xs text-slate-700 placeholder:text-slate-400 bg-transparent"
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter" || e.key === ",") {
+                                                                e.preventDefault();
+                                                                const val = e.currentTarget.value.trim();
+                                                                if (val && !(formData.coursesOffered || []).includes(val)) {
+                                                                    setFormData((prev) => ({ ...prev, coursesOffered: [...(prev.coursesOffered || []), val] }));
+                                                                }
+                                                                e.currentTarget.value = "";
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                                <p className="text-[10px] text-slate-400">Press Enter or comma to add each course category. Used for filtering on the universities page.</p>
                                             </div>
                                         </div>
                                     )}

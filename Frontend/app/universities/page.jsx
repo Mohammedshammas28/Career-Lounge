@@ -23,9 +23,11 @@ export default function UniversitiesPage() {
   const [filteredUniversities, setFilteredUniversities] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
+  const [selectedCourse, setSelectedCourse] = useState("All Courses");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
+  const [coursesList, setCoursesList] = useState([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -44,6 +46,11 @@ export default function UniversitiesPage() {
             ...new Set(result.data.map((uni) => uni.country)),
           ].filter(Boolean);
           setCountries(uniqueCountries.sort());
+
+          // Build unique courses list
+          const allCourses = result.data.flatMap((uni) => uni.coursesOffered || []);
+          const uniqueCourses = [...new Set(allCourses)].filter(Boolean).sort();
+          setCoursesList(uniqueCourses);
         } else {
           setError("Failed to load universities");
         }
@@ -81,7 +88,6 @@ export default function UniversitiesPage() {
       filtered = filtered.filter((uni) => {
         const universityCountry = (uni.country || "").toLowerCase();
         const selected = selectedCountry.toLowerCase();
-
         return (
           universityCountry === selected ||
           universityCountry.includes(selected) ||
@@ -90,8 +96,16 @@ export default function UniversitiesPage() {
       });
     }
 
+    if (selectedCourse && selectedCourse !== "All Courses") {
+      filtered = filtered.filter((uni) =>
+        (uni.coursesOffered || []).some(
+          (c) => c.toLowerCase() === selectedCourse.toLowerCase()
+        )
+      );
+    }
+
     setFilteredUniversities(filtered);
-  }, [searchQuery, selectedCountry, universities]);
+  }, [searchQuery, selectedCountry, selectedCourse, universities]);
 
   const handleViewDetails = (slug) => {
     router.push(`/university/${slug}`);
@@ -151,22 +165,46 @@ export default function UniversitiesPage() {
       <div className="relative -mt-32 pb-20 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Centered Country Selector (Prominent) */}
-          <div className="max-w-2xl mx-auto bg-white rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-16">
-            <h3 className="text-2xl font-bold text-slate-800 text-center mb-6">Select Country</h3>
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-full h-16 bg-white border-slate-200 rounded-xl shadow-sm text-lg text-slate-700 px-6 focus:ring-4 focus:ring-blue-500/10">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All Countries">All</SelectItem>
-                {countries.map((country) => (
-                  <SelectItem key={country} value={country}>
-                    {country}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Filters Row: Country + Course */}
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-16">
+            <h3 className="text-xl font-bold text-slate-800 text-center mb-5">Filter Universities</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Country Filter */}
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 block">Study Destination</label>
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                  <SelectTrigger className="w-full h-12 bg-white border-slate-200 rounded-xl shadow-sm text-base text-slate-700 px-4 focus:ring-4 focus:ring-blue-500/10">
+                    <SelectValue placeholder="All Countries" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All Countries">All Countries</SelectItem>
+                    {countries.map((country) => (
+                      <SelectItem key={country} value={country}>
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Course Offered Filter */}
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 block">Course / Discipline</label>
+                <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                  <SelectTrigger className="w-full h-12 bg-white border-slate-200 rounded-xl shadow-sm text-base text-slate-700 px-4 focus:ring-4 focus:ring-blue-500/10">
+                    <SelectValue placeholder="All Courses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All Courses">All Courses</SelectItem>
+                    {coursesList.map((course) => (
+                      <SelectItem key={course} value={course}>
+                        {course}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
 
           {/* Results Summary and Search Row */}

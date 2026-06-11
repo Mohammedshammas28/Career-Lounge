@@ -35,10 +35,21 @@ export function JobCard({ job }) {
         {job.company}
       </p>
 
-      {/* Job Type Badge */}
-      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/20 mb-6">
-        {job.type || "Full-time"}
-      </span>
+      {/* Job Type & Category Badges */}
+      <div className="flex flex-wrap gap-2 justify-center mb-6">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/20">
+          {job.type || "Full-time"}
+        </span>
+        {job.category && (
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${
+            job.category === "Overseas"
+              ? "bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 border-violet-100 dark:border-violet-900/20"
+              : "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/20"
+          }`}>
+            {job.category === "Overseas" ? "✈️ Overseas" : "🏠 Domestic"}
+          </span>
+        )}
+      </div>
 
       {/* Job Details Meta */}
       <div className="w-full space-y-2.5 text-left mb-8 mt-auto">
@@ -70,7 +81,10 @@ export function JobCard({ job }) {
             Know More
           </Button>
         </Link>
-        <Link href={`/contact?job=${job.slug || job._id}`} className="w-full">
+        <Link 
+          href={`/contact?service=${encodeURIComponent(job.category === "Overseas" ? "Overseas Recruitment" : "Domestic Recruitment")}&jobTitle=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}&sourcePage=${encodeURIComponent("Job Listing - " + job.title)}`} 
+          className="w-full"
+        >
           <Button
             className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 dark:shadow-none h-11 text-xs font-bold"
           >

@@ -53,8 +53,12 @@ export default function OverseasEducationPage() {
 
         const result = await response.json()
         const data = result.data || result.universities || []
-        setUniversities(data)
-        setFilteredUniversities(data)
+        
+        // Filter out only Overseas Universities
+        const overseasUnis = data.filter(uni => uni.category === "Overseas" || !uni.category); // Default to overseas if no category to prevent empty state during migration
+
+        setUniversities(overseasUnis)
+        setFilteredUniversities(overseasUnis)
       } catch (err) {
         console.error("Error fetching universities:", err)
       } finally {
@@ -327,7 +331,7 @@ export default function OverseasEducationPage() {
             Connect with our educational consultants to explore universities worldwide and kickstart your international education journey.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact">
+            <Link href={`/contact?service=${encodeURIComponent("Overseas Education")}`}>
               <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg">
                 Schedule Consultation
               </Button>

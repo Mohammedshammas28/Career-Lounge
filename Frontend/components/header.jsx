@@ -113,12 +113,7 @@ export function Header() {
                       <div
                         className="absolute left-full top-0 ml-2 w-56 bg-popover border border-border rounded-md shadow-lg p-1 z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                       >
-                        <Link
-                          href="/services/career-counselling/overview"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
-                        >
-                          Overview
-                        </Link>
+
                         <Link
                           href="/services/career-counselling/test-preparation"
                           className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
@@ -168,9 +163,34 @@ export function Header() {
                     <DropdownMenuItem asChild>
                       <Link href="/services/immigration">Immigration</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/services/recruitment">Recruitment</Link>
-                    </DropdownMenuItem>
+
+                    {/* Recruitment with Submenu */}
+                    <DropdownMenuSeparator />
+                    <div className="relative group">
+                      <button
+                        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent transition-colors"
+                      >
+                        <span>Recruitment</span>
+                        <ChevronDown className="h-4 w-4 group-hover:rotate-90 transition-transform" />
+                      </button>
+                      <div
+                        className="absolute left-full top-0 ml-2 w-52 bg-popover border border-border rounded-md shadow-lg p-1 z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                      >
+
+                        <Link
+                          href="/services/recruitment/domestic"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          🏠 Domestic
+                        </Link>
+                        <Link
+                          href="/services/recruitment/overseas"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                        >
+                          ✈️ Overseas
+                        </Link>
+                      </div>
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
               );
@@ -260,9 +280,7 @@ export function Header() {
                           <div className="py-1">
                             <span className="block px-2 py-1 text-xs font-semibold text-muted-foreground uppercase">Career Counselling</span>
                             <div className="pl-2 flex flex-col gap-0.5 mt-1">
-                              <Link href="/services/career-counselling/overview" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
-                                Overview
-                              </Link>
+
                               <Link href="/services/career-counselling/test-preparation" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
                                 Test Preparation
                               </Link>
@@ -291,9 +309,18 @@ export function Header() {
                           </Link>
 
                           {/* Recruitment */}
-                          <Link href="/services/recruitment" className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
-                            Recruitment
-                          </Link>
+                          <div className="py-1 border-t border-border/20 mt-1">
+                            <span className="block px-2 py-1 text-xs font-semibold text-muted-foreground uppercase">Recruitment</span>
+                            <div className="pl-2 flex flex-col gap-0.5 mt-1">
+
+                              <Link href="/services/recruitment/domestic" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                🏠 Domestic
+                              </Link>
+                              <Link href="/services/recruitment/overseas" className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-secondary/50 transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                ✈️ Overseas
+                              </Link>
+                            </div>
+                          </div>
                         </div>
                       </details>
                     </div>

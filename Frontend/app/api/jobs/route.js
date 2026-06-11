@@ -102,16 +102,21 @@ export async function GET(req) {
 
         const { searchParams } = new URL(req.url);
         const includeInactive = searchParams.get("all") === "true";
+        const categoryFilter = searchParams.get("category"); // "Domestic" | "Overseas" | null
 
-        let jobs = [];
-        if (includeInactive) {
-            jobs = await Job.find().sort({ createdAt: -1 });
-        } else {
-            jobs = await Job.find({ isActive: true }).sort({ createdAt: -1 });
+        let query = {};
+        if (!includeInactive) {
+            query.isActive = true;
+        }
+        if (categoryFilter && categoryFilter !== "All") {
+            query.category = categoryFilter;
         }
 
-        // If no jobs exist, seed with default jobs
-        if (jobs.length === 0) {
+        let jobs = await Job.find(query).sort({ createdAt: -1 });
+
+        // If no jobs exist at all, seed with default jobs
+        const totalJobs = await Job.countDocuments();
+        if (totalJobs === 0) {
             console.log("🌱 No jobs found. Seeding default jobs...");
             const seeded = [];
             for (const item of DEFAULT_JOBS) {
@@ -123,11 +128,12 @@ export async function GET(req) {
                 const job = new Job({
                     ...item,
                     slug,
+                    category: item.category || "Domestic",
                 });
                 await job.save();
                 seeded.push(job);
             }
-            jobs = seeded.sort((a, b) => b.createdAt - a.createdAt);
+            jobs = seeded.filter(j => !categoryFilter || j.category === categoryFilter).sort((a, b) => b.createdAt - a.createdAt);
         }
 
         return Response.json(

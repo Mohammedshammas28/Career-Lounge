@@ -27,6 +27,7 @@ export default function JobsPage() {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All Types");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
@@ -73,8 +74,14 @@ export default function JobsPage() {
       );
     }
 
+    if (selectedCategory && selectedCategory !== "All") {
+      filtered = filtered.filter(
+        (job) => (job.category || "Domestic") === selectedCategory
+      );
+    }
+
     setFilteredJobs(filtered);
-  }, [searchQuery, selectedType, jobs]);
+  }, [searchQuery, selectedType, selectedCategory, jobs]);
 
   const handleViewDetails = (slug) => {
     router.push(`/jobs/${slug}`);
@@ -154,7 +161,7 @@ export default function JobsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Filter Card */}
-          <div className="max-w-2xl mx-auto bg-white rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-16">
+          <div className="max-w-2xl mx-auto bg-white rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-8">
             <h3 className="text-2xl font-bold text-slate-800 text-center mb-6">Filter by Job Type</h3>
             <Select value={selectedType} onValueChange={setSelectedType}>
               <SelectTrigger className="w-full h-16 bg-white border-slate-200 rounded-xl shadow-sm text-lg text-slate-700 px-6 focus:ring-4 focus:ring-blue-500/10">
@@ -168,6 +175,27 @@ export default function JobsPage() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex gap-3 justify-center mb-12 flex-wrap">
+            {["All", "Domestic", "Overseas"].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-5 py-2 rounded-full text-sm font-bold border transition-all ${
+                  selectedCategory === cat
+                    ? cat === "Overseas"
+                      ? "bg-violet-600 text-white border-violet-600 shadow-md shadow-violet-200"
+                      : cat === "Domestic"
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-200"
+                      : "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
+                    : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50 shadow-sm"
+                }`}
+              >
+                {cat === "Domestic" ? "🏠 Domestic" : cat === "Overseas" ? "✈️ Overseas" : "All Jobs"}
+              </button>
+            ))}
           </div>
 
           {/* Search Row */}

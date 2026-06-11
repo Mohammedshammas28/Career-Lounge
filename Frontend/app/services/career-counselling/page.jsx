@@ -137,7 +137,7 @@ export default function CareerCounsellingPage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Start your journey toward professional excellence today. Schedule a free consultation call with our career experts.
           </p>
-          <Link href="/contact">
+          <Link href={`/contact?service=${encodeURIComponent("Career Counselling")}`}>
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
               Schedule Free Consultation <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

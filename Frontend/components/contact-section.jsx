@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -39,8 +39,10 @@ const CONTACT_INFO = [
 const SERVICE_OPTIONS = [
   { value: "Career Counselling", label: "Career Counselling" },
   { value: "Immigration Services", label: "Immigration Services" },
-  { value: "Recruitment Services", label: "Recruitment Services" },
-  { value: "Educational Consultancy", label: "Educational Consultancy" },
+  { value: "Domestic Education", label: "Domestic Education" },
+  { value: "Overseas Education", label: "Overseas Education" },
+  { value: "Domestic Recruitment", label: "Domestic Recruitment" },
+  { value: "Overseas Recruitment", label: "Overseas Recruitment" },
   { value: "Other", label: "Other" },
 ]
 
@@ -49,12 +51,12 @@ const FORM_FIELDS = [
   { name: "lastName", label: "Last Name", placeholder: "Doe", delay: "0.45s" },
 ]
 
-function FormField({ label, name, placeholder, value, onChange, delay, isTextarea = false }) {
+function FormField({ label, name, placeholder, value, onChange, delay, isTextarea = false, required = true }) {
   const Component = isTextarea ? Textarea : Input
   return (
     <div className="animate-fadeInUp" style={{ animation: `fadeInUp 0.6s ease-out ${delay} both` }}>
       <label htmlFor={name} className="block text-sm font-semibold text-foreground mb-2">
-        {label} <span className="text-primary">*</span>
+        {label} {required && <span className="text-primary">*</span>}
       </label>
       <Component
         id={name}
@@ -64,7 +66,7 @@ function FormField({ label, name, placeholder, value, onChange, delay, isTextare
         onChange={onChange}
         className="w-full bg-secondary/30 border border-border/60 hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all rounded-lg px-4 py-2.5"
         {...(isTextarea && { rows: 5 })}
-        required
+        required={required}
       />
     </div>
   )
@@ -120,18 +122,56 @@ function SuccessDialog({ isOpen, onClose, firstName, email }) {
   )
 }
 
-// Rewritten form component with improved structure
-export function ContactSection() {
+// Rewritten form component with improved structure and smart prefilling
+export function ContactSection({ searchParams }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     serviceType: "",
     message: "",
+    sourcePage: "",
+    sourceUrl: "",
+    referrer: "",
+    contextData: {}
   })
+  
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const { toast } = useToast()
+
+  // Smart Prefilling Logic
+  useEffect(() => {
+    if (typeof window === "undefined" || !searchParams) return;
+
+    let initialMessage = "";
+    let contextData = {};
+    
+    // Check specific parameters that might have been passed
+    const university = searchParams.university;
+    const course = searchParams.course;
+    const jobTitle = searchParams.jobTitle;
+    const company = searchParams.company;
+
+    if (university) {
+      initialMessage = `I am interested in applying to ${university}${course ? ` for the ${course} program` : ""}. Please provide more details.`;
+      contextData = { university, course };
+    } else if (jobTitle) {
+      initialMessage = `I am interested in applying for the ${jobTitle} position${company ? ` at ${company}` : ""}.`;
+      contextData = { jobTitle, company };
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      serviceType: searchParams.service || "",
+      message: prev.message || initialMessage,
+      sourceUrl: window.location.href,
+      sourcePage: searchParams.sourcePage || document.title,
+      referrer: document.referrer,
+      contextData: contextData
+    }))
+  }, [searchParams]);
 
   const validateForm = () => {
     const { firstName, lastName, email, message } = formData
@@ -173,8 +213,15 @@ export function ContactSection() {
         throw new Error(data.error || "Failed to send message")
       }
 
-      // Reset form and show success
-      setFormData({ firstName: "", lastName: "", email: "", serviceType: "", message: "" })
+      // Reset form (keep tracking params if they want to submit again)
+      setFormData(prev => ({ 
+        ...prev, 
+        firstName: "", 
+        lastName: "", 
+        email: "", 
+        phone: "",
+        message: "" 
+      }))
       setShowSuccessDialog(true)
     } catch (error) {
       console.error("Form submission error:", error)
@@ -237,15 +284,26 @@ export function ContactSection() {
                 ))}
               </div>
 
-              {/* Email */}
-              <FormField
-                name="email"
-                label="Email Address"
-                placeholder="john@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                delay="0.5s"
-              />
+              {/* Email & Phone */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <FormField
+                  name="email"
+                  label="Email Address"
+                  placeholder="john@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  delay="0.5s"
+                />
+                <FormField
+                  name="phone"
+                  label="Phone Number"
+                  placeholder="+1 (555) 000-0000"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  delay="0.5s"
+                  required={false}
+                />
+              </div>
 
               {/* Service Type */}
               <div className="animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.55s both' }}>

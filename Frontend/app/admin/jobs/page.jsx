@@ -39,6 +39,9 @@ export default function JobsAdminPage() {
     const [jobs, setJobs] = useState([]);
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [filterCategory, setFilterCategory] = useState("All");
+    const [filterFeatured, setFilterFeatured] = useState("All");
+    const [filterDate, setFilterDate] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingSlug, setEditingSlug] = useState(null);
@@ -57,7 +60,10 @@ export default function JobsAdminPage() {
         requirements: [""],
         responsibilities: [""],
         logo: "",
+        category: "Domestic",
         isActive: true,
+        isFeatured: false,
+        datePosted: new Date().toISOString().split("T")[0],
     });
 
     useEffect(() => {
@@ -80,16 +86,22 @@ export default function JobsAdminPage() {
         }
     };
 
-    // Filter jobs based on search query
+    // Filter jobs based on search query, category, featured, and date
     useEffect(() => {
         const filtered = jobs.filter(
-            (job) =>
-                (job.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (job.company || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (job.location || "").toLowerCase().includes(searchQuery.toLowerCase())
+            (job) => {
+                const matchesSearch =
+                    (job.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (job.company || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (job.location || "").toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCategory = filterCategory === "All" || (job.category || "Domestic") === filterCategory;
+                const matchesFeatured = filterFeatured === "All" || (filterFeatured === "Featured" ? !!job.isFeatured : !job.isFeatured);
+                const matchesDate = !filterDate || (job.datePosted && job.datePosted.startsWith(filterDate));
+                return matchesSearch && matchesCategory && matchesFeatured && matchesDate;
+            }
         );
         setFilteredJobs(filtered);
-    }, [searchQuery, jobs]);
+    }, [searchQuery, filterCategory, filterFeatured, filterDate, jobs]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -237,7 +249,10 @@ export default function JobsAdminPage() {
             requirements: job.requirements?.length ? job.requirements : [""],
             responsibilities: job.responsibilities?.length ? job.responsibilities : [""],
             logo: job.logo || "",
+            category: job.category || "Domestic",
             isActive: job.isActive !== undefined ? job.isActive : true,
+            isFeatured: job.isFeatured !== undefined ? job.isFeatured : false,
+            datePosted: job.datePosted ? new Date(job.datePosted).toISOString().split("T")[0] : new Date(job.createdAt || Date.now()).toISOString().split("T")[0],
         });
         setActiveFormTab("general");
         setIsDialogOpen(true);
@@ -274,7 +289,10 @@ export default function JobsAdminPage() {
             requirements: [""],
             responsibilities: [""],
             logo: "",
+            category: "Domestic",
             isActive: true,
+            isFeatured: false,
+            datePosted: new Date().toISOString().split("T")[0],
         });
         setActiveFormTab("general");
     };
@@ -425,6 +443,32 @@ export default function JobsAdminPage() {
 
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-700">Category <span className="text-rose-500">*</span></label>
+                                                    <select
+                                                        name="category"
+                                                        value={formData.category}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    >
+                                                        <option value="Domestic">🏠 Domestic</option>
+                                                        <option value="Overseas">✈️ Overseas</option>
+                                                    </select>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-700">Date Posted</label>
+                                                    <Input
+                                                        type="date"
+                                                        name="datePosted"
+                                                        value={formData.datePosted}
+                                                        onChange={handleInputChange}
+                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="space-y-1.5">
                                                     <label className="text-xs font-bold text-slate-700">Salary Package <span className="text-rose-500">*</span></label>
                                                     <Input
                                                         name="salary"
@@ -497,18 +541,32 @@ export default function JobsAdminPage() {
                                                 </div>
                                             </div>
 
-                                            {/* isActive status checkbox toggle */}
-                                            <div className="flex items-center gap-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                                <input
-                                                    type="checkbox"
-                                                    id="isActiveToggle"
-                                                    checked={formData.isActive}
-                                                    onChange={(e) => handleCheckboxChange(e.target.checked)}
-                                                    className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
-                                                />
-                                                <label htmlFor="isActiveToggle" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
-                                                    Active Listing (This job is visible and open for applications)
-                                                </label>
+                                            {/* isActive + isFeatured status toggles */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                <div className="flex items-center gap-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="isActiveToggle"
+                                                        checked={formData.isActive}
+                                                        onChange={(e) => handleCheckboxChange(e.target.checked)}
+                                                        className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
+                                                    />
+                                                    <label htmlFor="isActiveToggle" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                                                        Active Listing (visible &amp; open for applications)
+                                                    </label>
+                                                </div>
+                                                <div className="flex items-center gap-2 bg-amber-50 p-4 rounded-xl border border-amber-100">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="isFeaturedToggle"
+                                                        checked={formData.isFeatured}
+                                                        onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
+                                                        className="w-4 h-4 rounded text-amber-500 border-amber-300 focus:ring-amber-400"
+                                                    />
+                                                    <label htmlFor="isFeaturedToggle" className="text-xs font-bold text-amber-700 cursor-pointer select-none">
+                                                        ⭐ Featured Job (highlighted on listings page)
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -649,18 +707,75 @@ export default function JobsAdminPage() {
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
                     
                     {/* Search & Filter Bar */}
-                    <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50/50">
-                        <div className="relative w-full sm:max-w-md">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <Input
-                                placeholder="Search by Job title, Company, or Location..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 h-10 rounded-xl border-slate-200 bg-white shadow-sm focus:ring-blue-500"
-                            />
+                    <div className="p-6 border-b border-slate-100 flex flex-col gap-4 bg-slate-50/50">
+                        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                            <div className="relative w-full sm:max-w-md">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Input
+                                    placeholder="Search by Job title, Company, or Location..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-10 h-10 rounded-xl border-slate-200 bg-white shadow-sm focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                {/* Date Filter */}
+                                <div className="flex items-center gap-2">
+                                    <label className="text-xs font-bold text-slate-500 whitespace-nowrap">Date:</label>
+                                    <Input
+                                        type="month"
+                                        value={filterDate}
+                                        onChange={(e) => setFilterDate(e.target.value)}
+                                        className="h-9 rounded-xl border-slate-200 bg-white shadow-sm text-xs w-36 focus:ring-blue-500"
+                                    />
+                                    {filterDate && (
+                                        <button onClick={() => setFilterDate("")} className="text-slate-400 hover:text-slate-700 transition-colors">
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="text-xs font-medium text-slate-500 whitespace-nowrap">
+                                    Showing <span className="font-bold text-slate-700">{filteredJobs.length}</span> of <span className="font-bold text-slate-700">{jobs.length}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="text-xs font-medium text-slate-500">
-                            Showing <span className="font-bold text-slate-700">{filteredJobs.length}</span> of <span className="font-bold text-slate-700">{jobs.length}</span> Job opportunities
+
+                        {/* Category + Featured Filter Buttons */}
+                        <div className="flex gap-2 flex-wrap items-center">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Category:</span>
+                            {["All", "Domestic", "Overseas"].map((cat) => (
+                                <button
+                                    key={cat}
+                                    onClick={() => setFilterCategory(cat)}
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                                        filterCategory === cat
+                                            ? cat === "Overseas"
+                                                ? "bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-100"
+                                                : cat === "Domestic"
+                                                ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-100"
+                                                : "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-100"
+                                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                                    }`}
+                                >
+                                    {cat === "Domestic" ? "🏠 " : cat === "Overseas" ? "✈️ " : ""}{cat}
+                                </button>
+                            ))}
+                            <span className="ml-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Featured:</span>
+                            {["All", "Featured", "Standard"].map((f) => (
+                                <button
+                                    key={f}
+                                    onClick={() => setFilterFeatured(f)}
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                                        filterFeatured === f
+                                            ? f === "Featured"
+                                                ? "bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-100"
+                                                : "bg-slate-600 text-white border-slate-600 shadow-md shadow-slate-100"
+                                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                                    }`}
+                                >
+                                    {f === "Featured" ? "⭐ " : ""}{f}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
@@ -684,6 +799,7 @@ export default function JobsAdminPage() {
                                         <TableHead>Job Opportunity</TableHead>
                                         <TableHead>Company</TableHead>
                                         <TableHead>Location</TableHead>
+                                        <TableHead>Category</TableHead>
                                         <TableHead>Package & Exp</TableHead>
                                         <TableHead className="w-[100px] text-center">Status</TableHead>
                                         <TableHead className="w-[120px] text-right">Actions</TableHead>
@@ -706,6 +822,16 @@ export default function JobsAdminPage() {
                                                 <span className="inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase bg-blue-50 text-blue-600 border border-blue-100 mt-1">
                                                     {job.type}
                                                 </span>
+                                                {job.isFeatured && (
+                                                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-100 mt-1 ml-1">
+                                                        ⭐ Featured
+                                                    </span>
+                                                )}
+                                                {job.datePosted && (
+                                                    <div className="text-[10px] text-slate-400 font-medium mt-1">
+                                                        Posted: {new Date(job.datePosted).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                                                    </div>
+                                                )}
                                             </TableCell>
                                             <TableCell className="text-slate-600 font-medium">{job.company}</TableCell>
                                             <TableCell className="text-slate-500 text-xs font-semibold">
@@ -713,6 +839,15 @@ export default function JobsAdminPage() {
                                                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                                                     {job.location}
                                                 </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase border ${
+                                                    (job.category || "Domestic") === "Overseas"
+                                                        ? "bg-violet-50 text-violet-700 border-violet-200"
+                                                        : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                }`}>
+                                                    {(job.category || "Domestic") === "Overseas" ? "✈️" : "🏠"} {job.category || "Domestic"}
+                                                </span>
                                             </TableCell>
                                             <TableCell className="text-xs text-slate-600">
                                                 <div className="flex items-center gap-1 font-bold text-slate-700">
