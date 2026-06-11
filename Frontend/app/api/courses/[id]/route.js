@@ -48,9 +48,9 @@ export async function PATCH(req, { params }) {
             );
         }
 
-        // Generate slug from title if title is updated
-        if (body.title && !body.slug) {
-            body.slug = body.title
+        // Generate slug from courseName if courseName is updated
+        if (body.courseName && !body.slug) {
+            body.slug = body.courseName
                 .toLowerCase()
                 .replace(/\s+/g, "-")
                 .replace(/[^\w-]/g, "");

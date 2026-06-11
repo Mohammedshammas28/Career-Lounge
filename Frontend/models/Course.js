@@ -14,7 +14,7 @@ const subCourseSchema = new mongoose.Schema({
 
 const courseSchema = new mongoose.Schema(
     {
-        title: {
+        courseName: {
             type: String,
             required: true,
             trim: true,
@@ -25,17 +25,17 @@ const courseSchema = new mongoose.Schema(
             lowercase: true,
             trim: true,
         },
-        desc: String,
-        img: String,
+        description: String,
+        image: String,
         duration: String,
         fees: String,
-        level: String,
+        category: String,
         overview: String,
         requirements: String,
         opportunities: String,
         subjects: [String],
         subCourses: [subCourseSchema],
-        isActive: {
+        status: {
             type: Boolean,
             default: true,
         },
@@ -44,5 +44,21 @@ const courseSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
+
+courseSchema.pre("save", async function (next) {
+    if (this.courseName) {
+        this.courseName = this.courseName.trim().replace(/\s+/g, " ");
+    }
+    if (this.isModified("courseName")) {
+        const CourseModel = mongoose.models.Course || mongoose.model("Course");
+        const existing = await CourseModel.findOne({
+            courseName: { $regex: new RegExp(`^${this.courseName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") }
+        });
+        if (existing && existing._id.toString() !== this._id.toString()) {
+            return next(new Error(`Course with name "${this.courseName}" already exists`));
+        }
+    }
+    next();
+});
 
 export default mongoose.models.Course || mongoose.model("Course", courseSchema);

@@ -47,10 +47,26 @@ export default function UniversitiesPage() {
           ].filter(Boolean);
           setCountries(uniqueCountries.sort());
 
-          // Build unique courses list
-          const allCourses = result.data.flatMap((uni) => uni.coursesOffered || []);
-          const uniqueCourses = [...new Set(allCourses)].filter(Boolean).sort();
-          setCoursesList(uniqueCourses);
+          // Fetch courses for the filter (Priority 1)
+          let fetchedCourses = [];
+          try {
+            const coursesRes = await fetch("/api/courses");
+            const coursesResult = await coursesRes.json();
+            if (coursesResult.success && coursesResult.data?.length > 0) {
+              fetchedCourses = coursesResult.data.map(c => c.courseName).filter(Boolean);
+            }
+          } catch (cErr) {
+            console.error("Error fetching courses for filter:", cErr);
+          }
+
+          if (fetchedCourses.length > 0) {
+            setCoursesList(fetchedCourses.sort());
+          } else {
+            // Fallback (Priority 2): Extract unique course names from universities' coursesOffered
+            const allCourses = result.data.flatMap((uni) => uni.coursesOffered || []);
+            const uniqueCourses = [...new Set(allCourses)].filter(Boolean).sort();
+            setCoursesList(uniqueCourses);
+          }
         } else {
           setError("Failed to load universities");
         }
@@ -67,8 +83,12 @@ export default function UniversitiesPage() {
 
   useEffect(() => {
     const countryParam = searchParams.get("country");
+    const courseParam = searchParams.get("course");
     if (countryParam) {
       setSelectedCountry(countryParam);
+    }
+    if (courseParam) {
+      setSelectedCourse(courseParam);
     }
   }, [searchParams]);
 

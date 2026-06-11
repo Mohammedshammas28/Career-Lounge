@@ -1,13 +1,30 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Linkedin, Twitter, Instagram } from "lucide-react"
 
 export function Footer() {
+  const pathname = usePathname() || ""
+
+  const getContactHref = () => {
+    if (pathname.includes('/services/career-counselling')) return '/contact?service=Career Counselling'
+    if (pathname.includes('/services/educational-consultancy/domestic')) return '/contact?service=Domestic Education'
+    if (pathname.includes('/services/educational-consultancy/overseas')) return '/contact?service=Overseas Education'
+    if (pathname.includes('/services/educational-consultancy')) return '/contact?service=Educational Consultancy'
+    if (pathname.includes('/services/immigration')) return '/contact?service=Immigration Services'
+    if (pathname.includes('/services/recruitment/domestic')) return '/contact?service=Domestic Recruitment'
+    if (pathname.includes('/services/recruitment/overseas')) return '/contact?service=Overseas Recruitment'
+    if (pathname.includes('/services/recruitment')) return '/contact?service=Recruitment Services'
+    return '/contact'
+  }
+
   const footerLinks = {
     navigation: [
       { name: "Home", href: "/" },
       { name: "About", href: "/about" },
       { name: "Services", href: "/services" },
-      { name: "Contact", href: "/contact" },
+      { name: "Contact", href: getContactHref() },
     ],
     services: [
       { name: "Career Counselling", href: "/services/career-counselling" },

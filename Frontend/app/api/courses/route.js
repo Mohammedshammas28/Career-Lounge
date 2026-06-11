@@ -3,12 +3,12 @@ import Course from "@/models/Course";
 
 const DEFAULT_COURSES = [
     {
-        title: "Allied Health",
-        desc: "Patient care, clinical practice, and health sciences.",
-        img: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=60",
+        courseName: "Allied Health",
+        description: "Patient care, clinical practice, and health sciences.",
+        image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=60",
         duration: "3-4 Years",
         fees: "$12,000 / Year",
-        level: "Undergraduate",
+        category: "Undergraduate",
         overview: "Allied Health sciences encompass a broad range of health professions that are distinct from medicine and nursing. Professionals in this field work in patient care, clinical practice, diagnostics, and therapy. This program provides students with the critical skills required to support healthcare systems and improve patient outcomes.",
         requirements: "High school diploma or equivalent with minimum 60% grade. Core subjects in Biology and Chemistry recommended.",
         opportunities: "Healthcare Assistant, Clinical Lab Technician, Physical Therapy Aide, Health Educator, Diagnostic Specialist.",
@@ -36,15 +36,15 @@ const DEFAULT_COURSES = [
                 careerOutcomes: "Lab Technician, Pathologist Assistant, Quality Control Officer"
             }
         ],
-        isActive: true
+        status: true
     },
     {
-        title: "Commerce",
-        desc: "Business, trade, accounting, and finance fundamentals.",
-        img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=60",
+        courseName: "Commerce",
+        description: "Business, trade, accounting, and finance fundamentals.",
+        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=60",
         duration: "3 Years",
         fees: "$10,000 / Year",
-        level: "Undergraduate",
+        category: "Undergraduate",
         overview: "The Commerce program is designed to provide a comprehensive understanding of business operations, financial accounting, commerce laws, trade principles, and economics. Students learn to analyze business trends, manage financial books, and develop strategic plans for business growth in local and global markets.",
         requirements: "High school completion with mathematics/business studies background preferred.",
         opportunities: "Accountant, Financial Analyst, Auditor, Business Developer, Tax Consultant.",
@@ -65,15 +65,15 @@ const DEFAULT_COURSES = [
                 careerOutcomes: "Credit Officer, Insurance Broker, Investment Advisor"
             }
         ],
-        isActive: true
+        status: true
     },
     {
-        title: "Engineering",
-        desc: "Design, innovation, and real-world problem solving.",
-        img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=60",
+        courseName: "Engineering",
+        description: "Design, innovation, and real-world problem solving.",
+        image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=60",
         duration: "4 Years",
         fees: "$15,000 / Year",
-        level: "Undergraduate",
+        category: "Undergraduate",
         overview: "Engineering focuses on applying scientific and mathematical principles to design, manufacture, and maintain complex structures, machines, devices, systems, and processes. It is a highly analytical and creative field that drives technological advancement and solves real-world challenges.",
         requirements: "High school completion with strong performance in Physics, Chemistry, and Advanced Mathematics.",
         opportunities: "Software Engineer, Civil Engineer, Mechanical Engineer, Project Manager, Research Scientist.",
@@ -101,15 +101,15 @@ const DEFAULT_COURSES = [
                 careerOutcomes: "Structural Engineer, Site Manager, Urban Planner"
             }
         ],
-        isActive: true
+        status: true
     },
     {
-        title: "Management",
-        desc: "Strategy, operations, and data-driven decision making.",
-        img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=60",
+        courseName: "Management",
+        description: "Strategy, operations, and data-driven decision making.",
+        image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=60",
         duration: "2-3 Years",
         fees: "$14,000 / Year",
-        level: "Postgraduate",
+        category: "Postgraduate",
         overview: "The Management program focuses on leadership development, strategic planning, operations management, and data-driven decision making. It prepares students for managerial and executive roles in corporate, non-profit, and public organizations by building skills in negotiation, project coordination, and team building.",
         requirements: "Bachelor's degree in any discipline with a minimum GPA of 2.8. GMAT/GRE scores optional but preferred.",
         opportunities: "Operations Manager, Management Consultant, HR Specialist, Business Strategist, Product Manager.",
@@ -137,15 +137,15 @@ const DEFAULT_COURSES = [
                 careerOutcomes: "Hospital Administrator, Health Program Coordinator, Clinic Operations Lead"
             }
         ],
-        isActive: true
+        status: true
     },
     {
-        title: "Medicine",
-        desc: "Clinical science, diagnosis, and patient care.",
-        img: "https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=800",
+        courseName: "Medicine",
+        description: "Clinical science, diagnosis, and patient care.",
+        image: "https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=800",
         duration: "5-6 Years",
         fees: "$25,000 / Year",
-        level: "Undergraduate",
+        category: "Undergraduate",
         overview: "Medicine is a rigorous professional program that covers clinical science, pathology, pharmacology, and patient diagnosis. Students receive intensive hands-on clinical training, enabling them to diagnose illnesses, prescribe treatments, and perform medical procedures to ensure human health and well-being.",
         requirements: "Excellent academic scores in Biology, Chemistry, and Physics. Medical entrance test clearance.",
         opportunities: "General Practitioner, Resident Doctor, Medical Researcher, Hospital Administrator, Healthcare Consultant.",
@@ -166,15 +166,15 @@ const DEFAULT_COURSES = [
                 careerOutcomes: "Dentist, Dental Surgeon, Orthodontist Practitioner"
             }
         ],
-        isActive: true
+        status: true
     },
     {
-        title: "Science",
-        desc: "Core scientific principles, research, and discovery.",
-        img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=60",
+        courseName: "Science",
+        description: "Core scientific principles, research, and discovery.",
+        image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=60",
         duration: "3 Years",
         fees: "$9,000 / Year",
-        level: "Undergraduate",
+        category: "Undergraduate",
         overview: "The Science program offers a comprehensive study of fundamental sciences, fostering critical thinking, research skills, and scientific discovery. Students can choose to specialize in Biology, Chemistry, Physics, or Mathematics, conducting laboratory work and field research to expand theoretical and practical knowledge.",
         requirements: "High school completion with science subjects (Physics, Chemistry, Biology/Maths).",
         opportunities: "Research Analyst, Laboratory Manager, Quality Controller, Scientific Writer, Academician.",
@@ -195,7 +195,7 @@ const DEFAULT_COURSES = [
                 careerOutcomes: "Network Analyst, IT Consultant, Systems Manager"
             }
         ],
-        isActive: true
+        status: true
     }
 ];
 
@@ -210,7 +210,7 @@ export async function GET(req) {
         if (includeInactive) {
             courses = await Course.find().sort({ createdAt: -1 });
         } else {
-            courses = await Course.find({ isActive: true }).sort({ createdAt: -1 });
+            courses = await Course.find({ status: true }).sort({ createdAt: -1 });
         }
 
         // If no courses exist, seed with default courses
@@ -218,7 +218,7 @@ export async function GET(req) {
             console.log("🌱 No courses found. Seeding default courses with sub-courses...");
             const seeded = [];
             for (const item of DEFAULT_COURSES) {
-                const slug = item.title
+                const slug = item.courseName
                     .toLowerCase()
                     .replace(/\s+/g, "-")
                     .replace(/[^\w-]/g, "");
@@ -258,24 +258,34 @@ export async function POST(req) {
 
         const body = await req.json();
 
-        // Generate slug from title
+        if (!body.courseName) {
+            return Response.json(
+                { success: false, error: "Course name is required" },
+                { status: 400 }
+            );
+        }
+
+        // Generate slug from courseName
         const slug =
             body.slug ||
-            body.title
+            body.courseName
                 .toLowerCase()
                 .replace(/\s+/g, "-")
                 .replace(/[^\w-]/g, "");
 
-        // Check if course already exists
+        // Check if course already exists (case-insensitive)
         const existingCourse = await Course.findOne({
-            $or: [{ slug }, { title: body.title }],
+            $or: [
+                { slug },
+                { courseName: { $regex: new RegExp(`^${body.courseName.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") } }
+            ],
         });
 
         if (existingCourse) {
             return Response.json(
                 {
                     success: false,
-                    error: "Course with this title or slug already exists",
+                    error: "Course with this name or slug already exists",
                 },
                 { status: 400 }
             );

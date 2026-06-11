@@ -18,7 +18,7 @@ function ensureOffersFile() {
           primaryButtonText: "Explore Programs",
           primaryButtonLink: "/services/educational-consultancy",
           secondaryButtonText: "Book Consultation",
-          secondaryButtonLink: "/contact",
+          secondaryButtonLink: "/contact?service=Overseas Education",
           stats: [
             { label: "Students Guided", value: "5000+" },
             { label: "Success Rate", value: "98%" },
@@ -56,7 +56,7 @@ function ensureOffersFile() {
           primaryButtonText: "Explore Immigration",
           primaryButtonLink: "/services/immigration",
           secondaryButtonText: "Free Assessment",
-          secondaryButtonLink: "/contact",
+          secondaryButtonLink: "/contact?service=Immigration Services",
           stats: [
             { label: "Visa Approvals", value: "1000+" },
             { label: "Success Rate", value: "99%" },

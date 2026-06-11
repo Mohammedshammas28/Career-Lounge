@@ -63,6 +63,7 @@ export default function UniversitiesAdminPage() {
     const [activeFormTab, setActiveFormTab] = useState("basic");
     const [uploading, setUploading] = useState({ logo: false, bannerImage: false });
     const [uploadError, setUploadError] = useState("");
+    const [availableCourses, setAvailableCourses] = useState([]);
 
     const [formData, setFormData] = useState({
         universityName: "",
@@ -98,10 +99,23 @@ export default function UniversitiesAdminPage() {
         coursesOffered: [],
     });
 
-    // Fetch universities
+    // Fetch universities and available courses
     useEffect(() => {
         fetchUniversities();
+        fetchAvailableCourses();
     }, []);
+
+    const fetchAvailableCourses = async () => {
+        try {
+            const response = await fetch("/api/courses");
+            const result = await response.json();
+            if (result.success) {
+                setAvailableCourses(result.data);
+            }
+        } catch (error) {
+            console.error("Error fetching available courses:", error);
+        }
+    };
 
     const fetchUniversities = async () => {
         try {
@@ -606,7 +620,46 @@ export default function UniversitiesAdminPage() {
                                                         }}
                                                     />
                                                 </div>
-                                                <p className="text-[10px] text-slate-400">Press Enter or comma to add each course category. Used for filtering on the universities page.</p>
+                                                
+                                                {/* Selection dropdown helper to pick from Courses Collection */}
+                                                {availableCourses.length > 0 && (
+                                                    <div className="mt-2 space-y-1">
+                                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Click to toggle courses from database:</span>
+                                                        <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 border rounded-lg max-h-24 overflow-y-auto">
+                                                            {availableCourses.map((c) => {
+                                                                const isSelected = (formData.coursesOffered || []).includes(c.courseName);
+                                                                return (
+                                                                    <button
+                                                                        key={c._id}
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            if (isSelected) {
+                                                                                setFormData(prev => ({
+                                                                                    ...prev,
+                                                                                    coursesOffered: prev.coursesOffered.filter(item => item !== c.courseName)
+                                                                                }));
+                                                                            } else {
+                                                                                setFormData(prev => ({
+                                                                                    ...prev,
+                                                                                    coursesOffered: [...(prev.coursesOffered || []), c.courseName]
+                                                                                }));
+                                                                            }
+                                                                        }}
+                                                                        className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors border
+                                                                            ${isSelected
+                                                                                ? "bg-blue-600 border-blue-600 text-white"
+                                                                                : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                                                                            }`}
+                                                                    >
+                                                                        {c.courseName}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                <p className="text-[10px] text-slate-400">Press Enter, comma, or click available courses to add. Used for filtering on the universities page.</p>
                                             </div>
                                         </div>
                                     )}

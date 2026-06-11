@@ -87,7 +87,7 @@ export default function PremiumOfferSlider() {
     };
 
     const handleConsultation = () => {
-        router.push("/contact");
+        router.push("/contact?service=Overseas Education");
     };
 
     if (isLoading) {

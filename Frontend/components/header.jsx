@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -17,6 +18,19 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
   const [tickerItems, setTickerItems] = useState([])
+  const pathname = usePathname() || ""
+
+  const getContactHref = () => {
+    if (pathname.includes('/services/career-counselling')) return '/contact?service=Career Counselling'
+    if (pathname.includes('/services/educational-consultancy/domestic')) return '/contact?service=Domestic Education'
+    if (pathname.includes('/services/educational-consultancy/overseas')) return '/contact?service=Overseas Education'
+    if (pathname.includes('/services/educational-consultancy')) return '/contact?service=Educational Consultancy'
+    if (pathname.includes('/services/immigration')) return '/contact?service=Immigration Services'
+    if (pathname.includes('/services/recruitment/domestic')) return '/contact?service=Domestic Recruitment'
+    if (pathname.includes('/services/recruitment/overseas')) return '/contact?service=Overseas Recruitment'
+    if (pathname.includes('/services/recruitment')) return '/contact?service=Recruitment Services'
+    return '/contact'
+  }
 
   useEffect(() => {
     const fetchTicker = async () => {
@@ -57,7 +71,7 @@ export function Header() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
-    { name: "Contact", href: "/contact" },
+    { name: "Contact", href: getContactHref() },
   ]
 
   return (
@@ -211,7 +225,7 @@ export function Header() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
           <ThemeToggle />
-          <Link href="/contact">
+          <Link href={getContactHref()}>
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
               Get Started
             </Button>
@@ -339,7 +353,7 @@ export function Header() {
               })}
             </div>
             <div className="py-6 border-t border-border mt-6">
-              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+              <Link href={getContactHref()} onClick={() => setMobileMenuOpen(false)}>
                 <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                   Get Started
                 </Button>

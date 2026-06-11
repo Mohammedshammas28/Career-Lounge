@@ -157,6 +157,9 @@ export function ContactSection({ searchParams }) {
     if (university) {
       initialMessage = `I am interested in applying to ${university}${course ? ` for the ${course} program` : ""}. Please provide more details.`;
       contextData = { university, course };
+    } else if (course) {
+      initialMessage = `I am interested in enquiring about the ${course} program. Please provide more details.`;
+      contextData = { course };
     } else if (jobTitle) {
       initialMessage = `I am interested in applying for the ${jobTitle} position${company ? ` at ${company}` : ""}.`;
       contextData = { jobTitle, company };

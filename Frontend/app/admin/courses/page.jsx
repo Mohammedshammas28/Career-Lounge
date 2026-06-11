@@ -50,17 +50,17 @@ export default function CoursesAdminPage() {
     });
 
     const [formData, setFormData] = useState({
-        title: "",
-        desc: "",
-        img: "",
+        courseName: "",
+        description: "",
+        image: "",
         duration: "",
         fees: "",
-        level: "Undergraduate",
+        category: "Undergraduate",
         overview: "",
         requirements: "",
         opportunities: "",
         subjectsInput: "", // Comma-separated string for easy input, converted to array on save
-        isActive: true,
+        status: true,
     });
 
     useEffect(() => {
@@ -88,7 +88,7 @@ export default function CoursesAdminPage() {
     };
 
     const handleSelectChange = (value) => {
-        setFormData((prev) => ({ ...prev, level: value }));
+        setFormData((prev) => ({ ...prev, category: value }));
     };
 
     const handleImageUpload = async (file) => {
@@ -112,7 +112,7 @@ export default function CoursesAdminPage() {
                 throw new Error(result.error || "Upload failed");
             }
 
-            setFormData((prev) => ({ ...prev, img: result.url }));
+            setFormData((prev) => ({ ...prev, image: result.url }));
         } catch (error) {
             console.error("Course image upload failed:", error);
             setUploadError(error.message || "Could not upload image");
@@ -173,18 +173,18 @@ export default function CoursesAdminPage() {
             : [];
 
         const payload = {
-            title: formData.title,
-            desc: formData.desc,
-            img: formData.img,
+            courseName: formData.courseName,
+            description: formData.description,
+            image: formData.image,
             duration: formData.duration,
             fees: formData.fees,
-            level: formData.level,
+            category: formData.category,
             overview: formData.overview,
             requirements: formData.requirements,
             opportunities: formData.opportunities,
             subjects,
             subCourses,
-            isActive: formData.isActive,
+            status: formData.status,
         };
 
         try {
@@ -214,17 +214,17 @@ export default function CoursesAdminPage() {
     const handleEdit = (course) => {
         setEditingId(course._id);
         setFormData({
-            title: course.title || "",
-            desc: course.desc || "",
-            img: course.img || "",
+            courseName: course.courseName || course.title || "",
+            description: course.description || course.desc || "",
+            image: course.image || course.img || "",
             duration: course.duration || "",
             fees: course.fees || "",
-            level: course.level || "Undergraduate",
+            category: course.category || course.level || "Undergraduate",
             overview: course.overview || "",
             requirements: course.requirements || "",
             opportunities: course.opportunities || "",
             subjectsInput: course.subjects ? course.subjects.join(", ") : "",
-            isActive: course.isActive,
+            status: course.status !== undefined ? course.status : course.isActive,
         });
         setSubCourses(course.subCourses || []);
         setIsDialogOpen(true);
@@ -248,10 +248,11 @@ export default function CoursesAdminPage() {
 
     const toggleCourseStatus = async (course) => {
         try {
+            const currentStatus = course.status !== undefined ? course.status : course.isActive;
             const response = await fetch(`/api/courses/${course._id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ isActive: !course.isActive }),
+                body: JSON.stringify({ status: !currentStatus }),
             });
             const result = await response.json();
             if (result.success) {
@@ -265,17 +266,17 @@ export default function CoursesAdminPage() {
     const resetForm = () => {
         setEditingId(null);
         setFormData({
-            title: "",
-            desc: "",
-            img: "",
+            courseName: "",
+            description: "",
+            image: "",
             duration: "",
             fees: "",
-            level: "Undergraduate",
+            category: "Undergraduate",
             overview: "",
             requirements: "",
             opportunities: "",
             subjectsInput: "",
-            isActive: true,
+            status: true,
         });
         setSubCourses([]);
         setNewSubCourse({
@@ -331,8 +332,8 @@ export default function CoursesAdminPage() {
                                             <div>
                                                 <label className="block text-sm font-semibold mb-2 text-gray-700">Course Category Title *</label>
                                                 <Input
-                                                    name="title"
-                                                    value={formData.title}
+                                                    name="courseName"
+                                                    value={formData.courseName}
                                                     onChange={handleInputChange}
                                                     placeholder="e.g., Allied Health, Medicine, Management"
                                                     required
@@ -340,7 +341,7 @@ export default function CoursesAdminPage() {
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-semibold mb-2 text-gray-700">Course Level *</label>
-                                                <Select value={formData.level} onValueChange={handleSelectChange}>
+                                                <Select value={formData.category} onValueChange={handleSelectChange}>
                                                     <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Choose level" />
                                                     </SelectTrigger>
@@ -357,8 +358,8 @@ export default function CoursesAdminPage() {
                                         <div>
                                             <label className="block text-sm font-semibold mb-2 text-gray-700">Short Description *</label>
                                             <Textarea
-                                                name="desc"
-                                                value={formData.desc}
+                                                name="description"
+                                                value={formData.description}
                                                 onChange={handleInputChange}
                                                 placeholder="Brief summary for popular course card..."
                                                 rows={2}
@@ -412,10 +413,10 @@ export default function CoursesAdminPage() {
                                                 <p className="text-xs text-gray-500 mt-1">Recommended: 800x500 px (Max 5MB)</p>
                                             </div>
                                             {isUploadingImage && <p className="text-sm text-blue-600 mt-2 font-medium">Uploading image, please wait...</p>}
-                                            {formData.img && (
+                                            {formData.image && (
                                                 <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 w-fit">
                                                     <img
-                                                        src={formData.img}
+                                                        src={formData.image}
                                                         alt="Course preview"
                                                         className="h-28 w-44 object-cover"
                                                     />
@@ -430,8 +431,8 @@ export default function CoursesAdminPage() {
                                             <label className="flex items-center gap-2 cursor-pointer">
                                                 <input
                                                     type="checkbox"
-                                                    checked={formData.isActive}
-                                                    onChange={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
+                                                    checked={formData.status}
+                                                    onChange={() => setFormData(prev => ({ ...prev, status: !prev.status }))}
                                                     className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                                 />
                                                 <span className="text-sm font-medium text-gray-700">Show on homepage (Active)</span>
@@ -638,60 +639,65 @@ export default function CoursesAdminPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {courses.map((course) => (
-                                        <TableRow key={course._id} className="hover:bg-gray-50">
-                                            <TableCell>
-                                                <div className="w-24 h-14 rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
-                                                    <img
-                                                        src={course.img || "/placeholder-course.jpg"}
-                                                        alt={course.title}
-                                                        className="w-full h-full object-cover"
-                                                        onError={(e) => {
-                                                            e.currentTarget.src = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='8' fill='%2364748b'%3ECourse%3C/text%3E%3C/svg%3E";
-                                                        }}
-                                                    />
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="font-semibold text-gray-900">
-                                                {course.title}
-                                            </TableCell>
-                                            <TableCell className="text-gray-700">
-                                                <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800">
-                                                    {course.level || "Undergraduate"}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="text-gray-700 text-sm font-semibold">
-                                                <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-xs font-bold text-blue-700">
-                                                    {course.subCourses ? course.subCourses.length : 0} Specializations
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="text-gray-600 text-sm">
-                                                <span className="flex items-center gap-1">
-                                                    <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                                    {course.duration || "—"}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="text-gray-600 text-sm">
-                                                <span className="flex items-center gap-0.5 font-medium text-emerald-700">
-                                                    {course.fees || "—"}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell>
-                                                <button
-                                                    onClick={() => toggleCourseStatus(course)}
-                                                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold gap-1 transition-all ${course.isActive
-                                                        ? "bg-green-100 text-green-800 hover:bg-green-200"
-                                                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                                        }`}
-                                                >
-                                                    {course.isActive ? (
-                                                        <CheckCircle className="w-3 h-3" />
-                                                    ) : (
-                                                        <Circle className="w-3 h-3" />
-                                                    )}
-                                                    {course.isActive ? "Active" : "Inactive"}
-                                                </button>
-                                            </TableCell>
+                                    {courses.map((course) => {
+                                        const name = course.courseName || course.title || "";
+                                        const image = course.image || course.img || "/placeholder-course.jpg";
+                                        const category = course.category || course.level || "Undergraduate";
+                                        const currentStatus = course.status !== undefined ? course.status : course.isActive;
+                                        return (
+                                            <TableRow key={course._id} className="hover:bg-gray-50">
+                                                <TableCell>
+                                                    <div className="w-24 h-14 rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
+                                                        <img
+                                                            src={image}
+                                                            alt={name}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='8' fill='%2364748b'%3ECourse%3C/text%3E%3C/svg%3E";
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="font-semibold text-gray-900">
+                                                    {name}
+                                                </TableCell>
+                                                <TableCell className="text-gray-700">
+                                                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800">
+                                                        {category}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell className="text-gray-700 text-sm font-semibold">
+                                                    <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-xs font-bold text-blue-700">
+                                                        {course.subCourses ? course.subCourses.length : 0} Specializations
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell className="text-gray-600 text-sm">
+                                                    <span className="flex items-center gap-1">
+                                                        <Clock className="w-3.5 h-3.5 text-gray-400" />
+                                                        {course.duration || "—"}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell className="text-gray-600 text-sm">
+                                                    <span className="flex items-center gap-0.5 font-medium text-emerald-700">
+                                                        {course.fees || "—"}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <button
+                                                        onClick={() => toggleCourseStatus(course)}
+                                                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold gap-1 transition-all ${currentStatus
+                                                            ? "bg-green-100 text-green-800 hover:bg-green-200"
+                                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                                            }`}
+                                                    >
+                                                        {currentStatus ? (
+                                                            <CheckCircle className="w-3 h-3" />
+                                                        ) : (
+                                                            <Circle className="w-3 h-3" />
+                                                        )}
+                                                        {currentStatus ? "Active" : "Inactive"}
+                                                    </button>
+                                                </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
                                                     <Button
@@ -713,7 +719,8 @@ export default function CoursesAdminPage() {
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                        );
+                                    })}
                                 </TableBody>
                             </Table>
                         </div>

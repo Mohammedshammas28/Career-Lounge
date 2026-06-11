@@ -142,7 +142,7 @@ export default function JobsPage() {
             transition={{ delay: 0.3 }}
           >
             <Button
-              onClick={() => router.push("/contact")}
+              onClick={() => router.push("/contact?service=Overseas Recruitment")}
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg shadow-blue-900/20 transition-all hover:-translate-y-1"
             >
               Talk to a Recruiter

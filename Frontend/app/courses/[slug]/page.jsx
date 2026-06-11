@@ -1,22 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, DollarSign, GraduationCap, BookOpen, CheckCircle, ArrowRight, User, Mail, Phone, MessageSquare, Briefcase, Award, ChevronDown } from "lucide-react";
+import { Clock, DollarSign, GraduationCap, BookOpen, CheckCircle, ArrowRight, User, Mail, Phone, MessageSquare, Briefcase, Award, ChevronDown, MapPin, Globe } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CourseDetailsPage() {
     const params = useParams();
+    const router = useRouter();
     const [course, setCourse] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeSection, setActiveSection] = useState("overview");
     const [expandedIndex, setExpandedIndex] = useState(0);
+    const [relatedUniversities, setRelatedUniversities] = useState([]);
+    const [relatedCountries, setRelatedCountries] = useState([]);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -52,222 +55,248 @@ export default function CourseDetailsPage() {
     }, [params.slug]);
 
     useEffect(() => {
+        if (course) {
+            const fetchRelatedUniversities = async () => {
+                try {
+                    const response = await fetch("/api/universities");
+                    const result = await response.json();
+                    if (result.success) {
+                        const filtered = result.data.filter(uni => 
+                            (uni.coursesOffered || []).some(
+                                c => c.toLowerCase() === course.courseName.toLowerCase()
+                            )
+                        );
+                        setRelatedUniversities(filtered);
+                        
+                        // Extract unique countries
+                        const countries = [...new Set(filtered.map(uni => uni.country).filter(Boolean))];
+                        setRelatedCountries(countries.sort());
+                    }
+                } catch (err) {
+                    console.error("Error fetching related universities:", err);
+                }
+            };
+            fetchRelatedUniversities();
+        }
+    }, [course]);
+
+    useEffect(() => {
         if (!isLoading && course) {
             const observer = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            setActiveSection(entry.target.id);
-                        }
-                    });
-                },
-                {
-                    rootMargin: "-25% 0px -25% 0px",
-                    threshold: 0
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
                 }
-            );
-
-            const sectionIds = ["overview", "specializations", "requirements", "subjects", "opportunities"];
-            sectionIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) observer.observe(el);
             });
-
-            return () => observer.disconnect();
+        },
+        {
+            rootMargin: "-25% 0px -25% 0px",
+            threshold: 0
         }
-    }, [isLoading, course]);
+    );
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
+    const sectionIds = ["overview", "specializations", "universities", "requirements", "subjects", "opportunities"];
+    sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+    });
 
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        try {
-            const response = await fetch("/api/contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    message: `Course Enquiry: ${course?.title || ""}. Mobile: ${formData.phone}. User message: ${formData.message}`
-                })
-            });
-            const result = await response.json();
-            if (result.success) {
-                setSubmitSuccess(true);
-                setFormData({ name: "", email: "", phone: "", message: "" });
-            } else {
-                alert("Thank you! Our counselor will get in touch with you shortly.");
-                setSubmitSuccess(true);
-            }
-        } catch (error) {
-            console.error("Error submitting contact:", error);
-            setSubmitSuccess(true);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    return () => observer.disconnect();
+}
+}, [isLoading, course]);
 
-    if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-white">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-gray-500 font-medium">Loading course details...</p>
-                </div>
-            </div>
-        );
+const handleInputChange = (e) => {
+const { name, value } = e.target;
+setFormData(prev => ({ ...prev, [name]: value }));
+};
+
+const handleFormSubmit = async (e) => {
+e.preventDefault();
+setIsSubmitting(true);
+try {
+    const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: `Course Enquiry: ${course?.courseName || ""}. Mobile: ${formData.phone}. User message: ${formData.message}`
+        })
+    });
+    const result = await response.json();
+    if (result.success) {
+        setSubmitSuccess(true);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+    } else {
+        alert("Thank you! Our counselor will get in touch with you shortly.");
+        setSubmitSuccess(true);
     }
+} catch (error) {
+    console.error("Error submitting contact:", error);
+    setSubmitSuccess(true);
+} finally {
+    setIsSubmitting(false);
+}
+};
 
-    if (error || !course) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-white">
-                <div className="text-center max-w-md px-6">
-                    <div className="text-6xl mb-4">📚</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Course Not Found</h2>
-                    <p className="text-gray-600 mb-6 font-medium">We couldn't find the course you're looking for. It might have been moved or deleted.</p>
-                    <Link href="/" className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                        Back to Home
-                    </Link>
-                </div>
-            </div>
-        );
-    }
+if (isLoading) {
+return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-gray-500 font-medium">Loading course details...</p>
+        </div>
+    </div>
+);
+}
 
-    // Dynamically build secondary nav items based on course content
-    const navItems = [
-        { id: "overview", label: "Overview" },
-    ];
-    if (course.subCourses && course.subCourses.length > 0) {
-        navItems.push({ id: "specializations", label: "Specializations" });
-    }
-    if (course.requirements) {
-        navItems.push({ id: "requirements", label: "Requirements" });
-    }
-    if (course.subjects && course.subjects.length > 0) {
-        navItems.push({ id: "subjects", label: "Curriculum" });
-    }
-    if (course.opportunities) {
-        navItems.push({ id: "opportunities", label: "Careers" });
-    }
+if (error || !course) {
+return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center max-w-md px-6">
+            <div className="text-6xl mb-4">📚</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Course Not Found</h2>
+            <p className="text-gray-600 mb-6 font-medium">We couldn't find the course you're looking for. It might have been moved or deleted.</p>
+            <Link href="/" className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                Back to Home
+            </Link>
+        </div>
+    </div>
+);
+}
 
-    return (
-        <main className="min-h-screen bg-gray-50">
-            <Header />
+// Dynamically build secondary nav items based on course content
+const navItems = [
+{ id: "overview", label: "Overview" },
+];
+if (course.subCourses && course.subCourses.length > 0) {
+navItems.push({ id: "specializations", label: "Specializations" });
+}
+if (relatedUniversities.length > 0) {
+navItems.push({ id: "universities", label: "Universities" });
+}
+if (course.requirements) {
+navItems.push({ id: "requirements", label: "Requirements" });
+}
+if (course.subjects && course.subjects.length > 0) {
+navItems.push({ id: "subjects", label: "Curriculum" });
+}
+if (course.opportunities) {
+navItems.push({ id: "opportunities", label: "Careers" });
+}
 
-            <div className="pt-[140px] pb-20">
-                {/* Course Secondary Navbar */}
-                <div className="sticky top-[116px] z-40 bg-white border-b shadow-md overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between h-16">
-                            {/* Navigation Links with Horizontal Scroll on Mobile */}
-                            <div className="relative flex-1 overflow-hidden h-full">
-                                <div className="flex items-center gap-2 sm:gap-6 overflow-x-auto scrollbar-hide h-full items-stretch">
-                                    {navItems.map((item) => (
-                                        <button
-                                            key={item.id}
-                                            onClick={() => {
-                                                const el = document.getElementById(item.id);
-                                                if (el) {
-                                                    const headerHeight = 116;
-                                                    const navHeight = 64;
-                                                    const offset = headerHeight + navHeight + 20;
-                                                    const bodyRect = document.body.getBoundingClientRect().top;
-                                                    const elementRect = el.getBoundingClientRect().top;
-                                                    const elementPosition = elementRect - bodyRect;
-                                                    const offsetPosition = elementPosition - offset;
+return (
+<main className="min-h-screen bg-gray-50">
+    <Header />
 
-                                                    window.scrollTo({
-                                                        top: offsetPosition,
-                                                        behavior: "smooth",
-                                                    });
-                                                }
-                                            }}
-                                            className={`relative flex items-center px-4 text-sm font-bold transition-all whitespace-nowrap h-full outline-none
-                                                ${activeSection === item.id
-                                                    ? "text-blue-600"
-                                                    : "text-gray-500 hover:text-gray-900"
-                                                }`}
-                                        >
-                                            {item.label}
-                                            {activeSection === item.id && (
-                                                <motion.div
-                                                    layoutId="activeCourseTabIndicator"
-                                                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 rounded-t-full"
-                                                />
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Enquire Now Link/Button */}
-                            <div className="hidden md:flex items-center ml-8">
+    <div className="pt-[140px] pb-20">
+        {/* Course Secondary Navbar */}
+        <div className="sticky top-[116px] z-40 bg-white border-b shadow-md overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    {/* Navigation Links with Horizontal Scroll on Mobile */}
+                    <div className="relative flex-1 overflow-hidden h-full">
+                        <div className="flex items-center gap-2 sm:gap-6 overflow-x-auto scrollbar-hide h-full items-stretch">
+                            {navItems.map((item) => (
                                 <button
+                                    key={item.id}
                                     onClick={() => {
-                                        const formEl = document.querySelector("form");
-                                        if (formEl) {
-                                            formEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                                        const el = document.getElementById(item.id);
+                                        if (el) {
+                                            const headerHeight = 116;
+                                            const navHeight = 64;
+                                            const offset = headerHeight + navHeight + 20;
+                                            const bodyRect = document.body.getBoundingClientRect().top;
+                                            const elementRect = el.getBoundingClientRect().top;
+                                            const elementPosition = elementRect - bodyRect;
+                                            const offsetPosition = elementPosition - offset;
+
+                                            window.scrollTo({
+                                                top: offsetPosition,
+                                                behavior: "smooth",
+                                            });
                                         }
                                     }}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5"
+                                    className={`relative flex items-center px-4 text-sm font-bold transition-all whitespace-nowrap h-full outline-none
+                                        ${activeSection === item.id
+                                            ? "text-blue-600"
+                                            : "text-gray-500 hover:text-gray-900"
+                                        }`}
                                 >
-                                    Enquire Now
+                                    {item.label}
+                                    {activeSection === item.id && (
+                                        <motion.div
+                                            layoutId="activeCourseTabIndicator"
+                                            className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 rounded-t-full"
+                                        />
+                                    )}
                                 </button>
-                            </div>
+                            ))}
                         </div>
                     </div>
-                </div>
 
-                {/* Hero Section */}
-                <div className="relative h-[250px] sm:h-[350px] w-full overflow-hidden">
-                    <img
-                        src={course.img || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"}
-                        alt={course.title}
-                        className="w-full h-full object-cover object-center"
-                        onError={(e) => {
-                            e.currentTarget.src = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80";
-                        }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
-                    <div className="absolute inset-0 flex items-end">
-                        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-                            <div className="max-w-3xl">
-                                <div className="flex flex-wrap gap-2 mb-3">
-                                    <Badge className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold uppercase tracking-wider py-1 px-3">
-                                        {course.level || "Undergraduate"}
-                                    </Badge>
-                                    <Badge variant="outline" className="text-white border-white bg-white/10 text-xs font-semibold py-1 px-3">
-                                        <Clock className="w-3.5 h-3.5 mr-1 text-blue-400" /> {course.duration || "3 Years"}
-                                    </Badge>
-                                </div>
-                                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
-                                    {course.title}
-                                </h1>
-                                <p className="text-gray-200 text-sm sm:text-base md:text-lg leading-relaxed font-medium">
-                                    {course.desc}
-                                </p>
-                            </div>
-                        </div>
+                    {/* Enquire Now Link/Button */}
+                    <div className="hidden md:flex items-center ml-8">
+                        <button
+                            onClick={() => {
+                                router.push(`/contact?service=Overseas Education&course=${encodeURIComponent(course.courseName)}`);
+                            }}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5"
+                        >
+                            Enquire Now
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                {/* Course Metadata Cards bar */}
-                <div className="bg-white border-b shadow-sm relative z-30">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x border-x-0 sm:border-x">
-                            <div className="p-4 sm:p-6 text-center sm:text-left flex items-center gap-4 justify-center sm:justify-start">
-                                <div className="p-3 rounded-xl bg-blue-50 text-blue-600 shrink-0">
-                                    <GraduationCap className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Degree Level</p>
-                                    <p className="text-sm font-bold text-gray-900 mt-0.5">{course.level || "Undergraduate"}</p>
-                                </div>
-                            </div>
+        {/* Hero Section */}
+        <div className="relative h-[250px] sm:h-[350px] w-full overflow-hidden">
+            <img
+                src={course.image || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"}
+                alt={course.courseName}
+                className="w-full h-full object-cover object-center"
+                onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80";
+                }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
+            <div className="absolute inset-0 flex items-end">
+                <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
+                    <div className="max-w-3xl">
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            <Badge className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold uppercase tracking-wider py-1 px-3">
+                                {course.category || "Undergraduate"}
+                            </Badge>
+                            <Badge variant="outline" className="text-white border-white bg-white/10 text-xs font-semibold py-1 px-3">
+                                <Clock className="w-3.5 h-3.5 mr-1 text-blue-400" /> {course.duration || "3 Years"}
+                            </Badge>
+                        </div>
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
+                            {course.courseName}
+                        </h1>
+                        <p className="text-gray-200 text-sm sm:text-base md:text-lg leading-relaxed font-medium">
+                            {course.description}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {/* Course Metadata Cards bar */}
+        <div className="bg-white border-b shadow-sm relative z-30">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x border-x-0 sm:border-x">
+                    <div className="p-4 sm:p-6 text-center sm:text-left flex items-center gap-4 justify-center sm:justify-start">
+                        <div className="p-3 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                            <GraduationCap className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Degree Level</p>
+                            <p className="text-sm font-bold text-gray-900 mt-0.5">{course.category || "Undergraduate"}</p>
+                        </div>
+                    </div>
                             <div className="p-4 sm:p-6 text-center sm:text-left flex items-center gap-4 justify-center sm:justify-start">
                                 <div className="p-3 rounded-xl bg-amber-50 text-amber-600 shrink-0">
                                     <Clock className="w-6 h-6" />
@@ -434,14 +463,7 @@ export default function CourseDetailsPage() {
                                                                     <div className="flex justify-end pt-3 border-t">
                                                                         <Button
                                                                             onClick={() => {
-                                                                                setFormData(prev => ({
-                                                                                    ...prev,
-                                                                                    message: `I would like to enquire about the ${sub.name} specialization under ${course.title}.`
-                                                                                }));
-                                                                                const formEl = document.querySelector("form");
-                                                                                if (formEl) {
-                                                                                    formEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                                                                                }
+                                                                                router.push(`/contact?service=Overseas Education&course=${encodeURIComponent(course.courseName)}&message=${encodeURIComponent(`I would like to enquire about the ${sub.name} specialization under ${course.courseName}.`)}`);
                                                                             }}
                                                                             className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-blue-200 transition-all hover:-translate-y-0.5"
                                                                         >
@@ -456,6 +478,88 @@ export default function CourseDetailsPage() {
                                                 </div>
                                             );
                                         })}
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* Universities Section */}
+                            {relatedUniversities.length > 0 && (
+                                <section id="universities" className="scroll-mt-[200px] bg-white rounded-3xl shadow-sm border p-6 sm:p-8">
+                                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3 border-b pb-4 mb-6">
+                                        <GraduationCap className="w-6 h-6 text-blue-600" />
+                                        Offered by Top Universities
+                                    </h2>
+                                    
+                                    {/* Display list of unique countries */}
+                                    {relatedCountries.length > 0 && (
+                                        <div className="mb-6 flex flex-wrap items-center gap-2">
+                                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Available Countries:</span>
+                                            {relatedCountries.map((c, i) => (
+                                                <Badge key={i} className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-semibold px-2.5 py-0.5 text-xs">
+                                                    <Globe className="w-3 h-3 mr-1 text-emerald-600" /> {c}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {relatedUniversities.map((uni) => (
+                                            <div 
+                                                key={uni._id} 
+                                                className="border rounded-2xl p-5 bg-gray-50/50 hover:bg-white hover:border-blue-500/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                                            >
+                                                <div>
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="w-12 h-12 rounded-xl bg-white border flex items-center justify-center overflow-hidden p-1 shrink-0 shadow-sm">
+                                                            {uni.logo ? (
+                                                                <img src={uni.logo} alt={uni.universityName} className="w-full h-full object-contain" />
+                                                            ) : (
+                                                                <GraduationCap className="w-6 h-6 text-gray-400" />
+                                                            )}
+                                                        </div>
+                                                        <div className="min-w-0">
+                                                            <h4 className="font-bold text-gray-900 text-sm truncate leading-snug">{uni.universityName}</h4>
+                                                            <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                                                                <MapPin className="w-3.5 h-3.5 text-gray-400" /> {uni.city}, {uni.country}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="grid grid-cols-2 gap-3 text-[11px] text-gray-600 font-medium py-3 border-y my-3">
+                                                        <div>
+                                                            <span className="text-gray-400 block text-[9px] uppercase font-bold tracking-wider">Intakes</span>
+                                                            <span className="text-gray-800">
+                                                                {uni.intakes?.length > 0 
+                                                                    ? uni.intakes.map(i => i.intakeName).join(", ")
+                                                                    : "N/A"}
+                                                            </span>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400 block text-[9px] uppercase font-bold tracking-wider">Ranking</span>
+                                                            <span className="text-gray-800 font-semibold">{uni.ranking || "N/A"}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-2.5 mt-2">
+                                                    <Button 
+                                                        variant="outline" 
+                                                        size="sm" 
+                                                        onClick={() => router.push(`/university/${uni.slug}`)}
+                                                        className="flex-1 text-xs py-2 rounded-xl font-bold"
+                                                    >
+                                                        Details
+                                                    </Button>
+                                                    <Button 
+                                                        size="sm" 
+                                                        onClick={() => router.push(`/contact?service=Overseas Education&university=${encodeURIComponent(uni.universityName)}&course=${encodeURIComponent(course.courseName)}`)}
+                                                        className="flex-1 text-xs py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold"
+                                                    >
+                                                        Apply
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </section>
                             )}

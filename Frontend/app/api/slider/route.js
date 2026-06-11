@@ -17,7 +17,7 @@ const DEFAULT_SLIDER = {
       primaryButtonText: "Explore Programs",
       primaryButtonLink: "/services",
       secondaryButtonText: "Book Consultation",
-      secondaryButtonLink: "/contact",
+      secondaryButtonLink: "/contact?service=Overseas Education",
       stats: [
         { label: "Universities", value: "500+" },
         { label: "Success Rate", value: "95%" },
