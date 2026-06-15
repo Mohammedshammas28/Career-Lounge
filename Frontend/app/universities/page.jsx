@@ -24,6 +24,7 @@ export default function UniversitiesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
   const [selectedCourse, setSelectedCourse] = useState("All Courses");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
@@ -84,11 +85,22 @@ export default function UniversitiesPage() {
   useEffect(() => {
     const countryParam = searchParams.get("country");
     const courseParam = searchParams.get("course");
+    const categoryParam = searchParams.get("category");
     if (countryParam) {
       setSelectedCountry(countryParam);
     }
     if (courseParam) {
       setSelectedCourse(courseParam);
+    }
+    if (categoryParam) {
+      const cat = categoryParam.toLowerCase();
+      if (cat === "domestic") {
+        setSelectedCategory("Domestic");
+      } else if (cat === "overseas") {
+        setSelectedCategory("Overseas");
+      } else {
+        setSelectedCategory("All");
+      }
     }
   }, [searchParams]);
 
@@ -101,6 +113,12 @@ export default function UniversitiesPage() {
           uni.universityName.toLowerCase().includes(searchQuery.toLowerCase()) ||
           uni.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           uni.country?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (selectedCategory && selectedCategory !== "All") {
+      filtered = filtered.filter(
+        (uni) => (uni.category || "Domestic") === selectedCategory
       );
     }
 
@@ -117,15 +135,35 @@ export default function UniversitiesPage() {
     }
 
     if (selectedCourse && selectedCourse !== "All Courses") {
-      filtered = filtered.filter((uni) =>
-        (uni.coursesOffered || []).some(
+      filtered = filtered.filter((uni) => {
+        // 1. Check in coursesOffered array (which may be broad categories)
+        const hasInOffered = (uni.coursesOffered || []).some(
           (c) => c.toLowerCase() === selectedCourse.toLowerCase()
-        )
-      );
+        );
+        if (hasInOffered) return true;
+
+        // 2. Fallback: Check inside detailed courses array by mapping name to categories
+        const hasInCourses = (uni.courses || []).some((c) => {
+          const name = (c.courseName || "").toLowerCase();
+          const selected = selectedCourse.toLowerCase();
+
+          if (name.includes(selected)) return true;
+
+          if (selected === "management" && (name.includes("mba") || name.includes("business") || name.includes("management"))) return true;
+          if (selected === "science" && (name.includes("computer") || name.includes("data") || name.includes("cyber") || name.includes("science") || name.includes("information technology") || name.includes("it"))) return true;
+          if (selected === "allied health" && (name.includes("nursing") || name.includes("physiotherapy") || name.includes("therapy") || name.includes("health"))) return true;
+          if (selected === "medicine" && (name.includes("medicine") || name.includes("surgery") || name.includes("dental") || name.includes("mbbs") || name.includes("bds"))) return true;
+          if (selected === "commerce" && (name.includes("accounting") || name.includes("finance") || name.includes("banking") || name.includes("commerce"))) return true;
+
+          return false;
+        });
+
+        return hasInCourses;
+      });
     }
 
     setFilteredUniversities(filtered);
-  }, [searchQuery, selectedCountry, selectedCourse, universities]);
+  }, [searchQuery, selectedCategory, selectedCountry, selectedCourse, universities]);
 
   const handleViewDetails = (slug) => {
     router.push(`/university/${slug}`);
@@ -133,6 +171,22 @@ export default function UniversitiesPage() {
 
   const handleApplyNow = (slug) => {
     router.push(`/contact?university=${slug}`);
+  };
+
+  const getFilteredCountries = () => {
+    let list = universities;
+    if (selectedCategory && selectedCategory !== "All") {
+      list = list.filter(uni => (uni.category || "Domestic") === selectedCategory);
+    }
+    const uniqueCountries = [
+      ...new Set(list.map((uni) => uni.country)),
+    ].filter(Boolean);
+    return uniqueCountries.sort();
+  };
+
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    setSelectedCountry("All Countries");
   };
 
   const getLogo = (uni) => {
@@ -186,7 +240,7 @@ export default function UniversitiesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Filters Row: Country + Course */}
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-16">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 mb-8">
             <h3 className="text-xl font-bold text-slate-800 text-center mb-5">Filter Universities</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Country Filter */}
@@ -198,7 +252,7 @@ export default function UniversitiesPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="All Countries">All Countries</SelectItem>
-                    {countries.map((country) => (
+                    {getFilteredCountries().map((country) => (
                       <SelectItem key={country} value={country}>
                         {country}
                       </SelectItem>
@@ -227,10 +281,32 @@ export default function UniversitiesPage() {
             </div>
           </div>
 
+          {/* Category Filter Pills */}
+          <div className="flex gap-3 justify-center mb-12 flex-wrap">
+            {["All", "Domestic", "Overseas"].map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => handleCategoryChange(cat)}
+                className={`px-6 py-2.5 rounded-full text-sm font-bold border transition-all cursor-pointer ${
+                  selectedCategory === cat
+                    ? cat === "Overseas"
+                      ? "bg-violet-600 text-white border-violet-600 shadow-md shadow-violet-200"
+                      : cat === "Domestic"
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-200"
+                      : "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200"
+                    : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50 shadow-sm"
+                }`}
+              >
+                {cat === "Domestic" ? "🏠 Domestic" : cat === "Overseas" ? "✈️ Overseas" : "All Universities"}
+              </button>
+            ))}
+          </div>
+
           {/* Results Summary and Search Row */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
             <h4 className="text-slate-500 font-medium">
-              Showing Results in <span className="text-slate-900 font-bold">{selectedCountry}</span>
+              Showing <span className="text-slate-900 font-bold">{selectedCategory === "All" ? "All" : selectedCategory}</span> Universities in <span className="text-slate-900 font-bold">{selectedCountry}</span>
             </h4>
 
             <div className="relative w-full sm:w-96 group">

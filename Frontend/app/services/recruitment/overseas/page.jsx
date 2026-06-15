@@ -34,14 +34,7 @@ export default function OverseasRecruitmentPage() {
     fetchJobs()
   }, [])
 
-  const destinations = [
-    { country: "United Kingdom", flag: "🇬🇧", roles: "Healthcare, Engineering, IT, Finance" },
-    { country: "Canada", flag: "🇨🇦", roles: "Nursing, Teaching, Technology, Trades" },
-    { country: "Australia", flag: "🇦🇺", roles: "Allied Health, Engineering, Hospitality" },
-    { country: "Germany", flag: "🇩🇪", roles: "Engineering, IT, Manufacturing" },
-    { country: "New Zealand", flag: "🇳🇿", roles: "Healthcare, Agriculture, Construction" },
-    { country: "Singapore", flag: "🇸🇬", roles: "Finance, Technology, Logistics" },
-  ]
+
 
   return (
     <main className="min-h-screen bg-background">
@@ -112,31 +105,7 @@ export default function OverseasRecruitmentPage() {
         </div>
       </section>
 
-      {/* Destinations Section */}
-      <section className="py-16 lg:py-24 bg-card/50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-2">Global Reach</p>
-            <h2 className="text-3xl font-bold text-foreground mb-4">Where We Place You</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">We have active employer partnerships across these key international destinations.</p>
-          </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {destinations.map((dest, idx) => (
-              <div
-                key={dest.country}
-                className="bg-background border border-border rounded-2xl p-6 hover:border-violet-400/50 transition-all hover:shadow-lg group flex items-start gap-4"
-                style={{ animation: `fadeInUp 0.6s ease-out ${0.2 + idx * 0.1}s both` }}
-              >
-                <span className="text-4xl">{dest.flag}</span>
-                <div>
-                  <h3 className="text-base font-bold text-foreground group-hover:text-violet-600 transition-colors">{dest.country}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{dest.roles}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* Overseas Job Listings */}
       <section className="py-16 lg:py-24">

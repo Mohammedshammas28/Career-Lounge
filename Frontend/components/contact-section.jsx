@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -12,14 +12,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin, CheckCircle2, ShieldAlert, Sparkles, Send } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 const CONTACT_INFO = [
   {
     icon: Mail,
     title: "Email",
-    value: "m.shammas2k6@gmail.com",
+    value: "support@career-lounge.in",
     delay: "0.2s",
   },
   {
@@ -37,157 +37,282 @@ const CONTACT_INFO = [
 ]
 
 const SERVICE_OPTIONS = [
+  { value: "Study Abroad Consultation", label: "Study Abroad Consultation" },
+  { value: "University Admissions", label: "University Admissions" },
+  { value: "Visa Assistance", label: "Visa Assistance" },
+  { value: "Scholarship Guidance", label: "Scholarship Guidance" },
   { value: "Career Counselling", label: "Career Counselling" },
-  { value: "Immigration Services", label: "Immigration Services" },
-  { value: "Domestic Education", label: "Domestic Education" },
-  { value: "Overseas Education", label: "Overseas Education" },
-  { value: "Domestic Recruitment", label: "Domestic Recruitment" },
-  { value: "Overseas Recruitment", label: "Overseas Recruitment" },
+  { value: "Profile Building", label: "Profile Building" },
+  { value: "Application Support", label: "Application Support" },
+  { value: "Education Loan Assistance", label: "Education Loan Assistance" },
   { value: "Other", label: "Other" },
 ]
 
-const FORM_FIELDS = [
-  { name: "firstName", label: "First Name", placeholder: "John", delay: "0.4s" },
-  { name: "lastName", label: "Last Name", placeholder: "Doe", delay: "0.45s" },
-]
-
-function FormField({ label, name, placeholder, value, onChange, delay, isTextarea = false, required = true }) {
-  const Component = isTextarea ? Textarea : Input
-  return (
-    <div className="animate-fadeInUp" style={{ animation: `fadeInUp 0.6s ease-out ${delay} both` }}>
-      <label htmlFor={name} className="block text-sm font-semibold text-foreground mb-2">
-        {label} {required && <span className="text-primary">*</span>}
-      </label>
-      <Component
-        id={name}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className="w-full bg-secondary/30 border border-border/60 hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all rounded-lg px-4 py-2.5"
-        {...(isTextarea && { rows: 5 })}
-        required={required}
-      />
-    </div>
-  )
-}
-
-function ContactInfoCard({ icon: Icon, title, value, delay }) {
-  return (
-    <div className="animate-fadeInUp group" style={{ animation: `fadeInUp 0.6s ease-out ${delay} both` }}>
-      <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all mb-4">
-        <Icon className="h-6 w-6 text-primary" />
-      </div>
-      <h3 className="text-sm uppercase tracking-wide text-muted-foreground mb-2">{title}</h3>
-      <p className="text-foreground font-semibold group-hover:text-primary transition-colors">{value}</p>
-    </div>
-  )
-}
-
-function SuccessDialog({ isOpen, onClose, firstName, email }) {
+function SuccessDialog({ isOpen, onClose, fullName, email }) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-black border-primary/40 max-w-md shadow-2xl">
+      <AlertDialogContent className="bg-slate-950 border-indigo-500/40 max-w-md shadow-2xl text-white">
         <AlertDialogHeader>
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center animate-bounce-in shadow-lg">
-              <span className="text-3xl text-white">✓</span>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center animate-bounce shadow-lg">
+              <CheckCircle2 className="w-10 h-10 text-white" />
             </div>
           </div>
-          <AlertDialogTitle className="text-2xl text-center text-white font-bold">
-            Message Received!
+          <AlertDialogTitle className="text-2xl text-center font-bold">
+            Submission Confirmed!
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-center mt-4">
+          <AlertDialogDescription className="text-center mt-4 text-slate-300">
             <span className="block space-y-2">
               <span className="block text-white font-semibold text-base">
-                Thank you, {firstName}!
+                Thank you, ${fullName}!
               </span>
-              <span className="block text-white/80 text-sm">
-                We&apos;ve received your message and will contact you within 24-48 hours.
+              <span className="block text-slate-300 text-sm">
+                Your mobile and email verification completed successfully. We have received your query.
               </span>
-              <span className="block text-sm text-white/70">
-                📧 Confirmation sent to <br /> <span className="font-semibold text-white">{email}</span>
+              <span className="block text-xs text-indigo-300">
+                📧 Confirmation and resources sent to <br /> <span className="font-semibold text-white">${email}</span>
               </span>
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogAction
           onClick={onClose}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 w-full mt-6 font-semibold"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white w-full mt-6 font-semibold rounded-lg"
         >
-          Done
+          Explore More
         </AlertDialogAction>
       </AlertDialogContent>
     </AlertDialog>
   )
 }
 
-// Rewritten form component with improved structure and smart prefilling
 export function ContactSection({ searchParams }) {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     phone: "",
-    serviceType: "",
-    message: "",
-    sourcePage: "",
-    sourceUrl: "",
-    referrer: "",
-    contextData: {}
+    country: "",
+    service: "",
+    message: ""
   })
+
+  // OTP State
+  const [emailOtp, setEmailOtp] = useState("")
+  const [phoneOtp, setPhoneOtp] = useState("")
   
+  const [emailOtpSent, setEmailOtpSent] = useState(false)
+  const [phoneOtpSent, setPhoneOtpSent] = useState(false)
+  
+  const [emailVerified, setEmailVerified] = useState(false)
+  const [phoneVerified, setPhoneVerified] = useState(false)
+  
+  const [isSendingEmailOtp, setIsSendingEmailOtp] = useState(false)
+  const [isSendingPhoneOtp, setIsSendingPhoneOtp] = useState(false)
+  
+  const [isVerifyingEmailOtp, setIsVerifyingEmailOtp] = useState(false)
+  const [isVerifyingPhoneOtp, setIsVerifyingPhoneOtp] = useState(false)
+
+  // Cooldowns
+  const [emailCooldown, setEmailCooldown] = useState(0)
+  const [phoneCooldown, setPhoneCooldown] = useState(0)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const { toast } = useToast()
+
+  // Cooldown Timer Effects
+  useEffect(() => {
+    let emailTimer;
+    if (emailCooldown > 0) {
+      emailTimer = setTimeout(() => setEmailCooldown(emailCooldown - 1), 1000);
+    }
+    return () => clearTimeout(emailTimer);
+  }, [emailCooldown]);
+
+  useEffect(() => {
+    let phoneTimer;
+    if (phoneCooldown > 0) {
+      phoneTimer = setTimeout(() => setPhoneCooldown(phoneCooldown - 1), 1000);
+    }
+    return () => clearTimeout(phoneTimer);
+  }, [phoneCooldown]);
 
   // Smart Prefilling Logic
   useEffect(() => {
     if (typeof window === "undefined" || !searchParams) return;
 
     let initialMessage = "";
-    let contextData = {};
-    
-    // Check specific parameters that might have been passed
     const university = searchParams.university;
     const course = searchParams.course;
     const jobTitle = searchParams.jobTitle;
-    const company = searchParams.company;
 
     if (university) {
-      initialMessage = `I am interested in applying to ${university}${course ? ` for the ${course} program` : ""}. Please provide more details.`;
-      contextData = { university, course };
+      initialMessage = `I am interested in applying to ${university}${course ? ` for the ${course} program` : ""}. Please provide details.`;
     } else if (course) {
-      initialMessage = `I am interested in enquiring about the ${course} program. Please provide more details.`;
-      contextData = { course };
+      initialMessage = `I am interested in enquiring about the ${course} program.`;
     } else if (jobTitle) {
-      initialMessage = `I am interested in applying for the ${jobTitle} position${company ? ` at ${company}` : ""}.`;
-      contextData = { jobTitle, company };
+      initialMessage = `I am interested in applying for the ${jobTitle} position.`;
     }
 
     setFormData(prev => ({
       ...prev,
-      serviceType: searchParams.service || "",
-      message: prev.message || initialMessage,
-      sourceUrl: window.location.href,
-      sourcePage: searchParams.sourcePage || document.title,
-      referrer: document.referrer,
-      contextData: contextData
+      service: searchParams.service || "",
+      message: prev.message || initialMessage
     }))
   }, [searchParams]);
 
-  const validateForm = () => {
-    const { firstName, lastName, email, message } = formData
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !message.trim()) {
+  const validateBaseFields = () => {
+    const { fullName, email, phone, country, service, message } = formData
+    if (!fullName.trim() || !email.trim() || !phone.trim() || !country.trim() || !service || !message.trim()) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive",
+        title: "Missing Fields",
+        description: "Please fill out all fields first before requesting verification.",
+        variant: "destructive"
       })
       return false
     }
     return true
   }
+
+  const handleSendEmailOtp = async () => {
+    if (!validateBaseFields()) return;
+    setIsSendingEmailOtp(true);
+
+    try {
+      const response = await fetch("/api/contact/send-email-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to send code");
+
+      setEmailOtpSent(true);
+      setEmailCooldown(60); // 60s cooldown for resend
+      toast({
+        title: "OTP Sent",
+        description: "6-digit code sent to your email address.",
+        className: "bg-green-50 text-green-950 border-green-200"
+      });
+    } catch (error) {
+      toast({
+        title: "Send Failed",
+        description: error.message || "Could not send OTP. Try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingEmailOtp(false);
+    }
+  };
+
+  const handleVerifyEmailOtp = async () => {
+    if (!emailOtp || emailOtp.length !== 6) {
+      toast({
+        title: "Invalid OTP",
+        description: "Please enter a 6-digit verification code.",
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsVerifyingEmailOtp(true);
+
+    try {
+      const response = await fetch("/api/contact/verify-email-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, otp: emailOtp })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Incorrect OTP code");
+
+      setEmailVerified(true);
+      toast({
+        title: "Email Verified",
+        description: "Your email has been successfully verified.",
+        className: "bg-green-50 text-green-950 border-green-200"
+      });
+    } catch (error) {
+      toast({
+        title: "Verification Failed",
+        description: error.message || "Failed to verify. Please check the code.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsVerifyingEmailOtp(false);
+    }
+  };
+
+  const handleSendPhoneOtp = async () => {
+    if (!validateBaseFields()) return;
+    setIsSendingPhoneOtp(true);
+
+    try {
+      const response = await fetch("/api/contact/send-phone-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: formData.phone })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to send SMS code");
+
+      setPhoneOtpSent(true);
+      setPhoneCooldown(60); // 60s cooldown for resend
+      toast({
+        title: "OTP Sent",
+        description: "6-digit code sent to your mobile number.",
+        className: "bg-green-50 text-green-950 border-green-200"
+      });
+    } catch (error) {
+      toast({
+        title: "Send Failed",
+        description: error.message || "Could not send SMS code. Try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingPhoneOtp(false);
+    }
+  };
+
+  const handleVerifyPhoneOtp = async () => {
+    if (!phoneOtp || phoneOtp.length !== 6) {
+      toast({
+        title: "Invalid OTP",
+        description: "Please enter a 6-digit verification code.",
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsVerifyingPhoneOtp(true);
+
+    try {
+      const response = await fetch("/api/contact/verify-phone-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: formData.phone, otp: phoneOtp })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Incorrect OTP code");
+
+      setPhoneVerified(true);
+      toast({
+        title: "Mobile Verified",
+        description: "Your mobile number has been successfully verified.",
+        className: "bg-green-50 text-green-950 border-green-200"
+      });
+    } catch (error) {
+      toast({
+        title: "Verification Failed",
+        description: error.message || "Failed to verify mobile OTP.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsVerifyingPhoneOtp(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -199,12 +324,19 @@ export function ContactSection({ searchParams }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!validateForm()) return
+    if (!emailVerified || !phoneVerified) {
+      toast({
+        title: "Verification Required",
+        description: "Please verify both email and mobile numbers before submitting.",
+        variant: "destructive",
+      })
+      return;
+    }
 
     setIsSubmitting(true)
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/api/contact/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -213,24 +345,31 @@ export function ContactSection({ searchParams }) {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to send message")
+        throw new Error(data.error || "Submission failed")
       }
 
-      // Reset form (keep tracking params if they want to submit again)
-      setFormData(prev => ({ 
-        ...prev, 
-        firstName: "", 
-        lastName: "", 
-        email: "", 
-        phone: "",
-        message: "" 
-      }))
       setShowSuccessDialog(true)
+      
+      // Reset Form State
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        country: "",
+        service: "",
+        message: ""
+      })
+      setEmailOtp("")
+      setPhoneOtp("")
+      setEmailOtpSent(false)
+      setPhoneOtpSent(false)
+      setEmailVerified(false)
+      setPhoneVerified(false)
     } catch (error) {
-      console.error("Form submission error:", error)
+      console.error("Submission error:", error)
       toast({
         title: "Error",
-        description: error.message || "Failed to submit form. Please try again.",
+        description: error.message || "Failed to submit. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -239,91 +378,205 @@ export function ContactSection({ searchParams }) {
   }
 
   return (
-    <section id="contact" className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-fixed z-0"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1920&h=1080&fit=crop')"
-        }}
-      />
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/40 dark:bg-background/60 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/2 via-transparent to-primary/2 pointer-events-none z-20" />
+    <section id="contact" className="py-24 lg:py-32 relative overflow-hidden bg-slate-950">
+      {/* Visual background enhancements */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="mx-auto max-w-4xl px-6 lg:px-8 relative z-30">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-30">
         {/* Header */}
-        <div className="text-center mb-16 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
-          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4">Get in Touch</p>
-          <h2 className="text-3xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
-            Let&apos;s <span className="gradient-text">Connect</span>
+        <div className="text-center mb-16 animate-fadeInUp">
+          <p className="text-indigo-400 font-medium tracking-wide uppercase text-sm mb-4">Get in Touch</p>
+          <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight text-white mb-6">
+            Let&apos;s <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Connect</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-            Have a question or ready to take the next step? We&apos;re here to help. Fill out the form below and we&apos;ll get back to you as soon as possible.
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+            Have questions about studies abroad or career pathways? Verify your credentials and reach our advisors instantly.
           </p>
         </div>
 
-        {/* Main Container */}
-        <div className="grid lg:grid-cols-3 gap-12 mb-16">
-          {/* Contact Info */}
-          <div className="lg:col-span-1 space-y-8">
+        {/* Main Grid Layout */}
+        <div className="grid lg:grid-cols-3 gap-12 mb-16 items-start">
+          {/* Left Side: Contact Cards */}
+          <div className="lg:col-span-1 space-y-6">
             {CONTACT_INFO.map((info) => (
-              <ContactInfoCard key={info.title} {...info} />
+              <div key={info.title} className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl flex gap-4 items-center group hover:border-indigo-500/30 transition-all duration-300">
+                <div className="h-12 w-12 rounded-xl bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500/20 transition-all">
+                  <info.icon className="h-6 w-6 text-indigo-400" />
+                </div>
+                <div>
+                  <h4 className="text-xs uppercase tracking-wider text-slate-500 font-bold">{info.title}</h4>
+                  <p className="text-white font-medium mt-1 text-sm">{info.value}</p>
+                </div>
+              </div>
             ))}
           </div>
 
-          {/* Form */}
-          <div className="lg:col-span-2 card-gradient border border-border/50 rounded-2xl p-8 lg:p-10 card-hover-lift animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.35s both' }}>
+          {/* Right Side: Form Card */}
+          <div className="lg:col-span-2 bg-slate-900/30 border border-slate-800/80 rounded-2xl p-8 lg:p-10 shadow-2xl relative">
+            <div className="absolute top-4 right-4 flex items-center gap-1.5 text-xs text-indigo-300 font-semibold bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full">
+              <Sparkles className="w-3.5 h-3.5" /> SECURE FORM
+            </div>
+            
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Fields */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                {FORM_FIELDS.map((field) => (
-                  <FormField
-                    key={field.name}
-                    {...field}
-                    value={formData[field.name]}
+              
+              {/* Full Name */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  Full Name <span className="text-indigo-400">*</span>
+                </label>
+                <Input
+                  name="fullName"
+                  placeholder="John Doe"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="bg-slate-950/60 border-slate-800 focus:border-indigo-500 text-white rounded-lg h-11"
+                  required
+                  disabled={emailVerified || phoneVerified || emailOtpSent || phoneOtpSent}
+                />
+              </div>
+
+              {/* Email Address & Verification */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-slate-300">
+                  Email Address <span className="text-indigo-400">*</span>
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    name="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    value={formData.email}
                     onChange={handleChange}
+                    className="bg-slate-950/60 border-slate-800 focus:border-indigo-500 text-white rounded-lg h-11 flex-1"
+                    required
+                    disabled={emailVerified || emailOtpSent}
                   />
-                ))}
+                  {!emailVerified && (
+                    <Button
+                      type="button"
+                      onClick={handleSendEmailOtp}
+                      disabled={isSendingEmailOtp || emailCooldown > 0 || !formData.email || emailVerified}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white h-11 font-semibold px-4 rounded-lg min-w-[130px] disabled:opacity-50"
+                    >
+                      {isSendingEmailOtp ? "Sending..." : emailCooldown > 0 ? `Resend (${emailCooldown}s)` : "Send OTP"}
+                    </Button>
+                  )}
+                  {emailVerified && (
+                    <div className="flex items-center gap-1.5 px-4 bg-green-500/10 border border-green-500/30 text-green-400 rounded-lg text-sm font-bold">
+                      <CheckCircle2 className="w-4 h-4" /> Verified
+                    </div>
+                  )}
+                </div>
+
+                {/* Email OTP Verification Input */}
+                {emailOtpSent && !emailVerified && (
+                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex gap-2 items-center animate-fadeIn">
+                    <Input
+                      placeholder="Enter 6-digit Email OTP"
+                      value={emailOtp}
+                      onChange={(e) => setEmailOtp(e.target.value.slice(0, 6))}
+                      className="bg-slate-900 border-slate-700 text-white text-center font-bold tracking-widest text-lg h-11 flex-1"
+                      maxLength={6}
+                    />
+                    <Button
+                      type="button"
+                      onClick={handleVerifyEmailOtp}
+                      disabled={isVerifyingEmailOtp || emailOtp.length !== 6}
+                      className="bg-green-600 hover:bg-green-700 text-white h-11 font-semibold px-5 rounded-lg"
+                    >
+                      {isVerifyingEmailOtp ? "Verifying..." : "Verify"}
+                    </Button>
+                  </div>
+                )}
               </div>
 
-              {/* Email & Phone */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                <FormField
-                  name="email"
-                  label="Email Address"
-                  placeholder="john@example.com"
-                  value={formData.email}
+              {/* Mobile Number & Verification */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-slate-300">
+                  Mobile Number <span className="text-indigo-400">*</span>
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    name="phone"
+                    placeholder="+91 9866708665"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="bg-slate-950/60 border-slate-800 focus:border-indigo-500 text-white rounded-lg h-11 flex-1"
+                    required
+                    disabled={phoneVerified || phoneOtpSent}
+                  />
+                  {!phoneVerified && (
+                    <Button
+                      type="button"
+                      onClick={handleSendPhoneOtp}
+                      disabled={isSendingPhoneOtp || phoneCooldown > 0 || !formData.phone || phoneVerified}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white h-11 font-semibold px-4 rounded-lg min-w-[130px] disabled:opacity-50"
+                    >
+                      {isSendingPhoneOtp ? "Sending..." : phoneCooldown > 0 ? `Resend (${phoneCooldown}s)` : "Send OTP"}
+                    </Button>
+                  )}
+                  {phoneVerified && (
+                    <div className="flex items-center gap-1.5 px-4 bg-green-500/10 border border-green-500/30 text-green-400 rounded-lg text-sm font-bold">
+                      <CheckCircle2 className="w-4 h-4" /> Verified
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile OTP Verification Input */}
+                {phoneOtpSent && !phoneVerified && (
+                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex gap-2 items-center animate-fadeIn">
+                    <Input
+                      placeholder="Enter 6-digit Mobile OTP"
+                      value={phoneOtp}
+                      onChange={(e) => setPhoneOtp(e.target.value.slice(0, 6))}
+                      className="bg-slate-900 border-slate-700 text-white text-center font-bold tracking-widest text-lg h-11 flex-1"
+                      maxLength={6}
+                    />
+                    <Button
+                      type="button"
+                      onClick={handleVerifyPhoneOtp}
+                      disabled={isVerifyingPhoneOtp || phoneOtp.length !== 6}
+                      className="bg-green-600 hover:bg-green-700 text-white h-11 font-semibold px-5 rounded-lg"
+                    >
+                      {isVerifyingPhoneOtp ? "Verifying..." : "Verify"}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Country */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  Country <span className="text-indigo-400">*</span>
+                </label>
+                <Input
+                  name="country"
+                  placeholder="e.g., India"
+                  value={formData.country}
                   onChange={handleChange}
-                  delay="0.5s"
-                />
-                <FormField
-                  name="phone"
-                  label="Phone Number"
-                  placeholder="+1 (555) 000-0000"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  delay="0.5s"
-                  required={false}
+                  className="bg-slate-950/60 border-slate-800 focus:border-indigo-500 text-white rounded-lg h-11"
+                  required
+                  disabled={emailVerified || phoneVerified || emailOtpSent || phoneOtpSent}
                 />
               </div>
 
-              {/* Service Type */}
-              <div className="animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.55s both' }}>
-                <label htmlFor="serviceType" className="block text-sm font-semibold text-foreground mb-2">
-                  Select Service <span className="text-primary">*</span>
+              {/* Interested Service */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  Interested Service <span className="text-indigo-400">*</span>
                 </label>
                 <select
-                  id="serviceType"
-                  name="serviceType"
-                  value={formData.serviceType}
+                  name="service"
+                  value={formData.service}
                   onChange={handleChange}
-                  className="w-full bg-secondary/50 dark:bg-secondary/70 border-2 border-primary/40 dark:border-primary/60 hover:border-primary/60 dark:hover:border-primary/80 focus:border-primary dark:focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/50 transition-all rounded-lg px-4 py-2.5 text-foreground dark:text-foreground font-medium appearance-none cursor-pointer"
+                  className="w-full bg-slate-950/60 border border-slate-800 hover:border-indigo-500/50 focus:border-indigo-500 focus:outline-none transition-all rounded-lg px-4 py-2.5 text-white cursor-pointer h-11"
                   required
+                  disabled={emailVerified || phoneVerified || emailOtpSent || phoneOtpSent}
                 >
-                  <option value="">Choose a service...</option>
+                  <option value="" className="bg-slate-900 text-slate-500">Choose a service...</option>
                   {SERVICE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <option key={option.value} value={option.value} className="bg-slate-900 text-white">
                       {option.label}
                     </option>
                   ))}
@@ -331,46 +584,55 @@ export function ContactSection({ searchParams }) {
               </div>
 
               {/* Message */}
-              <FormField
-                name="message"
-                label="Message"
-                placeholder="Tell us about your needs and how we can help..."
-                value={formData.message}
-                onChange={handleChange}
-                delay="0.6s"
-                isTextarea
-              />
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  Message <span className="text-indigo-400">*</span>
+                </label>
+                <Textarea
+                  name="message"
+                  placeholder="Tell us about your background, requirements, and how we can support you..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="bg-slate-950/60 border-slate-800 focus:border-indigo-500 text-white rounded-lg"
+                  rows={5}
+                  required
+                  disabled={emailVerified || phoneVerified || emailOtpSent || phoneOtpSent}
+                />
+              </div>
 
               {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-semibold py-3 text-base animate-fadeInUp hover:shadow-lg hover:scale-[1.02] transition-all"
-                style={{ animation: 'fadeInUp 0.6s ease-out 0.65s both' }}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="animate-spin">⏳</span> Sending...
-                  </span>
-                ) : (
-                  "Send Message"
+              <div className="space-y-4">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !emailVerified || !phoneVerified}
+                  className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 text-base rounded-lg shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 h-12 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <span>⏳ Processing Submission...</span>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" /> Submit Verified Inquiry
+                    </>
+                  )}
+                </Button>
+                
+                {(!emailVerified || !phoneVerified) && (
+                  <p className="text-xs text-indigo-300/80 text-center flex items-center justify-center gap-1">
+                    <ShieldAlert className="w-3.5 h-3.5 text-indigo-400" /> Form submission is locked until both email and mobile numbers are OTP verified.
+                  </p>
                 )}
-              </Button>
-
-              <p className="text-xs text-muted-foreground text-center animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.7s both' }}>
-                We respect your privacy. We&apos;ll only use your information to respond to your inquiry.
-              </p>
+              </div>
             </form>
           </div>
         </div>
 
         {/* Location Map Section */}
-        <div className="mt-16 animate-fadeInUp" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
+        <div className="mt-16">
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-foreground mb-2">Visit Our Office</h3>
-            <p className="text-muted-foreground text-sm mb-4">Near Pillar No. 204, beside Ramdev Granites, Attapur, Dargah Pahad, Chintalmet, Upperpally, Hyderabad, Telangana 500048</p>
+            <h3 className="text-2xl font-bold text-white mb-2">Visit Our Office</h3>
+            <p className="text-slate-400 text-sm">Near Pillar No. 204, beside Ramdev Granites, Attapur, Dargah Pahad, Chintalmet, Upperpally, Hyderabad, Telangana 500048</p>
           </div>
-          <div className="relative rounded-2xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-shadow h-64 card-hover-lift">
+          <div className="relative rounded-2xl overflow-hidden border border-slate-800 shadow-xl h-64">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.752!2d78.4145344!3d17.3487697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9778f5c462e9:0x1351877bc2795a1a!2sAlman%20Travel%20Services!5e0!3m2!1sen!2sin!4v1684756891234"
               width="100%"
@@ -384,11 +646,11 @@ export function ContactSection({ searchParams }) {
           </div>
         </div>
 
-        {/* Success Dialog */}
+        {/* Success Confirmation Dialog */}
         <SuccessDialog
           isOpen={showSuccessDialog}
           onClose={() => setShowSuccessDialog(false)}
-          firstName={formData.firstName}
+          fullName={formData.fullName}
           email={formData.email}
         />
       </div>

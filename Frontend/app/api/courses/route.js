@@ -277,7 +277,7 @@ export async function POST(req) {
         const existingCourse = await Course.findOne({
             $or: [
                 { slug },
-                { courseName: { $regex: new RegExp(`^${body.courseName.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") } }
+                { courseName: { $regex: new RegExp(`^${body.courseName.trim().replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") } }
             ],
         });
 

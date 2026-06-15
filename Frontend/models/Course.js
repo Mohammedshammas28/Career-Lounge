@@ -52,7 +52,7 @@ courseSchema.pre("save", async function (next) {
     if (this.isModified("courseName")) {
         const CourseModel = mongoose.models.Course || mongoose.model("Course");
         const existing = await CourseModel.findOne({
-            courseName: { $regex: new RegExp(`^${this.courseName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") }
+            courseName: { $regex: new RegExp(`^${this.courseName.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") }
         });
         if (existing && existing._id.toString() !== this._id.toString()) {
             return next(new Error(`Course with name "${this.courseName}" already exists`));

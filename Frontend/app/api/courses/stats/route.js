@@ -16,7 +16,7 @@ export async function GET(req) {
         }
 
         // Find universities that offer this course category (case-insensitive regex match)
-        const regex = new RegExp(`^${courseName.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i");
+        const regex = new RegExp(`^${courseName.trim().replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i");
         const universities = await University.find({
             coursesOffered: { $regex: regex }
         });

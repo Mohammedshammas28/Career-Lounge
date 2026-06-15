@@ -227,6 +227,8 @@ export default function BannersAdminPage() {
         const draggedIndex = banners.findIndex(b => b._id === draggedId);
         const targetIndex = banners.findIndex(b => b._id === targetBannerId);
 
+        if (draggedIndex === -1 || targetIndex === -1) return;
+
         const newBanners = [...banners];
         [newBanners[draggedIndex], newBanners[targetIndex]] = [newBanners[targetIndex], newBanners[draggedIndex]];
 
