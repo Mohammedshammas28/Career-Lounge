@@ -131,10 +131,6 @@ export default function UniversitiesPage() {
     router.push(`/university/${slug}`);
   };
 
-  const handleApplyNow = (slug) => {
-    router.push(`/contact?university=${slug}`);
-  };
-
   const getLogo = (uni) => {
     if (!uni) return null;
     // Prioritize the logo from database if available
@@ -315,19 +311,13 @@ export default function UniversitiesPage() {
                     </p>
 
                     {/* Action Buttons */}
-                    <div className="grid grid-cols-2 gap-3 w-full mt-auto">
+                    <div className="w-full mt-auto">
                       <Button
                         variant="outline"
                         onClick={() => handleViewDetails(uni.slug)}
-                        className="rounded-xl border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 h-11 text-xs font-bold"
+                        className="rounded-xl border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 h-11 text-xs font-bold w-full"
                       >
                         Know More
-                      </Button>
-                      <Button
-                        onClick={() => handleApplyNow(uni.slug)}
-                        className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 h-11 text-xs font-bold"
-                      >
-                        Apply Now
                       </Button>
                     </div>
                   </motion.div>

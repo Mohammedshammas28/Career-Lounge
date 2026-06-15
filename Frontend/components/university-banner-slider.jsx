@@ -238,7 +238,7 @@ export default function PremiumOfferSlider() {
                                 <>
                                     <Image
                                         src={currentBanner.customBannerImage || uni?.bannerImage}
-                                        alt={uni?.universityName}
+                                        alt={uni?.universityName || "Featured University Banner"}
                                         fill
                                         className="object-cover"
                                     />
@@ -253,7 +253,7 @@ export default function PremiumOfferSlider() {
                                 <div className="absolute top-6 right-6 z-20 bg-white/95 backdrop-blur rounded-xl p-3 shadow-xl border border-white/20">
                                     <Image
                                         src={uni.logo}
-                                        alt={uni.universityName}
+                                        alt={uni.universityName || "University Logo"}
                                         width={60}
                                         height={60}
                                         className="object-contain"

@@ -18,7 +18,6 @@ export default function OverseasRecruitmentPage() {
       try {
         setIsLoading(true)
         const response = await fetch("/api/jobs?category=Overseas", {
-          cache: "no-store",
           headers: { "Cache-Control": "no-cache" },
         })
         if (!response.ok) throw new Error("Failed to fetch jobs")

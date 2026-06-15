@@ -16,7 +16,6 @@ export function SlidingBanner() {
             try {
                 console.log("🔄 Fetching university banners from /api/banners...")
                 const response = await fetch("/api/banners", {
-                    cache: "no-store",
                     headers: { "Cache-Control": "no-cache" }
                 })
 

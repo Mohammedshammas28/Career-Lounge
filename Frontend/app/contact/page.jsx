@@ -7,11 +7,12 @@ export const metadata = {
   description: 'Get in touch with Career Lounge. Fill out our contact form or reach us directly via email, phone, or visit our office.',
 }
 
-export default function ContactPage({ searchParams }) {
+export default async function ContactPage({ searchParams }) {
+  const params = await searchParams
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      <ContactSection searchParams={searchParams} />
+      <ContactSection searchParams={params} />
       <Footer />
     </main>
   )
