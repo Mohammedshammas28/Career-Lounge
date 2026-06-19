@@ -31,7 +31,7 @@ const STATIC_SERVICES = [
     {
         title: "Career Counselling",
         description: "Personalized guidance to align your goals, profile, and study destination.",
-        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
+        image: "https://picsum.photos/seed/career-counselling/800/480",
         iconName: "UserRoundSearch",
         buttonText: "Book Session",
         buttonLink: "/services/career-counselling",
@@ -39,7 +39,7 @@ const STATIC_SERVICES = [
     {
         title: "Profile Evaluation",
         description: "Get a clear assessment of your academics, experience, and improvement areas.",
-        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=80",
+        image: "https://picsum.photos/seed/profile-evaluation/800/480",
         iconName: "FileText",
         buttonText: "Evaluate Profile",
         buttonLink: "/services/career-counselling",
@@ -47,7 +47,7 @@ const STATIC_SERVICES = [
     {
         title: "Resume Building",
         description: "Build a polished resume that presents your strengths with clarity and impact.",
-        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&q=80",
+        image: "https://picsum.photos/seed/resume-building/800/480",
         iconName: "ClipboardList",
         buttonText: "Polish Resume",
         buttonLink: "/services/career-counselling",
@@ -243,11 +243,16 @@ export default function CareerGuidanceCarousel() {
 
                                             <div className="relative overflow-hidden rounded-[24px] bg-slate-100 shadow-[0_10px_24px_rgba(59,130,246,0.12)]">
                                                 <motion.img
-                                                    src={service.image}
+                                                    src={service.image || `https://picsum.photos/seed/${encodeURIComponent(service.title)}/800/480`}
                                                     alt={service.title}
                                                     className="h-44 w-full object-cover"
                                                     whileHover={{ scale: 1.08 }}
                                                     transition={{ duration: 0.35 }}
+                                                    referrerPolicy="no-referrer"
+                                                    onError={(e) => {
+                                                        e.currentTarget.src = `https://picsum.photos/seed/${encodeURIComponent(service.title)}/800/480`
+                                                        e.currentTarget.onerror = () => { e.currentTarget.style.display = "none" }
+                                                    }}
                                                 />
 
                                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/50 via-slate-950/8 to-transparent" />

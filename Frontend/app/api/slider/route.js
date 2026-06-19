@@ -10,7 +10,7 @@ const DEFAULT_SLIDER = {
       title: "Transform Your Dreams",
       subtitle: "Into Global Opportunities",
       description: "Study abroad with Career Lounge's premium international consultancy services",
-      image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1200&h=700&fit=crop",
+      image: "https://picsum.photos/seed/global-education/1200/700",
       category: "Education",
       backgroundColor: "from-slate-950 to-slate-900",
       glowColor: "purple",

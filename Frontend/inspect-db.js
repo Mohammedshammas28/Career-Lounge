@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoUri = "mongodb://mohammedshammasuddins81:Shammas_28@cluster0-shard-00-00.xm21m.mongodb.net:27017,cluster0-shard-00-01.xm21m.mongodb.net:27017,cluster0-shard-00-02.xm21m.mongodb.net:27017/Career-Lounge?ssl=true&replicaSet=atlas-90e3ig-shard-0&authSource=admin&retryWrites=true&w=majority";
+const mongoUri = "mongodb+srv://info_db_user:Career-Lounge9291@careerlounge-cluster.bc1mhmr.mongodb.net/CareerLounge?appName=careerlounge-cluster";
 
 async function run() {
     try {

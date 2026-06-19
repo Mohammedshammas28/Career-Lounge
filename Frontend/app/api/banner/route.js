@@ -11,7 +11,7 @@ export async function GET() {
         slides: [
           {
             id: 1,
-            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=400&fit=crop",
+            image: "https://picsum.photos/seed/career-transform/1200/400",
             title: "Transform Your Career",
             description: "Expert career counselling and guidance for your future",
             ctaText: "Get Started",
@@ -19,7 +19,7 @@ export async function GET() {
           },
           {
             id: 2,
-            image: "https://images.unsplash.com/photo-1427504494785-405a6e7ee8fa?w=1200&h=400&fit=crop",
+            image: "https://picsum.photos/seed/study-abroad/1200/400",
             title: "Study Abroad",
             description: "Get admission to top universities worldwide",
             ctaText: "Explore Programs",
@@ -27,7 +27,7 @@ export async function GET() {
           },
           {
             id: 3,
-            image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&h=400&fit=crop",
+            image: "https://picsum.photos/seed/immigration-journey/1200/400",
             title: "Immigrate with Confidence",
             description: "Navigate your immigration journey with expert support",
             ctaText: "Learn More",
@@ -54,7 +54,7 @@ export async function GET() {
         slides: [
           {
             id: 1,
-            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=400&fit=crop",
+            image: "https://picsum.photos/seed/career-transform/1200/400",
             title: "Transform Your Career",
             description: "Expert career counselling and guidance for your future",
             ctaText: "Get Started",

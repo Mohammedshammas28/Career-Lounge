@@ -5,6 +5,12 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      { protocol: "https", hostname: "picsum.photos" },
+      { protocol: "https", hostname: "flagcdn.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "placehold.co" },
+    ],
   },
 }
 

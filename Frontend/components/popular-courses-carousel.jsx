@@ -5,13 +5,16 @@ import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight, Star, Building, Globe } from "lucide-react"
 import Link from "next/link"
 
+const makePlaceholder = (name) =>
+    `https://picsum.photos/seed/${encodeURIComponent(name)}-course/800/480`
+
 const staticCourses = [
-    { _id: "allied-health", courseName: "Allied Health", description: "Patient care, clinical practice, and health sciences.", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=60" },
-    { _id: "commerce", courseName: "Commerce", description: "Business, trade, accounting, and finance fundamentals.", image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=60" },
-    { _id: "engineering", courseName: "Engineering", description: "Design, innovation, and real-world problem solving.", image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=60" },
-    { _id: "management", courseName: "Management", description: "Strategy, operations, and data-driven decision making.", image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=60" },
-    { _id: "medicine", courseName: "Medicine", description: "Clinical science, diagnosis, and patient care.", image: "https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=800" },
-    { _id: "science", courseName: "Science", description: "Core scientific principles, research, and discovery.", image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=60" },
+    { _id: "allied-health", courseName: "Allied Health", description: "Patient care, clinical practice, and health sciences.", image: "https://picsum.photos/seed/allied-health/800/480" },
+    { _id: "commerce", courseName: "Commerce", description: "Business, trade, accounting, and finance fundamentals.", image: "https://picsum.photos/seed/commerce-finance/800/480" },
+    { _id: "engineering", courseName: "Engineering", description: "Design, innovation, and real-world problem solving.", image: "https://picsum.photos/seed/engineering-tech/800/480" },
+    { _id: "management", courseName: "Management", description: "Strategy, operations, and data-driven decision making.", image: "https://picsum.photos/seed/management-biz/800/480" },
+    { _id: "medicine", courseName: "Medicine", description: "Clinical science, diagnosis, and patient care.", image: "https://picsum.photos/seed/medicine-health/800/480" },
+    { _id: "science", courseName: "Science", description: "Core scientific principles, research, and discovery.", image: "https://picsum.photos/seed/science-lab/800/480" },
 ]
 
 export default function PopularCoursesCarousel() {
@@ -214,14 +217,17 @@ export default function PopularCoursesCarousel() {
                                                 <div className="relative overflow-hidden rounded-[20px] bg-slate-100">
                                                     <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/18 via-black/0 to-transparent" />
                                                     <motion.img
-                                                        src={image}
+                                                        src={image || makePlaceholder(name)}
                                                         alt={name}
                                                         className="h-48 w-full object-cover"
                                                         whileHover={{ scale: 1.08 }}
                                                         transition={{ duration: 0.3 }}
+                                                        referrerPolicy="no-referrer"
                                                         onError={(event) => {
-                                                            event.currentTarget.src =
-                                                                "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23e2e8f0'/%3E%3Cstop offset='100%25' stop-color='%23cbd5e1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='500' fill='url(%23g)'/%3E%3C/svg%3E"
+                                                            event.currentTarget.src = makePlaceholder(name)
+                                                            event.currentTarget.onerror = () => {
+                                                                event.currentTarget.style.display = "none"
+                                                            }
                                                         }}
                                                     />
                                                 </div>

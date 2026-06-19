@@ -32,7 +32,7 @@ export function ProcessSection() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:bg-fixed z-0"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&h=1080&fit=crop')"
+          backgroundImage: "url('https://picsum.photos/seed/business-process/1920/1080')"
         }}
       />
       {/* Overlay */}

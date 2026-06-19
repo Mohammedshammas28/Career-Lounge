@@ -5,6 +5,8 @@ import { otpService } from "@/backend/services/otpService";
 import { emailService } from "@/backend/services/emailService";
 import { emailValidator } from "@/backend/utils/emailValidator";
 
+import { memoryCheckVerification, memoryConsumeVerification } from "@/app/api/contact/send-email-otp/route";
+
 export async function POST(request) {
   try {
     await connectToDatabase();
@@ -32,12 +34,20 @@ export async function POST(request) {
     }
 
     // 4. Verify OTP Statuses
-    const isEmailVerified = await otpService.checkVerificationStatus(email);
-    const isPhoneVerified = await otpService.checkVerificationStatus(phone);
+    let isEmailVerified = false;
+    try {
+      isEmailVerified = await otpService.checkVerificationStatus(email);
+    } catch (dbError) {
+      console.warn("[Submit Form] DB unavailable, trying in-memory status:", dbError.message);
+    }
 
-    if (!isEmailVerified || !isPhoneVerified) {
+    if (!isEmailVerified) {
+      isEmailVerified = memoryCheckVerification(email);
+    }
+
+    if (!isEmailVerified) {
       return Response.json({
-        error: "Verification failed. Both Email and Mobile OTP must be successfully verified before submitting."
+        error: "Verification failed. Email OTP must be successfully verified before submitting."
       }, { status: 400 });
     }
 
@@ -50,7 +60,7 @@ export async function POST(request) {
       service,
       message,
       emailVerified: true,
-      phoneVerified: true,
+      phoneVerified: false,
       status: "New"
     });
     await submission.save();
@@ -95,8 +105,12 @@ export async function POST(request) {
     });
 
     // 8. Consume verification tokens so they can't be reused
-    await otpService.consumeVerification(email);
-    await otpService.consumeVerification(phone);
+    try {
+      await otpService.consumeVerification(email);
+    } catch (dbError) {
+      console.warn("[Submit Form] DB error during consume:", dbError.message);
+    }
+    memoryConsumeVerification(email);
 
     return Response.json({
       success: true,

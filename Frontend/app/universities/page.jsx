@@ -169,7 +169,6 @@ export default function UniversitiesPage() {
     router.push(`/university/${slug}`);
   };
 
-<<<<<<< HEAD
   const handleApplyNow = (slug) => {
     router.push(`/contact?university=${slug}`);
   };
@@ -190,8 +189,6 @@ export default function UniversitiesPage() {
     setSelectedCountry("All Countries");
   };
 
-=======
->>>>>>> 923b55307a620e1e98aab32b32e682fe0c5f6709
   const getLogo = (uni) => {
     if (!uni) return null;
     // Prioritize the logo from database if available

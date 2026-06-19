@@ -5,7 +5,7 @@ const DEFAULT_COURSES = [
     {
         courseName: "Allied Health",
         description: "Patient care, clinical practice, and health sciences.",
-        image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=60",
+        image: "https://picsum.photos/seed/allied-health/800/480",
         duration: "3-4 Years",
         fees: "$12,000 / Year",
         category: "Undergraduate",
@@ -41,7 +41,7 @@ const DEFAULT_COURSES = [
     {
         courseName: "Commerce",
         description: "Business, trade, accounting, and finance fundamentals.",
-        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=60",
+        image: "https://picsum.photos/seed/commerce-finance/800/480",
         duration: "3 Years",
         fees: "$10,000 / Year",
         category: "Undergraduate",
@@ -70,7 +70,7 @@ const DEFAULT_COURSES = [
     {
         courseName: "Engineering",
         description: "Design, innovation, and real-world problem solving.",
-        image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=60",
+        image: "https://picsum.photos/seed/engineering-tech/800/480",
         duration: "4 Years",
         fees: "$15,000 / Year",
         category: "Undergraduate",
@@ -106,7 +106,7 @@ const DEFAULT_COURSES = [
     {
         courseName: "Management",
         description: "Strategy, operations, and data-driven decision making.",
-        image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=60",
+        image: "https://picsum.photos/seed/management-biz/800/480",
         duration: "2-3 Years",
         fees: "$14,000 / Year",
         category: "Postgraduate",
@@ -142,7 +142,7 @@ const DEFAULT_COURSES = [
     {
         courseName: "Medicine",
         description: "Clinical science, diagnosis, and patient care.",
-        image: "https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=800",
+        image: "https://picsum.photos/seed/medicine-health/800/480",
         duration: "5-6 Years",
         fees: "$25,000 / Year",
         category: "Undergraduate",
@@ -171,7 +171,7 @@ const DEFAULT_COURSES = [
     {
         courseName: "Science",
         description: "Core scientific principles, research, and discovery.",
-        image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=60",
+        image: "https://picsum.photos/seed/science-lab/800/480",
         duration: "3 Years",
         fees: "$9,000 / Year",
         category: "Undergraduate",
@@ -230,7 +230,23 @@ export async function GET(req) {
                 await course.save();
                 seeded.push(course);
             }
-            courses = seeded.sort((a, b) => b.createdAt - a.createdAt);
+            courses = seeded;
+        }
+
+        // Auto-migrate: fix any courses with broken Unsplash/Pexels image URLs
+        const migratePromises = [];
+        for (const course of courses) {
+            if (course.image && (course.image.includes("images.unsplash.com") || course.image.includes("images.pexels.com"))) {
+                const newUrl = `https://picsum.photos/seed/${encodeURIComponent(course.courseName)}/800/480`;
+                migratePromises.push(
+                    Course.findByIdAndUpdate(course._id, { image: newUrl })
+                );
+                course.image = newUrl;
+            }
+        }
+        if (migratePromises.length > 0) {
+            console.log(`🔄 Migrating ${migratePromises.length} courses with broken image URLs...`);
+            await Promise.all(migratePromises);
         }
 
         return Response.json(

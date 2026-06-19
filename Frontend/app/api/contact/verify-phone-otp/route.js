@@ -1,4 +1,5 @@
 import { otpService } from "@/backend/services/otpService";
+import { memoryVerifyPhoneOTP } from "@/app/api/contact/send-phone-otp/route";
 
 export async function POST(request) {
   try {
@@ -8,8 +9,20 @@ export async function POST(request) {
       return Response.json({ error: "Phone number and verification code are required." }, { status: 400 });
     }
 
-    // Verify OTP
-    const verification = await otpService.verifyOTP({ identifier: phone, otp });
+    // Try DB-backed OTP verification first, fall back to in-memory
+    let verification;
+    try {
+      verification = await otpService.verifyOTP({ identifier: phone, otp });
+    } catch (dbError) {
+      console.warn("[Verify Phone OTP] DB unavailable, trying in-memory fallback:", dbError.message);
+      verification = memoryVerifyPhoneOTP(phone, otp);
+    }
+
+    // If DB returned not found, also try the memory store (covers cases where OTP was sent in memory-fallback mode)
+    if (!verification.success && verification.message?.includes("not found")) {
+      const memResult = memoryVerifyPhoneOTP(phone, otp);
+      if (memResult.success) verification = memResult;
+    }
 
     if (!verification.success) {
       return Response.json({ error: verification.message }, { status: 400 });

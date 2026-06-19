@@ -5,66 +5,83 @@ import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight, GraduationCap } from "lucide-react"
 import Link from "next/link"
 
+// Gradient placeholder colors for each exam card
+const EXAM_GRADIENTS = [
+    "from-blue-500 to-indigo-600",
+    "from-emerald-500 to-teal-600",
+    "from-violet-500 to-purple-600",
+    "from-orange-500 to-red-500",
+    "from-cyan-500 to-blue-600",
+    "from-pink-500 to-rose-600",
+    "from-green-500 to-emerald-600",
+    "from-amber-500 to-orange-600",
+    "from-sky-500 to-cyan-600",
+    "from-fuchsia-500 to-pink-600",
+]
+
+const makePlaceholder = (name) =>
+    `https://placehold.co/800x480/1e293b/ffffff?text=${encodeURIComponent(name)}&font=montserrat`
+
 const STATIC_EXAMS = [
     {
         name: "ACT",
         targetScore: "Target: 28+",
         description: "College readiness assessment.",
-        img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=60",
+        img: "https://picsum.photos/seed/act-exam/800/480",
     },
     {
         name: "CELPIP",
         targetScore: "Target: 9+",
         description: "Canadian immigration and study pathways.",
-        img: "https://images.unsplash.com/photo-1513258496099-48168024aec0?w=800&q=60",
+        img: "https://picsum.photos/seed/celpip-test/800/480",
     },
     {
         name: "Duolingo English Test",
         targetScore: "Target: 120+",
         description: "Affordable online English test.",
-        img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=60",
+        img: "https://picsum.photos/seed/duolingo-english/800/480",
     },
     {
         name: "GMAT",
         targetScore: "Target: 650+",
         description: "Business school admission test.",
-        img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=60",
+        img: "https://picsum.photos/seed/gmat-business/800/480",
     },
     {
         name: "GRE",
         targetScore: "Target: 320+",
         description: "Graduate school admission test.",
-        img: "https://images.unsplash.com/photo-1513258496099-48168024aec0?w=800&q=60",
+        img: "https://picsum.photos/seed/gre-graduate/800/480",
     },
     {
         name: "IELTS",
         targetScore: "Target: 7.0+",
         description: "English proficiency test accepted worldwide.",
-        img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=60",
+        img: "https://picsum.photos/seed/ielts-english/800/480",
     },
     {
         name: "OET",
         targetScore: "Target: B+",
         description: "English test for healthcare professionals.",
-        img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=60",
+        img: "https://picsum.photos/seed/oet-healthcare/800/480",
     },
     {
         name: "PTE Academic",
         targetScore: "Target: 65+",
         description: "Fast computer-based English test.",
-        img: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=60",
+        img: "https://picsum.photos/seed/pte-academic/800/480",
     },
     {
         name: "SAT",
         targetScore: "Target: 1400+",
         description: "Undergraduate admission test.",
-        img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=60",
+        img: "https://picsum.photos/seed/sat-undergrad/800/480",
     },
     {
         name: "TOEFL iBT",
         targetScore: "Target: 95+",
         description: "University-focused English proficiency exam.",
-        img: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&q=60",
+        img: "https://picsum.photos/seed/toefl-university/800/480",
     },
 ]
 
@@ -245,15 +262,23 @@ export default function TestPreparationCarousel() {
                                         <div className="relative overflow-hidden rounded-[20px] bg-slate-100">
                                             <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/18 via-black/0 to-transparent" />
                                             <motion.img
-                                                src={exam.image}
-                                                alt={exam.title}
+                                                src={exam.image || exam.img || makePlaceholder(exam.title || exam.name || "Exam")}
+                                                alt={exam.title || exam.name}
                                                 className="h-48 w-full object-cover"
                                                 whileHover={{ scale: 1.08 }}
                                                 transition={{ duration: 0.3 }}
+                                                referrerPolicy="no-referrer"
+                                                onError={(e) => {
+                                                    const name = exam.title || exam.name || "Exam"
+                                                    e.currentTarget.src = `https://picsum.photos/seed/${encodeURIComponent(name)}/800/480`
+                                                    e.currentTarget.onerror = () => {
+                                                        e.currentTarget.style.display = "none"
+                                                    }
+                                                }}
                                             />
                                             <div className="absolute left-3 top-3 z-20 inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur">
                                                 <GraduationCap className="h-3.5 w-3.5 text-primary" />
-                                                {exam.title}
+                                                {exam.title || exam.name}
                                             </div>
                                         </div>
 

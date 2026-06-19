@@ -12,7 +12,7 @@ export function HeroSection() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:bg-fixed z-0"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&h=1080&fit=crop')"
+          backgroundImage: "url('https://picsum.photos/seed/hero-office/1920/1080')"
         }}
       />
 
@@ -82,7 +82,7 @@ export function HeroSection() {
                   <div
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                     style={{
-                      backgroundImage: "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=450&fit=crop')"
+                      backgroundImage: "url('https://picsum.photos/seed/career-team/800/450')"
                     }}
                   />
                   {/* Gradient overlay */}

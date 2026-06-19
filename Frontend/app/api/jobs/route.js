@@ -9,7 +9,7 @@ const DEFAULT_JOBS = [
         type: "Full-time",
         salary: "AED 18,000 - 25,000 / Month",
         experience: "5+ Years",
-        logo: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&h=200&fit=crop",
+        logo: "https://picsum.photos/seed/technova/200/200",
         description: "We are seeking a Senior Software Engineer to lead the development of our cloud platforms and mentor junior developers. In this role, you will collaborate with cross-functional teams to define, design, and ship new features.",
         requirements: [
             "Bachelor's degree in Computer Science or related field",
@@ -32,7 +32,7 @@ const DEFAULT_JOBS = [
         type: "Full-time",
         salary: "AED 12,000 - 15,000 / Month",
         experience: "3+ Years",
-        logo: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=200&h=200&fit=crop",
+        logo: "https://picsum.photos/seed/citycare/200/200",
         description: "Provide critical nursing care, manage patient rehabilitation programs, and lead hospital shifts. You will work closely with medical doctors and healthcare teams to provide exceptional clinical treatment.",
         requirements: [
             "Bachelor of Science in Nursing (BSN) or equivalent",
@@ -55,7 +55,7 @@ const DEFAULT_JOBS = [
         type: "Full-time",
         salary: "AED 10,000 - 14,000 / Month",
         experience: "4+ Years",
-        logo: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=200&h=200&fit=crop",
+        logo: "https://picsum.photos/seed/apexmedia/200/200",
         description: "Develop, implement, track and optimize our digital marketing campaigns across all digital channels. You will lead marketing campaigns from conceptualization to execution, analyzing performance metrics to drive client growth.",
         requirements: [
             "Degree in Marketing, Communications, or related field",
@@ -78,7 +78,7 @@ const DEFAULT_JOBS = [
         type: "Full-time",
         salary: "SAR 15,000 - 20,000 / Month",
         experience: "2+ Years",
-        logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200&h=200&fit=crop",
+        logo: "https://picsum.photos/seed/globalfinance/200/200",
         description: "Conduct financial analysis, build complex financial models, and prepare reports for senior leadership to drive strategic investment choices. You will gather data and identify business trends to optimize corporate budget execution.",
         requirements: [
             "Bachelor's degree in Finance, Economics, Accounting, or related field",

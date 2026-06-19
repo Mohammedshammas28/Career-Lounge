@@ -7,7 +7,7 @@ import { getCounsellingUserTemplate, getCounsellingAdminTemplate } from "../temp
 import { getPasswordResetOTPTemplate, getPasswordResetConfirmationTemplate } from "../templates/passwordResetTemplate";
 
 // Environment variables with fallback
-const EMAIL_FROM = process.env.EMAIL_FROM || "Career Lounge <noreply@career-lounge.in>";
+const EMAIL_FROM = process.env.EMAIL_FROM || "Career Lounge <info@career-lounge.in>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@career-lounge.in";
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@career-lounge.in";
 const APPLICATION_EMAIL = process.env.APPLICATION_EMAIL || "applications@career-lounge.in";

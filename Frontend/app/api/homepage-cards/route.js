@@ -8,7 +8,7 @@ const DEFAULT_CARDS = [
         title: "Career Counselling",
         subtitle: "Premium",
         description: "Personalized guidance to align your goals, profile, and study destination.",
-        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
+        image: "https://picsum.photos/seed/career-counselling/800/480",
         iconName: "UserRoundSearch",
         buttonText: "Book Session",
         buttonLink: "/services/career-counselling",
@@ -20,7 +20,7 @@ const DEFAULT_CARDS = [
         title: "Profile Evaluation",
         subtitle: "Premium",
         description: "Get a clear assessment of your academics, experience, and improvement areas.",
-        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=80",
+        image: "https://picsum.photos/seed/profile-evaluation/800/480",
         iconName: "FileText",
         buttonText: "Evaluate Profile",
         buttonLink: "/services/career-counselling",
@@ -32,7 +32,7 @@ const DEFAULT_CARDS = [
         title: "Resume Building",
         subtitle: "Premium",
         description: "Build a polished resume that presents your strengths with clarity and impact.",
-        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&q=80",
+        image: "https://picsum.photos/seed/resume-building/800/480",
         iconName: "ClipboardList",
         buttonText: "Polish Resume",
         buttonLink: "/services/career-counselling",
@@ -46,7 +46,7 @@ const DEFAULT_CARDS = [
         title: "ACT",
         subtitle: "Target: 28+",
         description: "College readiness assessment.",
-        image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=60",
+        image: "https://picsum.photos/seed/act-exam/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 1,
@@ -57,7 +57,7 @@ const DEFAULT_CARDS = [
         title: "CELPIP",
         subtitle: "Target: 9+",
         description: "Canadian immigration and study pathways.",
-        image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?w=800&q=60",
+        image: "https://picsum.photos/seed/celpip-test/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 2,
@@ -68,7 +68,7 @@ const DEFAULT_CARDS = [
         title: "Duolingo English Test",
         subtitle: "Target: 120+",
         description: "Affordable online English test.",
-        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=60",
+        image: "https://picsum.photos/seed/duolingo-english/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 3,
@@ -79,7 +79,7 @@ const DEFAULT_CARDS = [
         title: "GMAT",
         subtitle: "Target: 650+",
         description: "Business school admission test.",
-        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=60",
+        image: "https://picsum.photos/seed/gmat-business/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 4,
@@ -90,7 +90,7 @@ const DEFAULT_CARDS = [
         title: "GRE",
         subtitle: "Target: 320+",
         description: "Graduate school admission test.",
-        image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?w=800&q=60",
+        image: "https://picsum.photos/seed/gre-graduate/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 5,
@@ -101,7 +101,7 @@ const DEFAULT_CARDS = [
         title: "IELTS",
         subtitle: "Target: 7.0+",
         description: "English proficiency test accepted worldwide.",
-        image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=60",
+        image: "https://picsum.photos/seed/ielts-english/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 6,
@@ -112,7 +112,7 @@ const DEFAULT_CARDS = [
         title: "OET",
         subtitle: "Target: B+",
         description: "English test for healthcare professionals.",
-        image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=60",
+        image: "https://picsum.photos/seed/oet-healthcare/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 7,
@@ -123,7 +123,7 @@ const DEFAULT_CARDS = [
         title: "PTE Academic",
         subtitle: "Target: 65+",
         description: "Fast computer-based English test.",
-        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=60",
+        image: "https://picsum.photos/seed/pte-academic/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 8,
@@ -134,7 +134,7 @@ const DEFAULT_CARDS = [
         title: "SAT",
         subtitle: "Target: 1400+",
         description: "Undergraduate admission test.",
-        image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=60",
+        image: "https://picsum.photos/seed/sat-undergrad/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 9,
@@ -145,7 +145,7 @@ const DEFAULT_CARDS = [
         title: "TOEFL iBT",
         subtitle: "Target: 95+",
         description: "University-focused English proficiency exam.",
-        image: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&q=60",
+        image: "https://picsum.photos/seed/toefl-university/800/480",
         buttonText: "Explore Preparation",
         buttonLink: "/services/career-counselling/test-preparation",
         displayOrder: 10,
@@ -220,7 +220,7 @@ const DEFAULT_CARDS = [
         title: "Allied Health",
         subtitle: "",
         description: "Patient care, clinical practice, and health sciences.",
-        image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=60",
+        image: "https://picsum.photos/seed/allied-health/800/480",
         buttonText: "Explore Course",
         buttonLink: "/courses/allied-health",
         displayOrder: 1,
@@ -231,7 +231,7 @@ const DEFAULT_CARDS = [
         title: "Commerce",
         subtitle: "",
         description: "Business, trade, accounting, and finance fundamentals.",
-        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=60",
+        image: "https://picsum.photos/seed/commerce-finance/800/480",
         buttonText: "Explore Course",
         buttonLink: "/courses/commerce",
         displayOrder: 2,
@@ -242,7 +242,7 @@ const DEFAULT_CARDS = [
         title: "Engineering",
         subtitle: "",
         description: "Design, innovation, and real-world problem solving.",
-        image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=60",
+        image: "https://picsum.photos/seed/engineering-tech/800/480",
         buttonText: "Explore Course",
         buttonLink: "/courses/engineering",
         displayOrder: 3,
@@ -253,7 +253,7 @@ const DEFAULT_CARDS = [
         title: "Management",
         subtitle: "",
         description: "Strategy, operations, and data-driven decision making.",
-        image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=60",
+        image: "https://picsum.photos/seed/management-biz/800/480",
         buttonText: "Explore Course",
         buttonLink: "/courses/management",
         displayOrder: 4,
@@ -264,7 +264,7 @@ const DEFAULT_CARDS = [
         title: "Medicine",
         subtitle: "",
         description: "Clinical science, diagnosis, and patient care.",
-        image: "https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=800",
+        image: "https://picsum.photos/seed/medicine-health/800/480",
         buttonText: "Explore Course",
         buttonLink: "/courses/medicine",
         displayOrder: 5,
@@ -275,13 +275,22 @@ const DEFAULT_CARDS = [
         title: "Science",
         subtitle: "",
         description: "Core scientific principles, research, and discovery.",
-        image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=60",
+        image: "https://picsum.photos/seed/science-lab/800/480",
         buttonText: "Explore Course",
         buttonLink: "/courses/science",
         displayOrder: 6,
         isActive: true,
     },
 ];
+
+// Map of old broken image URLs → new reliable picsum URLs
+const IMAGE_MIGRATION_MAP = {
+    "images.unsplash.com": (title) => `https://picsum.photos/seed/${encodeURIComponent(title)}/800/480`,
+    "images.pexels.com": (title) => `https://picsum.photos/seed/${encodeURIComponent(title)}/800/480`,
+};
+
+const needsMigration = (url) =>
+    url && (url.includes("images.unsplash.com") || url.includes("images.pexels.com"));
 
 export async function GET(req) {
     try {
@@ -301,13 +310,39 @@ export async function GET(req) {
 
         let cards = await HomePageCard.find(query).sort({ displayOrder: 1, createdAt: -1 });
 
-        // If collection is empty, seed it
+        // If collection is empty (no type filter), seed with default cards
         if (cards.length === 0 && !type) {
             console.log("🌱 Seeding default home page cards...");
             const seeded = await HomePageCard.insertMany(DEFAULT_CARDS);
             cards = seeded.filter(card => includeInactive || card.isActive);
-            // Sort seeded cards
             cards.sort((a, b) => a.displayOrder - b.displayOrder);
+        }
+
+        // If type-filtered query returns nothing, seed only that type
+        if (cards.length === 0 && type) {
+            const typeCards = DEFAULT_CARDS.filter(c => c.type === type);
+            if (typeCards.length > 0) {
+                console.log(`🌱 Seeding default cards for type: ${type}...`);
+                const seeded = await HomePageCard.insertMany(typeCards);
+                cards = seeded.filter(card => includeInactive || card.isActive);
+                cards.sort((a, b) => a.displayOrder - b.displayOrder);
+            }
+        }
+
+        // Auto-migrate: fix any cards still using hotlink-blocked Unsplash/Pexels URLs
+        const migrationPromises = [];
+        for (const card of cards) {
+            if (needsMigration(card.image)) {
+                const newUrl = `https://picsum.photos/seed/${encodeURIComponent(card.title)}/800/480`;
+                migrationPromises.push(
+                    HomePageCard.findByIdAndUpdate(card._id, { image: newUrl })
+                );
+                card.image = newUrl; // Update in-memory so response is correct immediately
+            }
+        }
+        if (migrationPromises.length > 0) {
+            console.log(`🔄 Migrating ${migrationPromises.length} cards with broken image URLs...`);
+            await Promise.all(migrationPromises);
         }
 
         return Response.json(
