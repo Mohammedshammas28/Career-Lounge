@@ -42,9 +42,21 @@ const SERVICE_OPTIONS = [
   { value: "Visa Assistance", label: "Visa Assistance" },
   { value: "Scholarship Guidance", label: "Scholarship Guidance" },
   { value: "Career Counselling", label: "Career Counselling" },
+<<<<<<< HEAD
   { value: "Profile Building", label: "Profile Building" },
   { value: "Application Support", label: "Application Support" },
   { value: "Education Loan Assistance", label: "Education Loan Assistance" },
+=======
+  { value: "Test Preparation", label: "Test Preparation" },
+  { value: "Language Training", label: "Language Training" },
+  { value: "Immigration Services", label: "Immigration Services" },
+  { value: "Educational Consultancy", label: "Educational Consultancy" },
+  { value: "Domestic Education", label: "Domestic Education" },
+  { value: "Overseas Education", label: "Overseas Education" },
+  { value: "Recruitment Services", label: "Recruitment Services" },
+  { value: "Domestic Recruitment", label: "Domestic Recruitment" },
+  { value: "Overseas Recruitment", label: "Overseas Recruitment" },
+>>>>>>> 923b55307a620e1e98aab32b32e682fe0c5f6709
   { value: "Other", label: "Other" },
 ]
 
@@ -139,12 +151,28 @@ export function ContactSection({ searchParams }) {
 
   // Smart Prefilling Logic
   useEffect(() => {
-    if (typeof window === "undefined" || !searchParams) return;
+    if (typeof window === "undefined") return;
 
     let initialMessage = "";
+<<<<<<< HEAD
     const university = searchParams.university;
     const course = searchParams.course;
     const jobTitle = searchParams.jobTitle;
+=======
+    let contextData = {};
+    let selectedService = "";
+    
+    // Get the service parameter from searchParams
+    if (searchParams && searchParams.service) {
+      selectedService = searchParams.service;
+    }
+    
+    // Check specific parameters that might have been passed
+    const university = searchParams?.university;
+    const course = searchParams?.course;
+    const jobTitle = searchParams?.jobTitle;
+    const company = searchParams?.company;
+>>>>>>> 923b55307a620e1e98aab32b32e682fe0c5f6709
 
     if (university) {
       initialMessage = `I am interested in applying to ${university}${course ? ` for the ${course} program` : ""}. Please provide details.`;
@@ -156,8 +184,17 @@ export function ContactSection({ searchParams }) {
 
     setFormData(prev => ({
       ...prev,
+<<<<<<< HEAD
       service: searchParams.service || "",
       message: prev.message || initialMessage
+=======
+      serviceType: selectedService,
+      message: prev.message || initialMessage,
+      sourceUrl: window.location.href,
+      sourcePage: searchParams.sourcePage || document.title,
+      referrer: document.referrer,
+      contextData: contextData
+>>>>>>> 923b55307a620e1e98aab32b32e682fe0c5f6709
     }))
   }, [searchParams]);
 

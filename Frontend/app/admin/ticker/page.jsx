@@ -20,7 +20,7 @@ export default function TickerAdminPage() {
   const fetchTickerData = async () => {
     try {
       setLoading(true)
-      const response = await fetch("/api/ticker", { cache: "no-store" })
+      const response = await fetch("/api/ticker", { headers: { "Cache-Control": "no-cache" } })
       const data = await response.json()
       setItems(data.items || [])
     } catch (error) {

@@ -35,7 +35,6 @@ export default function DomesticEducationPage() {
             try {
                 setIsLoading(true)
                 const response = await fetch("/api/universities", {
-                    cache: "no-store",
                     headers: {
                         "Cache-Control": "no-cache",
                         "Pragma": "no-cache",

@@ -21,14 +21,21 @@ export function Header() {
   const pathname = usePathname() || ""
 
   const getContactHref = () => {
+    // Sub-services (more specific routes first)
+    if (pathname.includes('/services/career-counselling/test-preparation')) return '/contact?service=Test Preparation'
+    if (pathname.includes('/services/career-counselling/language-training')) return '/contact?service=Language Training'
     if (pathname.includes('/services/career-counselling')) return '/contact?service=Career Counselling'
+    
     if (pathname.includes('/services/educational-consultancy/domestic')) return '/contact?service=Domestic Education'
     if (pathname.includes('/services/educational-consultancy/overseas')) return '/contact?service=Overseas Education'
     if (pathname.includes('/services/educational-consultancy')) return '/contact?service=Educational Consultancy'
+    
     if (pathname.includes('/services/immigration')) return '/contact?service=Immigration Services'
+    
     if (pathname.includes('/services/recruitment/domestic')) return '/contact?service=Domestic Recruitment'
     if (pathname.includes('/services/recruitment/overseas')) return '/contact?service=Overseas Recruitment'
     if (pathname.includes('/services/recruitment')) return '/contact?service=Recruitment Services'
+    
     return '/contact'
   }
 
@@ -38,7 +45,6 @@ export function Header() {
         const origin = typeof window !== "undefined" ? window.location.origin : ""
         const url = `${origin}/api/ticker`
         const response = await fetch(url, {
-          cache: "no-store",
           headers: {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',

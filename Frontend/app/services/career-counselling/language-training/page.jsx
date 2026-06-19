@@ -177,7 +177,7 @@ export default function LanguageTrainingPage() {
                     <p className="text-xl text-muted-foreground mb-8">
                         Connect with our language experts and start learning in a way that works for you. Flexible classes, expert trainers, and guaranteed progress.
                     </p>
-                    <Link href={`/contact?service=${encodeURIComponent("Career Counselling")}`}>
+                    <Link href={`/contact?service=${encodeURIComponent("Language Training")}`}>
                         <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg">
                             Enroll Now
                         </Button>

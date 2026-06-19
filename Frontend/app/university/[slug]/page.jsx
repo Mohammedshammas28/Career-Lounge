@@ -255,7 +255,7 @@ export default function UniversityDetailsPage() {
                     {university.bannerImage ? (
                         <Image
                             src={university.bannerImage}
-                            alt={university.universityName}
+                            alt={university.universityName || "University Banner"}
                             fill
                             className="object-cover"
                             priority
@@ -272,7 +272,7 @@ export default function UniversityDetailsPage() {
                                     {getLogo(university) ? (
                                         <Image
                                             src={getLogo(university)}
-                                            alt={university.universityName}
+                                            alt={university.universityName || "University Logo"}
                                             width={120}
                                             height={120}
                                             className="object-contain"
@@ -696,91 +696,130 @@ export default function UniversityDetailsPage() {
                         {/* Right Column: Sticky Sidebar */}
                         <div className="lg:col-span-1">
                             <div className="sticky top-[200px] space-y-6">
-                                <div className="bg-blue-600 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden">
-                                    <h3 className="text-xl font-bold mb-2 relative z-10">Want to Study in {university.country}?</h3>
-                                    <p className="text-blue-100 mb-6 relative z-10 text-sm">Fill in your details and we'll call you back</p>
+                                <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-blue-700 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden group">
+                                    {/* Animated Background Elements */}
+                                    <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
+                                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-400/20 rounded-full -ml-16 -mb-16 blur-3xl group-hover:scale-110 transition-transform duration-500" />
 
-                                    <form onSubmit={handleFormSubmit} className="space-y-4 relative z-10">
-                                        <div>
-                                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-1 block">Name *</label>
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                required
-                                                value={formData.name}
-                                                onChange={handleInputChange}
-                                                className="w-full bg-white rounded-lg px-4 py-3 text-gray-900 border-none focus:ring-2 focus:ring-blue-400 transition-all text-sm"
-                                                placeholder="Enter your name"
-                                            />
+                                    <div className="relative z-10">
+                                        {/* Header */}
+                                        <div className="mb-8">
+                                            <h3 className="text-2xl font-black mb-3 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                                                Want to Study in {university.country}?
+                                            </h3>
+                                            <p className="text-blue-100 text-sm font-medium">Get expert guidance. Fill in your details and we'll contact you within 24 hours.</p>
                                         </div>
-                                        <div>
-                                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-1 block">Email *</label>
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                required
-                                                value={formData.email}
-                                                onChange={handleInputChange}
-                                                className="w-full bg-white rounded-lg px-4 py-3 text-gray-900 border-none focus:ring-2 focus:ring-blue-400 transition-all text-sm"
-                                                placeholder="Enter your email"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-1 block">Mobile *</label>
-                                            <div className="flex gap-2">
-                                                <div className="bg-white rounded-lg px-2 flex items-center text-gray-500 text-sm font-bold border-none">
-                                                    +91
+
+                                        <form onSubmit={handleFormSubmit} className="space-y-5">
+                                            {/* Name Field */}
+                                            <div className="group/input">
+                                                <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-2 block">Full Name *</label>
+                                                <div className="relative">
+                                                    <input
+                                                        type="text"
+                                                        name="name"
+                                                        required
+                                                        value={formData.name}
+                                                        onChange={handleInputChange}
+                                                        className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3.5 text-gray-900 border-2 border-white/20 group-hover/input:border-white/40 focus:border-white focus:outline-none focus:ring-0 transition-all text-sm font-medium placeholder:text-gray-400"
+                                                        placeholder="Enter your full name"
+                                                    />
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 text-lg">👤</div>
                                                 </div>
-                                                <input
-                                                    type="tel"
-                                                    name="mobile"
-                                                    required
-                                                    value={formData.mobile}
-                                                    onChange={handleInputChange}
-                                                    className="w-full bg-white rounded-lg px-4 py-3 text-gray-900 border-none focus:ring-2 focus:ring-blue-400 transition-all text-sm"
-                                                    placeholder="Mobile number"
-                                                />
                                             </div>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-1 block">Your City *</label>
-                                            <input
-                                                type="text"
-                                                name="city"
-                                                required
-                                                value={formData.city}
-                                                onChange={handleInputChange}
-                                                className="w-full bg-white rounded-lg px-4 py-3 text-gray-900 border-none focus:ring-2 focus:ring-blue-400 transition-all text-sm"
-                                                placeholder="Enter your city"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-1 block">Preferred Destination *</label>
-                                            <select
-                                                name="preferredDestination"
-                                                required
-                                                value={formData.preferredDestination}
-                                                onChange={handleInputChange}
-                                                className="w-full bg-white rounded-lg px-4 py-3 text-gray-900 border-none focus:ring-2 focus:ring-blue-400 transition-all text-sm appearance-none"
-                                            >
-                                                <option value="">Select Destination</option>
-                                                <option value="UK">United Kingdom</option>
-                                                <option value="USA">USA</option>
-                                                <option value="Australia">Australia</option>
-                                                <option value="Canada">Canada</option>
-                                            </select>
-                                        </div>
-                                        <button
-                                            type="submit"
-                                            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-orange-400 flex items-center justify-center gap-2 mt-2"
-                                        >
-                                            Consult Now <ChevronRight className="w-4 h-4" />
-                                        </button>
-                                    </form>
 
-                                    {/* Decorative circles */}
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
-                                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-orange-400/20 rounded-full -ml-12 -mb-12 blur-2xl" />
+                                            {/* Email Field */}
+                                            <div className="group/input">
+                                                <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-2 block">Email Address *</label>
+                                                <div className="relative">
+                                                    <input
+                                                        type="email"
+                                                        name="email"
+                                                        required
+                                                        value={formData.email}
+                                                        onChange={handleInputChange}
+                                                        className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3.5 text-gray-900 border-2 border-white/20 group-hover/input:border-white/40 focus:border-white focus:outline-none focus:ring-0 transition-all text-sm font-medium placeholder:text-gray-400"
+                                                        placeholder="Enter your email"
+                                                    />
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 text-lg">✉️</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Mobile Field */}
+                                            <div className="group/input">
+                                                <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-2 block">Mobile Number *</label>
+                                                <div className="flex gap-2">
+                                                    <div className="bg-white/95 backdrop-blur-sm rounded-xl px-3.5 flex items-center text-gray-600 text-sm font-bold border-2 border-white/20 min-w-fit">
+                                                        +91
+                                                    </div>
+                                                    <div className="relative flex-1">
+                                                        <input
+                                                            type="tel"
+                                                            name="mobile"
+                                                            required
+                                                            value={formData.mobile}
+                                                            onChange={handleInputChange}
+                                                            className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3.5 text-gray-900 border-2 border-white/20 group-hover/input:border-white/40 focus:border-white focus:outline-none focus:ring-0 transition-all text-sm font-medium placeholder:text-gray-400"
+                                                            placeholder="Enter 10-digit number"
+                                                        />
+                                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 text-lg">📱</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* City Field */}
+                                            <div className="group/input">
+                                                <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-2 block">City *</label>
+                                                <div className="relative">
+                                                    <input
+                                                        type="text"
+                                                        name="city"
+                                                        required
+                                                        value={formData.city}
+                                                        onChange={handleInputChange}
+                                                        className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3.5 text-gray-900 border-2 border-white/20 group-hover/input:border-white/40 focus:border-white focus:outline-none focus:ring-0 transition-all text-sm font-medium placeholder:text-gray-400"
+                                                        placeholder="Enter your city"
+                                                    />
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 text-lg">📍</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Destination Dropdown */}
+                                            <div className="group/input">
+                                                <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-2 block">Preferred Destination *</label>
+                                                <div className="relative">
+                                                    <select
+                                                        name="preferredDestination"
+                                                        required
+                                                        value={formData.preferredDestination}
+                                                        onChange={handleInputChange}
+                                                        className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3.5 text-gray-900 border-2 border-white/20 group-hover/input:border-white/40 focus:border-white focus:outline-none focus:ring-0 transition-all text-sm font-medium appearance-none cursor-pointer pr-12"
+                                                    >
+                                                        <option value="">Select Destination</option>
+                                                        <option value="UK">United Kingdom</option>
+                                                        <option value="USA">United States</option>
+                                                        <option value="Australia">Australia</option>
+                                                        <option value="Canada">Canada</option>
+                                                        <option value="Germany">Germany</option>
+                                                        <option value="UAE">UAE</option>
+                                                    </select>
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 text-lg pointer-events-none">🌍</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Submit Button */}
+                                            <button
+                                                type="submit"
+                                                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-orange-500/50 flex items-center justify-center gap-2 mt-6 group/btn uppercase tracking-wide text-sm font-black"
+                                            >
+                                                <span>Consult Now</span>
+                                                <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                            </button>
+
+                                            {/* Trust Badge */}
+                                            <p className="text-center text-xs text-blue-100 mt-4 font-medium">✓ 100% Free | No Hidden Charges | Quick Response</p>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div className="bg-white rounded-2xl border p-6 shadow-sm">

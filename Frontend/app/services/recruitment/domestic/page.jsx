@@ -18,7 +18,6 @@ export default function DomesticRecruitmentPage() {
       try {
         setIsLoading(true)
         const response = await fetch("/api/jobs?category=Domestic", {
-          cache: "no-store",
           headers: { "Cache-Control": "no-cache" },
         })
         if (!response.ok) throw new Error("Failed to fetch jobs")

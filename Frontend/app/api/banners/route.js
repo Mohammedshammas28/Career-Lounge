@@ -3,6 +3,8 @@ import Banner from "@/models/Banner";
 // eslint-disable-next-line no-unused-vars
 import University from "@/models/University"; // Required to register the schema for population
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req) {
     try {
         await connectToDatabase();
@@ -22,7 +24,13 @@ export async function GET(req) {
                 success: true,
                 data: banners,
             },
-            { status: 200 }
+            {
+                status: 200,
+                headers: {
+                    "Cache-Control": "no-store, no-cache, must-revalidate",
+                    "Pragma": "no-cache",
+                }
+            }
         );
     } catch (error) {
         console.error("Error fetching banners:", error);
@@ -31,7 +39,13 @@ export async function GET(req) {
                 success: false,
                 error: error.message,
             },
-            { status: 500 }
+            {
+                status: 500,
+                headers: {
+                    "Cache-Control": "no-store, no-cache, must-revalidate",
+                    "Pragma": "no-cache",
+                }
+            }
         );
     }
 }
@@ -71,7 +85,13 @@ export async function POST(req) {
                 success: true,
                 data: banner,
             },
-            { status: 201 }
+            {
+                status: 201,
+                headers: {
+                    "Cache-Control": "no-store, no-cache, must-revalidate",
+                    "Pragma": "no-cache",
+                }
+            }
         );
     } catch (error) {
         console.error("Error creating banner:", error);

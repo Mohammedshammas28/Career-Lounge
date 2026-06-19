@@ -238,7 +238,11 @@ export default function PremiumOfferSlider() {
                                 <>
                                     <Image
                                         src={currentBanner.customBannerImage || uni?.bannerImage}
+<<<<<<< HEAD
                                         alt={uni?.universityName || currentBanner.offerText || "University Banner"}
+=======
+                                        alt={uni?.universityName || "Featured University Banner"}
+>>>>>>> 923b55307a620e1e98aab32b32e682fe0c5f6709
                                         fill
                                         className="object-cover"
                                     />
