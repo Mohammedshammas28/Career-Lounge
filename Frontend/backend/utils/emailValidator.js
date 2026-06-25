@@ -60,19 +60,33 @@ export const emailValidator = {
    * Prevents duplicate form submissions within a short window (e.g. 5 minutes)
    */
   isDuplicateSubmission: async ({ email, service }) => {
-    await connectToDatabase();
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanService = service.trim();
+    try {
+      await connectToDatabase();
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanService = service.trim();
 
-    // Check if a submission exists from the same email for the same service in the last 5 minutes
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+      // Check if a submission exists from the same email for the same service in the last 5 minutes
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-    const existingSubmission = await ContactSubmission.findOne({
-      email: cleanEmail,
-      service: cleanService,
-      createdAt: { $gte: fiveMinutesAgo }
-    });
+      const existingSubmission = await ContactSubmission.findOne({
+        email: cleanEmail,
+        service: cleanService,
+        createdAt: { $gte: fiveMinutesAgo }
+      });
 
-    return !!existingSubmission;
+      return !!existingSubmission;
+    } catch (error) {
+      console.warn("⚠️ Duplicate submission check: Database down, using in-memory duplicate check fallback:", error.message);
+      if (!global.__clMemorySubmissions) return false;
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanService = service.trim();
+      const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+      
+      return global.__clMemorySubmissions.some(sub => 
+        sub.email === cleanEmail && 
+        sub.service === cleanService && 
+        new Date(sub.createdAt).getTime() >= fiveMinutesAgo
+      );
+    }
   }
 };

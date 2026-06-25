@@ -353,13 +353,31 @@ export async function GET(req) {
             { status: 200 }
         );
     } catch (error) {
-        console.error("Error fetching home page cards:", error);
+        console.warn("⚠️ Error fetching home page cards from database, using fallback:", error.message);
+        const { searchParams } = new URL(req.url);
+        const type = searchParams.get("type");
+        const includeInactive = searchParams.get("all") === "true";
+
+        let fallbackCards = DEFAULT_CARDS;
+        if (type) {
+            fallbackCards = fallbackCards.filter(card => card.type === type);
+        }
+        if (!includeInactive) {
+            fallbackCards = fallbackCards.filter(card => card.isActive);
+        }
+
+        fallbackCards = fallbackCards.map((card, idx) => ({
+            _id: `fallback-card-${idx}`,
+            ...card
+        }));
+
         return Response.json(
             {
-                success: false,
-                error: error.message,
+                success: true,
+                data: fallbackCards,
+                isFallback: true,
             },
-            { status: 500 }
+            { status: 200 }
         );
     }
 }

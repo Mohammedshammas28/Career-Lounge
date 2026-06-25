@@ -37,7 +37,7 @@ export function HeroSection() {
               strategic guidance, and personalized support. Transform your potential into success.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
-              <Link href="/services">
+              <Link href="/contact">
                 <Button
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 transition-all hover:shadow-lg hover:scale-105"

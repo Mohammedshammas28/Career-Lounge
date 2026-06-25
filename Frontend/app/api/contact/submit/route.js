@@ -9,7 +9,11 @@ import { memoryCheckVerification, memoryConsumeVerification } from "@/app/api/co
 
 export async function POST(request) {
   try {
-    await connectToDatabase();
+    try {
+      await connectToDatabase();
+    } catch (dbError) {
+      console.warn("[Submit Form] DB unavailable during connection, continuing with in-memory fallbacks:", dbError.message);
+    }
 
     const body = await request.json();
     const { fullName, email, phone, country, service, message } = body;
@@ -52,18 +56,33 @@ export async function POST(request) {
     }
 
     // 5. Save to ContactSubmission database
-    const submission = new ContactSubmission({
-      fullName,
-      email,
-      phone,
-      country,
-      service,
-      message,
-      emailVerified: true,
-      phoneVerified: false,
-      status: "New"
-    });
-    await submission.save();
+    try {
+      const submission = new ContactSubmission({
+        fullName,
+        email,
+        phone,
+        country,
+        service,
+        message,
+        emailVerified: true,
+        phoneVerified: false,
+        status: "New"
+      });
+      await submission.save();
+    } catch (dbError) {
+      console.warn("[Submit Form] DB unavailable, saving submission to memory fallback:", dbError.message);
+      if (!global.__clMemorySubmissions) global.__clMemorySubmissions = [];
+      global.__clMemorySubmissions.push({
+        fullName,
+        email,
+        phone,
+        country,
+        service,
+        message,
+        createdAt: new Date(),
+        status: "New (Memory Fallback)"
+      });
+    }
 
     // 6. Save to Lead (CRM) database for admin dashboard integration
     // Split fullName into firstName and lastName
@@ -71,17 +90,32 @@ export async function POST(request) {
     const firstName = nameParts[0] || "User";
     const lastName = nameParts.slice(1).join(" ") || "Lounge";
 
-    const newLead = new Lead({
-      firstName,
-      lastName,
-      email,
-      phone,
-      message,
-      serviceType: service,
-      status: "New",
-      contextData: { source: "Premium Contact Form" }
-    });
-    await newLead.save();
+    try {
+      const newLead = new Lead({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message,
+        serviceType: service,
+        status: "New",
+        contextData: { source: "Premium Contact Form" }
+      });
+      await newLead.save();
+    } catch (dbError) {
+      console.warn("[Submit Form] DB unavailable, saving Lead to memory fallback:", dbError.message);
+      if (!global.__clMemoryLeads) global.__clMemoryLeads = [];
+      global.__clMemoryLeads.push({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message,
+        serviceType: service,
+        status: "New (Memory Fallback)",
+        createdAt: new Date()
+      });
+    }
 
     // 7. Send notification emails
     const submissionTime = new Date().toLocaleString();

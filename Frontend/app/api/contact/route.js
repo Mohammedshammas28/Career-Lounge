@@ -4,7 +4,11 @@ import { emailService } from "@/backend/services/emailService";
 
 export async function POST(request) {
   try {
-    await connectToDatabase();
+    try {
+      await connectToDatabase();
+    } catch (dbError) {
+      console.warn("[Contact Message] DB unavailable during connection, continuing with in-memory fallbacks:", dbError.message);
+    }
 
     const body = await request.json();
     const { 
@@ -29,20 +33,39 @@ export async function POST(request) {
     }
 
     // 1. Save to Lead Database (CRM)
-    const newLead = new Lead({
-      firstName,
-      lastName,
-      email,
-      phone,
-      message,
-      serviceType: serviceType || "General Inquiry",
-      sourcePage,
-      sourceUrl,
-      referrer,
-      contextData: contextData || {}
-    });
+    try {
+      const newLead = new Lead({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message,
+        serviceType: serviceType || "General Inquiry",
+        sourcePage,
+        sourceUrl,
+        referrer,
+        contextData: contextData || {}
+      });
 
-    await newLead.save();
+      await newLead.save();
+    } catch (dbError) {
+      console.warn("[Contact Message] DB unavailable, saving Lead to memory fallback:", dbError.message);
+      if (!global.__clMemoryLeads) global.__clMemoryLeads = [];
+      global.__clMemoryLeads.push({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message,
+        serviceType: serviceType || "General Inquiry",
+        sourcePage,
+        sourceUrl,
+        referrer,
+        contextData: contextData || {},
+        createdAt: new Date(),
+        status: "New (Memory Fallback)"
+      });
+    }
 
     // 2. Email Delivery System
     try {

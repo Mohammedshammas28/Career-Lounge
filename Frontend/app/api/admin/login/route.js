@@ -6,7 +6,10 @@ export async function POST(request) {
     const username = String(body.username || "").trim()
     const password = String(body.password || "")
 
-    if (username !== adminAuthConfig.username || password !== adminAuthConfig.password) {
+    const expectedUsername = String(adminAuthConfig.username || "admin").trim().toLowerCase()
+    const expectedEmail = String(process.env.ADMIN_EMAIL || "info@career-lounge.in").trim().toLowerCase()
+
+    if ((username.toLowerCase() !== expectedUsername && username.toLowerCase() !== expectedEmail) || password !== adminAuthConfig.password) {
         return NextResponse.json({ message: "Invalid admin credentials" }, { status: 401 })
     }
 

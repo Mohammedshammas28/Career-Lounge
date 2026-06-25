@@ -5,6 +5,35 @@ import University from "@/models/University"; // Required to register the schema
 
 export const dynamic = 'force-dynamic'
 
+const DEFAULT_BANNERS = [
+    {
+        _id: "default-banner-1",
+        offerText: "Get up to 50% Scholarship on Tuition Fees",
+        offerPercentage: "50% Scholarship Available",
+        deadlineText: "July 31, 2026",
+        buttonText: "Explore University",
+        active: true,
+        university: {
+            universityName: "University of Melbourne",
+            bannerImage: "https://picsum.photos/seed/melbourne/1200/600",
+            slug: "university-of-melbourne"
+        }
+    },
+    {
+        _id: "default-banner-2",
+        offerText: "Free Admissions Consultation & Visa Assistance",
+        offerPercentage: "100% Free Consultation",
+        deadlineText: "Ongoing",
+        buttonText: "Book Session",
+        active: true,
+        university: {
+            universityName: "Career Lounge Premium Counselling",
+            bannerImage: "https://picsum.photos/seed/counselling/1200/600",
+            slug: ""
+        }
+    }
+];
+
 export async function GET(req) {
     try {
         await connectToDatabase();
@@ -33,14 +62,19 @@ export async function GET(req) {
             }
         );
     } catch (error) {
-        console.error("Error fetching banners:", error);
+        console.warn("⚠️ Error fetching banners from database, using fallback:", error.message);
+        const { searchParams } = new URL(req.url);
+        const allBanners = searchParams.get("all") === "true";
+        const fallbackBanners = allBanners ? DEFAULT_BANNERS : DEFAULT_BANNERS.filter(b => b.active);
+
         return Response.json(
             {
-                success: false,
-                error: error.message,
+                success: true,
+                data: fallbackBanners,
+                isFallback: true,
             },
             {
-                status: 500,
+                status: 200,
                 headers: {
                     "Cache-Control": "no-store, no-cache, must-revalidate",
                     "Pragma": "no-cache",

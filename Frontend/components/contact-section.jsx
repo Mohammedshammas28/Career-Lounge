@@ -104,40 +104,104 @@ const SERVICE_OPTIONS = [
 function SuccessDialog({ isOpen, onClose, fullName, email }) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-background border-border max-w-md shadow-2xl text-foreground">
-        <AlertDialogHeader>
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center animate-bounce shadow-lg">
-              <CheckCircle2 className="w-10 h-10 text-white" />
+      <AlertDialogContent className="p-0 overflow-hidden border-0 shadow-2xl max-w-md rounded-3xl bg-transparent">
+        {/* Full gradient card */}
+        <div className="relative bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] rounded-3xl overflow-hidden">
+
+          {/* Glowing orbs */}
+          <div className="absolute -top-12 -left-12 w-48 h-48 bg-violet-600/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-indigo-500/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-700/10 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Content */}
+          <div className="relative z-10 px-8 pt-10 pb-8 text-center">
+
+            {/* Animated check circle */}
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                {/* Outer pulse ring */}
+                <div className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
+                {/* Middle glow ring */}
+                <div className="absolute inset-1 rounded-full bg-emerald-400/10 blur-sm" />
+                {/* Icon container */}
+                <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-[0_0_30px_rgba(52,211,153,0.5)]">
+                  <CheckCircle2 className="w-10 h-10 text-white drop-shadow-lg" />
+                </div>
+              </div>
             </div>
+
+            {/* Stars decoration */}
+            <div className="flex justify-center gap-1 mb-4">
+              {["⭐","⭐","⭐","⭐","⭐"].map((s, i) => (
+                <span key={i} className="text-sm" style={{ animationDelay: `${i * 0.1}s` }}>{s}</span>
+              ))}
+            </div>
+
+            {/* Title */}
+            <AlertDialogHeader className="space-y-0 pb-0">
+              <AlertDialogTitle className="text-2xl font-black text-white tracking-tight mb-1">
+                🎉 Submission Confirmed!
+              </AlertDialogTitle>
+
+              <AlertDialogDescription className="text-center space-y-4" asChild>
+                <div>
+                  {/* Thank you message */}
+                  <div className="mt-4 px-4 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+                    <p className="text-white font-semibold text-base">
+                      Thank you, {fullName || "there"}!
+                    </p>
+                    <p className="text-slate-300 text-sm mt-1 leading-relaxed">
+                      Your inquiry has been received. Our expert advisors will get back to you shortly.
+                    </p>
+                  </div>
+
+                  {/* Email badge */}
+                  <div className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-500/10 border border-emerald-400/20 rounded-xl">
+                    <div className="w-5 h-5 rounded-full bg-emerald-400/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs">📧</span>
+                    </div>
+                    <p className="text-emerald-300 text-xs font-medium">
+                      Confirmation sent to{" "}
+                      <span className="text-white font-bold">{email || "your email"}</span>
+                    </p>
+                  </div>
+
+                  {/* Info chips */}
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    {[
+                      { icon: "⚡", label: "24hr Response" },
+                      { icon: "🔒", label: "Secure & Private" },
+                    ].map(({ icon, label }) => (
+                      <div key={label} className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 rounded-xl">
+                        <span className="text-sm">{icon}</span>
+                        <span className="text-slate-300 text-xs font-medium">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            {/* CTA Button */}
+            <AlertDialogAction
+              onClick={onClose}
+              className="mt-7 w-full h-12 rounded-2xl font-bold text-base text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-[0_4px_20px_rgba(139,92,246,0.4)] hover:shadow-[0_6px_28px_rgba(139,92,246,0.6)] transition-all duration-300 border-0"
+            >
+              ✨ Explore More Opportunities
+            </AlertDialogAction>
+
+            {/* Footer note */}
+            <p className="mt-4 text-slate-500 text-xs">
+              Questions? Call us at{" "}
+              <span className="text-violet-400 font-semibold">+91 7396460717</span>
+            </p>
           </div>
-          <AlertDialogTitle className="text-2xl text-center font-bold">
-            Submission Confirmed!
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-center mt-4 text-muted-foreground">
-            <span className="block space-y-2">
-              <span className="block text-foreground font-semibold text-base">
-                Thank you, {fullName}!
-              </span>
-              <span className="block text-muted-foreground text-sm">
-                Your mobile and email verification completed successfully. We have received your query.
-              </span>
-              <span className="block text-xs text-primary font-medium">
-                📧 Confirmation and resources sent to <br /> <span className="font-semibold text-foreground">{email}</span>
-              </span>
-            </span>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogAction
-          onClick={onClose}
-          className="bg-primary hover:bg-primary/95 text-primary-foreground w-full mt-6 font-semibold rounded-lg"
-        >
-          Explore More
-        </AlertDialogAction>
+        </div>
       </AlertDialogContent>
     </AlertDialog>
   )
 }
+
 
 export function ContactSection({ searchParams }) {
   const [formData, setFormData] = useState({

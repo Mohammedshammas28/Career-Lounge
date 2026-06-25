@@ -28,9 +28,10 @@ export const wrapEmailLayout = (title, bodyContent) => `
       border: 1px solid #f1f5f9;
     }
     .header {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      background: #ffffff;
       padding: 35px 40px;
       text-align: center;
+      border-bottom: 1px solid #f1f5f9;
     }
     .logo-text {
       color: #ffffff;
@@ -111,7 +112,9 @@ export const wrapEmailLayout = (title, bodyContent) => `
 <body>
   <div class="email-container">
     <div class="header">
-      <div class="logo-text">Career<span>Lounge</span></div>
+      <a href="https://career-lounge.in" style="text-decoration: none; display: inline-block;">
+        <img src="https://career-lounge.in/Careerlounge%20logo%20(1).png" alt="Career Lounge" style="max-height: 48px; width: auto; border: 0; display: block; margin: 0 auto;" />
+      </a>
     </div>
     <div class="content">
       ${bodyContent}

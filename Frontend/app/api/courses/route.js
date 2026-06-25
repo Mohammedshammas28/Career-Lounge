@@ -257,13 +257,19 @@ export async function GET(req) {
             { status: 200 }
         );
     } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.warn("⚠️ Error fetching courses from database, using fallback:", error.message);
+        const fallbackCourses = DEFAULT_COURSES.map((course, idx) => ({
+            _id: `fallback-course-${idx}`,
+            ...course,
+            slug: course.slug || course.courseName.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "")
+        }));
         return Response.json(
             {
-                success: false,
-                error: error.message,
+                success: true,
+                data: fallbackCourses,
+                isFallback: true,
             },
-            { status: 500 }
+            { status: 200 }
         );
     }
 }

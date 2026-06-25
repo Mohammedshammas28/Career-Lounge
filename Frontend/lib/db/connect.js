@@ -1,17 +1,27 @@
 import mongoose from "mongoose";
 
-let isConnected = false;
+// Disable buffering so that queries fail fast if the database is offline,
+// allowing the application to use fallback mechanisms immediately.
+mongoose.set("bufferCommands", false);
 
 export async function connectToDatabase() {
-    if (isConnected) {
+    // 1 = connected
+    if (mongoose.connection.readyState === 1) {
+        return;
+    }
+
+    // 2 = connecting
+    if (mongoose.connection.readyState === 2) {
         return;
     }
 
     try {
         const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/career-lounge";
-        await mongoose.connect(mongoUri);
+        // Connect with serverSelectionTimeoutMS so connection attempts fail fast (e.g. 3000ms instead of 30s)
+        await mongoose.connect(mongoUri, {
+            serverSelectionTimeoutMS: 3000,
+        });
 
-        isConnected = true;
         console.log("✓ Connected to MongoDB");
     } catch (error) {
         console.error("✗ MongoDB connection failed:", error.message);
@@ -20,16 +30,16 @@ export async function connectToDatabase() {
 }
 
 export async function disconnectFromDatabase() {
-    if (!isConnected) {
+    if (mongoose.connection.readyState === 0) {
         return;
     }
 
     try {
         await mongoose.disconnect();
-        isConnected = false;
         console.log("✓ Disconnected from MongoDB");
     } catch (error) {
         console.error("✗ MongoDB disconnection failed:", error.message);
         throw error;
     }
 }
+
