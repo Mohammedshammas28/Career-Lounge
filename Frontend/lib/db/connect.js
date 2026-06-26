@@ -1,40 +1,58 @@
+import dns from "dns";
 import mongoose from "mongoose";
 
-// Disable buffering so that queries fail fast if the database is offline,
-// allowing the application to use fallback mechanisms immediately.
-mongoose.set("bufferCommands", false);
+// ── Fix: Override DNS to Google/Cloudflare so that mongodb+srv:// SRV lookups
+// work even when the local/network DNS blocks SRV-type queries.
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "1.1.1.1", "8.8.4.4"]);
+
+// ── Production pattern: cache the connection promise globally so that
+// Next.js hot-reloads and serverless invocations reuse the same connection
+// instead of spawning a new one each time.
+let cachedPromise = null;
 
 export async function connectToDatabase() {
-    // 1 = connected
+    // Already connected — fast path
     if (mongoose.connection.readyState === 1) {
-        return;
+        return mongoose.connection;
     }
 
-    // 2 = connecting
-    if (mongoose.connection.readyState === 2) {
-        return;
+    // Reuse in-flight connection promise (prevents duplicate connections)
+    if (cachedPromise) {
+        await cachedPromise;
+        return mongoose.connection;
     }
 
-    try {
-        const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/career-lounge";
-        // Connect with serverSelectionTimeoutMS so connection attempts fail fast (e.g. 3000ms instead of 30s)
-        await mongoose.connect(mongoUri, {
-            serverSelectionTimeoutMS: 3000,
+    const mongoUri =
+        process.env.MONGODB_URI || "mongodb://localhost:27017/career-lounge";
+
+    cachedPromise = mongoose
+        .connect(mongoUri, {
+            serverSelectionTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
+            maxPoolSize: 10,          // connection pool for concurrent requests
+            minPoolSize: 2,
+            retryWrites: true,
+        })
+        .then((m) => {
+            console.log("✓ Connected to MongoDB Atlas");
+            return m;
+        })
+        .catch((err) => {
+            cachedPromise = null;     // allow retry on next request
+            console.error("✗ MongoDB connection failed:", err.message);
+            throw err;
         });
 
-        console.log("✓ Connected to MongoDB");
-    } catch (error) {
-        console.error("✗ MongoDB connection failed:", error.message);
-        throw error;
-    }
+    await cachedPromise;
+    return mongoose.connection;
 }
 
 export async function disconnectFromDatabase() {
-    if (mongoose.connection.readyState === 0) {
-        return;
-    }
+    if (mongoose.connection.readyState === 0) return;
 
     try {
+        cachedPromise = null;
         await mongoose.disconnect();
         console.log("✓ Disconnected from MongoDB");
     } catch (error) {

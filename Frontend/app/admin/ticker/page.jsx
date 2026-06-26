@@ -24,7 +24,7 @@ export default function TickerAdminPage() {
       const data = await response.json()
       setItems(data.items || [])
     } catch (error) {
-      console.error("Error fetching ticker:", error)
+      console.warn("Error fetching ticker:", error)
       setMessage("Error loading ticker data")
     } finally {
       setLoading(false)
@@ -63,7 +63,7 @@ export default function TickerAdminPage() {
         setMessage(data.error || "Failed to save ticker")
       }
     } catch (error) {
-      console.error("Error saving ticker:", error)
+      console.warn("Error saving ticker:", error)
       setMessage("Error saving ticker")
     } finally {
       setSaving(false)

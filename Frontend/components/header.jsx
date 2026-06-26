@@ -52,7 +52,7 @@ export function Header() {
           }
         })
         if (!response.ok) {
-          console.error("Ticker fetch returned non-OK status:", response.status, response.statusText)
+          console.warn("Ticker fetch returned non-OK status:", response.status, response.statusText)
           return
         }
         const data = await response.json()
@@ -63,7 +63,7 @@ export function Header() {
           setTickerItems([{ id: "1", text: data.text, active: true, isNew: false }])
         }
       } catch (error) {
-        console.error("Error fetching ticker:", error)
+        console.warn("Error fetching ticker:", error)
       }
     }
     fetchTicker()

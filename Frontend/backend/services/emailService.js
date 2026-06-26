@@ -210,6 +210,95 @@ export const emailService = {
   },
 
   /**
+   * Sends university inquiry notification to the admin/support team
+   */
+  sendAdminUniversityInquiryNotification: async ({ fullName, email, phone, city, preferredDestination, universityName, submissionTime }) => {
+    const subject = `🏫 New University Inquiry: ${universityName} - ${fullName}`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+        <h2 style="color: #4f46e5; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">New University Inquiry</h2>
+        <p style="font-size: 16px; color: #334155;">A user has submitted an inquiry form on the university details page.</p>
+        
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b; width: 180px;">Student Name</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #0f172a; font-weight: bold;">${fullName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b;">University Name</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #4f46e5; font-weight: bold; font-size: 16px;">${universityName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b;">Email Address</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #0f172a;"><a href="mailto:${email}" style="color: #4f46e5; text-decoration: none;">${email}</a></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b;">Mobile Number</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #0f172a;">${phone}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b;">City</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #0f172a;">${city}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b;">Preferred Destination</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #0f172a;">${preferredDestination}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: bold; color: #64748b;">Submitted At</td>
+            <td style="padding: 10px; border-bottom: 1px solid #f1f5f9; color: #0f172a;">${submissionTime || new Date().toLocaleString()}</td>
+          </tr>
+        </table>
+        
+        <p style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+          This is an automated notification from the Career Lounge platform.
+        </p>
+      </div>
+    `;
+    return sendEmail({
+      to: [ADMIN_EMAIL, SUPPORT_EMAIL],
+      subject,
+      html,
+      text: `New university inquiry from ${fullName} for ${universityName}.`
+    });
+  },
+
+  /**
+   * Sends auto-reply confirmation to the student after university inquiry
+   */
+  sendUserUniversityInquiryConfirmation: async ({ to, fullName, universityName }) => {
+    const subject = `Inquiry Received: Study at ${universityName} - Career Lounge`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+        <h2 style="color: #4f46e5; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">Inquiry Confirmed</h2>
+        <p style="font-size: 16px; color: #334155; line-height: 1.5;">Dear ${fullName},</p>
+        <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+          Thank you for reaching out to Career Lounge. We have successfully received your inquiry about studying at <strong>${universityName}</strong>.
+        </p>
+        
+        <div style="background-color: #f8fafc; border-left: 4px solid #4f46e5; border-radius: 0 8px 8px 0; padding: 15px; margin: 20px 0;">
+          <p style="margin: 0; font-size: 15px; font-weight: bold; color: #1e1b4b;">Enquiry: Study at ${universityName}</p>
+        </div>
+        
+        <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+          One of our certified study abroad counselors will review your profile details and contact you within the next 24 business hours to guide you on the admission criteria, scholarships, and visa process.
+        </p>
+        
+        <p style="font-size: 14px; color: #334155; line-height: 1.6; margin-bottom: 0;">
+          Best Regards,<br>
+          <strong>Admissions Advisory Team, Career Lounge</strong>
+        </p>
+      </div>
+    `;
+    return sendEmail({
+      to,
+      subject,
+      html,
+      text: `Dear ${fullName}, thank you for your inquiry about studying at ${universityName}. Our advisors will get in touch with you shortly.`
+    });
+  },
+
+  /**
    * Legacy wrapper for old contact route handler compatibility.
    */
   sendContactFormEmail: async ({ firstName, lastName, email, phone, serviceType, message, contextData }) => {

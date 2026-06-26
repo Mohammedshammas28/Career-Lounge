@@ -104,14 +104,13 @@ const SERVICE_OPTIONS = [
 function SuccessDialog({ isOpen, onClose, fullName, email }) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="p-0 overflow-hidden border-0 shadow-2xl max-w-md rounded-3xl bg-transparent">
-        {/* Full gradient card */}
-        <div className="relative bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] rounded-3xl overflow-hidden">
+      <AlertDialogContent className="p-0 overflow-hidden border border-slate-100 dark:border-zinc-800 shadow-2xl max-w-md rounded-3xl bg-transparent">
+        {/* White background card */}
+        <div className="relative bg-white dark:bg-zinc-950 rounded-3xl overflow-hidden">
 
-          {/* Glowing orbs */}
-          <div className="absolute -top-12 -left-12 w-48 h-48 bg-violet-600/30 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-indigo-500/30 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-700/10 rounded-full blur-2xl pointer-events-none" />
+          {/* Soft pastel glowing orbs */}
+          <div className="absolute -top-12 -left-12 w-48 h-48 bg-blue-100/30 dark:bg-blue-900/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-indigo-100/30 dark:bg-indigo-900/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Content */}
           <div className="relative z-10 px-8 pt-10 pb-8 text-center">
@@ -124,57 +123,46 @@ function SuccessDialog({ isOpen, onClose, fullName, email }) {
                 {/* Middle glow ring */}
                 <div className="absolute inset-1 rounded-full bg-emerald-400/10 blur-sm" />
                 {/* Icon container */}
-                <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-[0_0_30px_rgba(52,211,153,0.5)]">
+                <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-[0_4px_20px_rgba(16,185,129,0.3)]">
                   <CheckCircle2 className="w-10 h-10 text-white drop-shadow-lg" />
                 </div>
               </div>
             </div>
 
-            {/* Stars decoration */}
-            <div className="flex justify-center gap-1 mb-4">
-              {["⭐","⭐","⭐","⭐","⭐"].map((s, i) => (
-                <span key={i} className="text-sm" style={{ animationDelay: `${i * 0.1}s` }}>{s}</span>
-              ))}
-            </div>
-
             {/* Title */}
             <AlertDialogHeader className="space-y-0 pb-0">
-              <AlertDialogTitle className="text-2xl font-black text-white tracking-tight mb-1">
-                🎉 Submission Confirmed!
+              <AlertDialogTitle className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
+                Submission Confirmed
               </AlertDialogTitle>
 
               <AlertDialogDescription className="text-center space-y-4" asChild>
                 <div>
                   {/* Thank you message */}
-                  <div className="mt-4 px-4 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
-                    <p className="text-white font-semibold text-base">
+                  <div className="mt-4 px-4 py-3 bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 rounded-2xl">
+                    <p className="text-slate-900 dark:text-white font-semibold text-base">
                       Thank you, {fullName || "there"}!
                     </p>
-                    <p className="text-slate-300 text-sm mt-1 leading-relaxed">
+                    <p className="text-slate-600 dark:text-zinc-400 text-sm mt-1 leading-relaxed">
                       Your inquiry has been received. Our expert advisors will get back to you shortly.
                     </p>
                   </div>
 
                   {/* Email badge */}
-                  <div className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-500/10 border border-emerald-400/20 rounded-xl">
-                    <div className="w-5 h-5 rounded-full bg-emerald-400/20 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs">📧</span>
-                    </div>
-                    <p className="text-emerald-300 text-xs font-medium">
+                  <div className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-xl">
+                    <p className="text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
                       Confirmation sent to{" "}
-                      <span className="text-white font-bold">{email || "your email"}</span>
+                      <span className="text-emerald-950 dark:text-emerald-200 font-bold">{email || "your email"}</span>
                     </p>
                   </div>
 
                   {/* Info chips */}
                   <div className="mt-4 grid grid-cols-2 gap-2">
                     {[
-                      { icon: "⚡", label: "24hr Response" },
-                      { icon: "🔒", label: "Secure & Private" },
-                    ].map(({ icon, label }) => (
-                      <div key={label} className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 rounded-xl">
-                        <span className="text-sm">{icon}</span>
-                        <span className="text-slate-300 text-xs font-medium">{label}</span>
+                      { label: "24hr Response" },
+                      { label: "Secure & Private" },
+                    ].map(({ label }) => (
+                      <div key={label} className="flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 rounded-xl">
+                        <span className="text-slate-600 dark:text-zinc-400 text-xs font-semibold">{label}</span>
                       </div>
                     ))}
                   </div>
@@ -185,15 +173,15 @@ function SuccessDialog({ isOpen, onClose, fullName, email }) {
             {/* CTA Button */}
             <AlertDialogAction
               onClick={onClose}
-              className="mt-7 w-full h-12 rounded-2xl font-bold text-base text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-[0_4px_20px_rgba(139,92,246,0.4)] hover:shadow-[0_6px_28px_rgba(139,92,246,0.6)] transition-all duration-300 border-0"
+              className="mt-7 w-full h-12 rounded-2xl font-bold text-base text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 shadow-[0_4px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_28px_rgba(37,99,235,0.5)] transition-all duration-300 border-0"
             >
-              ✨ Explore More Opportunities
+              Explore More Opportunities
             </AlertDialogAction>
 
             {/* Footer note */}
             <p className="mt-4 text-slate-500 text-xs">
               Questions? Call us at{" "}
-              <span className="text-violet-400 font-semibold">+91 7396460717</span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold">+91 7396460717</span>
             </p>
           </div>
         </div>
@@ -298,7 +286,14 @@ export function ContactSection({ searchParams }) {
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to send code");
+      if (!response.ok) {
+        toast({
+          title: "Send Failed",
+          description: data.error || "Failed to send code",
+          variant: "destructive"
+        });
+        return;
+      }
 
       setEmailOtpSent(true);
       setEmailCooldown(60); // 60s cooldown for resend
@@ -340,7 +335,14 @@ export function ContactSection({ searchParams }) {
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Incorrect OTP code");
+      if (!response.ok) {
+        toast({
+          title: "Verification Failed",
+          description: data.error || "Incorrect OTP code",
+          variant: "destructive"
+        });
+        return;
+      }
 
       setEmailVerified(true);
       toast({
@@ -443,7 +445,13 @@ export function ContactSection({ searchParams }) {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Submission failed")
+        console.warn("Submission error:", data.error || "Submission failed")
+        toast({
+          title: "Error",
+          description: data.error || "Submission failed",
+          variant: "destructive",
+        })
+        return;
       }
 
       setShowSuccessDialog(true)
@@ -465,7 +473,7 @@ export function ContactSection({ searchParams }) {
       setPhoneIso("IN")
       setPhoneError("")
     } catch (error) {
-      console.error("Submission error:", error)
+      console.warn("Submission error:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to submit. Please try again.",

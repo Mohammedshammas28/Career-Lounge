@@ -77,7 +77,9 @@ export default function JobDetailsPage() {
     try {
       // Validate fields
       if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
-        throw new Error("Please fill in all required fields.");
+        setFormError("Please fill in all required fields.");
+        setIsSubmittingForm(false);
+        return;
       }
 
       const emailContent = `
@@ -117,10 +119,11 @@ ${formData.message}
           message: ""
         });
       } else {
-        throw new Error(result.error || "Failed to submit your application. Please try again.");
+        setFormError(result.error || "Failed to submit your application. Please try again.");
       }
     } catch (err) {
-      setFormError(err.message);
+      console.warn("Application submission error:", err.message);
+      setFormError(err.message || "An unexpected error occurred.");
     } finally {
       setIsSubmittingForm(false);
     }

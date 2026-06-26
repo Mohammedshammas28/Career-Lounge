@@ -45,20 +45,20 @@ const courseSchema = new mongoose.Schema(
     }
 );
 
-courseSchema.pre("save", async function (next) {
+courseSchema.pre("save", async function () {
     if (this.courseName) {
         this.courseName = this.courseName.trim().replace(/\s+/g, " ");
     }
     if (this.isModified("courseName")) {
-        const CourseModel = mongoose.models.Course || mongoose.model("Course");
+        const CourseModel = mongoose.models.Course || mongoose.model("Course", courseSchema);
         const existing = await CourseModel.findOne({
             courseName: { $regex: new RegExp(`^${this.courseName.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") }
         });
         if (existing && existing._id.toString() !== this._id.toString()) {
-            return next(new Error(`Course with name "${this.courseName}" already exists`));
+            throw new Error(`Course with name "${this.courseName}" already exists`);
         }
     }
-    next();
 });
+
 
 export default mongoose.models.Course || mongoose.model("Course", courseSchema);
