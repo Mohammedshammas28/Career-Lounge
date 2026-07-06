@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = 'force-dynamic';
+
 import { Header } from "@/components/header"
 import Link from "next/link"
 import { Globe, CheckCircle, Plane } from "lucide-react"
