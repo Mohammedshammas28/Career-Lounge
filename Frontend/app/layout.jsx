@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BannerProvider } from '@/components/BannerContext'
-import { CoreServicesSlider } from '@/components/core-services-slider'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import './globals.css'
 
@@ -22,10 +21,6 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  // In production, show only launching page. In development, show all pages.
-  const isProduction = process.env.NODE_ENV === 'production'
-  const showLaunchingOnly = isProduction
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased relative min-h-screen bg-gradient-to-br from-[#020617] via-[#7C3AED] to-[#3B82F6]`}>
@@ -36,15 +31,9 @@ export default function RootLayout({ children }) {
         <div className="pointer-events-none fixed inset-0 -z-10 bg-black/40" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <BannerProvider>
-            {showLaunchingOnly ? (
-              <main className="flex min-h-screen w-full items-center justify-center">
-                <CoreServicesSlider />
-              </main>
-            ) : (
-              <div className="pt-16 md:pt-0">
-                {children}
-              </div>
-            )}
+            <div className="pt-16 md:pt-0">
+              {children}
+            </div>
             <WhatsAppButton />
           </BannerProvider>
           <Analytics />
