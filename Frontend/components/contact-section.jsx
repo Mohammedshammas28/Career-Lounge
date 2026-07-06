@@ -98,6 +98,15 @@ const SERVICE_OPTIONS = [
   { value: "Profile Building", label: "Profile Building" },
   { value: "Application Support", label: "Application Support" },
   { value: "Education Loan Assistance", label: "Education Loan Assistance" },
+  { value: "Test Preparation", label: "Test Preparation" },
+  { value: "Language Training", label: "Language Training" },
+  { value: "Domestic Education", label: "Domestic Education" },
+  { value: "Overseas Education", label: "Overseas Education" },
+  { value: "Educational Consultancy", label: "Educational Consultancy" },
+  { value: "Immigration Services", label: "Immigration Services" },
+  { value: "Domestic Recruitment", label: "Domestic Recruitment" },
+  { value: "Overseas Recruitment", label: "Overseas Recruitment" },
+  { value: "Recruitment Services", label: "Recruitment Services" },
   { value: "Other", label: "Other" },
 ]
 
