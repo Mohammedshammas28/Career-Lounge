@@ -42,7 +42,10 @@ export default function DomesticEducationPage() {
                     },
                 })
 
-                if (!response.ok) throw new Error("Failed to fetch universities")
+                if (!response.ok) {
+                    setIsLoading(false)
+                    return
+                }
 
                 const result = await response.json()
                 const data = result.data || result.universities || []

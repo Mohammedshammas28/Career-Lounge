@@ -23,7 +23,11 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
           },
         })
 
-        if (!response.ok) throw new Error("Failed to fetch universities")
+        if (!response.ok) {
+          setIsLoading(false)
+          return
+        }
+
 
         const result = await response.json()
         let data = result.data || result.universities || []
