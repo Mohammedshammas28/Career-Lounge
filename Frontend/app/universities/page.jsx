@@ -1,8 +1,6 @@
 "use client";
 
-export const dynamic = 'force-dynamic';
-
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
@@ -20,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function UniversitiesPage() {
+function UniversitiesContent() {
   const [universities, setUniversities] = useState([]);
   const [filteredUniversities, setFilteredUniversities] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -412,5 +410,17 @@ export default function UniversitiesPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function UniversitiesPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading universities...</div>
+      </main>
+    }>
+      <UniversitiesContent />
+    </Suspense>
   );
 }

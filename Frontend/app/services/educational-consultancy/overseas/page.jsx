@@ -1,18 +1,16 @@
 "use client"
 
-export const dynamic = 'force-dynamic';
-
+import { Suspense, useEffect, useRef, useState } from "react"
 import { Header } from "@/components/header"
 import Link from "next/link"
 import { Globe, CheckCircle, Plane } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Footer } from "@/components/footer"
 import { MapPin } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default function OverseasEducationPage() {
+function OverseasEducationContent() {
   const [universities, setUniversities] = useState([])
   const [filteredUniversities, setFilteredUniversities] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -348,5 +346,17 @@ export default function OverseasEducationPage() {
 
       <Footer />
     </main>
+  )
+}
+
+export default function OverseasEducationPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </main>
+    }>
+      <OverseasEducationContent />
+    </Suspense>
   )
 }
