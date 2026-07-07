@@ -8,9 +8,9 @@ export function JobCard({ job }) {
   if (!job) return null
 
   return (
-    <div className="bg-white dark:bg-card rounded-[1.5rem] p-8 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-border flex flex-col items-center text-center group h-full">
+    <div className="bg-white dark:bg-card rounded-[1.5rem] p-5 sm:p-8 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-border flex flex-col items-center text-center group h-full">
       {/* Company Logo */}
-      <div className="w-full h-32 flex items-center justify-center mb-6">
+      <div className="w-full h-24 sm:h-32 flex items-center justify-center mb-4 sm:mb-6">
         {job.logo ? (
           <img
             src={job.logo}

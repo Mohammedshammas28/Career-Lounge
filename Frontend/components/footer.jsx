@@ -129,8 +129,8 @@ export function Footer() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 animate-fadeInUp" style={{animation: 'fadeInUp 0.6s ease-out 0.5s both'}}>
-          <p className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            {new Date().getFullYear()} Career Lounge. All rights reserved.
+          <p className="text-sm text-muted-foreground hover:text-foreground transition-colors text-center md:text-left">
+            &copy; {new Date().getFullYear()} Career Lounge. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground hover:text-foreground transition-colors gradient-text">
             Dedicated to Careers, Growth & Success.

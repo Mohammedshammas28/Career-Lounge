@@ -59,11 +59,11 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
 
   if (isLoading) {
     return (
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="rounded-lg border border-border overflow-hidden">
-            <Skeleton className="h-48 w-full" />
-            <div className="p-6 space-y-4">
+            <Skeleton className="h-40 sm:h-48 w-full" />
+            <div className="p-4 sm:p-6 space-y-4">
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-2/3" />
               <div className="flex gap-2 pt-4">
@@ -87,12 +87,12 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
 
   return (
     <>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {universities.map((university) => (
           <Link key={university.slug || university._id} href={`/services/educational-consultancy/overseas/universities/${university.slug || university._id}`}>
             <div className="group rounded-lg border border-border hover:border-primary/50 transition-all hover:shadow-lg overflow-hidden bg-background h-full cursor-pointer flex flex-col">
               {/* Banner Image */}
-              <div className="relative h-48 bg-gradient-to-br from-secondary/30 to-secondary/10 overflow-hidden">
+              <div className="relative h-40 sm:h-48 bg-gradient-to-br from-secondary/30 to-secondary/10 overflow-hidden">
                 {university.bannerImage ? (
                   <img
                     src={university.bannerImage}
@@ -157,7 +157,7 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 text-xs"
+                    className="flex-1 text-xs min-h-[2.5rem]"
                     onClick={(e) => {
                       e.stopPropagation()
                       e.preventDefault()
@@ -167,7 +167,7 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
                   </Button>
                   <Button
                     size="sm"
-                    className="flex-1 text-xs bg-blue-600 hover:bg-blue-700"
+                    className="flex-1 text-xs min-h-[2.5rem] bg-blue-600 hover:bg-blue-700"
                     onClick={(e) => {
                       e.stopPropagation()
                       e.preventDefault()

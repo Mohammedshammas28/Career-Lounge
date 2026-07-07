@@ -82,13 +82,13 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black backdrop-blur-md border-b border-border animate-fadeIn">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8 bg-white dark:bg-black">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8 lg:py-4 bg-white dark:bg-black">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 transition-transform hover:scale-105 group">
             <img
               src="/Careerlounge logo (1).png"
               alt="Career Lounge Logo"
-              className="h-12 w-auto"
+              className="h-10 lg:h-12 w-auto"
             />
           </Link>
         </div>
@@ -238,6 +238,23 @@ export function Header() {
           </Link>
         </div>
 
+        {/* Mobile menu toggle button */}
+        <div className="flex lg:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground hover:bg-secondary transition-all"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" aria-hidden="true" />
+            ) : (
+              <Menu className="h-6 w-6" aria-hidden="true" />
+            )}
+          </button>
+        </div>
+
       </nav>
       {/* Animated notification banner moved below navbar */}
       <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-2">
@@ -274,7 +291,7 @@ export function Header() {
             className="lg:hidden fixed inset-0 z-40 bg-black/50"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <nav className="lg:hidden fixed top-16 left-0 right-0 z-50 bg-white dark:bg-black px-6 py-6 border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <nav className="lg:hidden fixed top-[6.5rem] left-0 right-0 z-50 bg-white dark:bg-black px-4 py-4 border-b border-border max-h-[calc(100vh-6.5rem)] overflow-y-auto shadow-xl">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold text-foreground">Menu</h2>
               <button
@@ -358,7 +375,7 @@ export function Header() {
                 );
               })}
             </div>
-            <div className="py-6 border-t border-border mt-6">
+            <div className="py-4 border-t border-border mt-4 flex flex-col gap-3">
               <Link href={getContactHref()} onClick={() => setMobileMenuOpen(false)}>
                 <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                   Get Started

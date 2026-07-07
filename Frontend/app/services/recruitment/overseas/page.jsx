@@ -40,27 +40,27 @@ export default function OverseasRecruitmentPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="py-20 lg:py-32 relative overflow-hidden">
+      <section className="py-16 sm:py-20 lg:py-32 relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&h=1080&fit=crop')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-violet-900/55 via-black/30 to-white dark:from-violet-900/65 dark:via-black/50 dark:to-background z-10" />
-        <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center" style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }}>
-            <div className="h-16 w-16 rounded-xl bg-violet-500/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
-              <Plane className="h-8 w-8 text-violet-300" />
+            <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-xl bg-violet-500/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <Plane className="h-7 w-7 sm:h-8 sm:w-8 text-violet-300" />
             </div>
-            <p className="text-sm font-bold uppercase tracking-widest text-violet-300 mb-3">Recruitment Services</p>
-            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6">
+            <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-violet-300 mb-2 sm:mb-3">Recruitment Services</p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4 sm:mb-6">
               Overseas <span className="text-violet-400">Recruitment</span>
             </h1>
-            <p className="text-xl text-gray-200 mb-8">
+            <p className="text-base sm:text-xl text-gray-200 mb-6 sm:mb-8 px-2 sm:px-0">
               Your gateway to international careers — we place top talent with leading employers worldwide.
             </p>
             <Link href={`/contact?service=${encodeURIComponent("Overseas Recruitment")}`}>
-              <Button className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-6 text-base font-bold">
-                Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
+              <Button className="bg-violet-500 hover:bg-violet-600 text-white px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base font-bold w-full sm:w-auto">
+                Start Your Journey <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
           </div>
@@ -68,22 +68,22 @@ export default function OverseasRecruitmentPage() {
       </section>
 
       {/* Overview Section */}
-      <section className="py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="py-12 lg:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div style={{ animation: "fadeInUp 0.6s ease-out 0.2s both" }}>
-              <h2 className="text-3xl font-bold text-foreground mb-6">Work Abroad with Confidence</h2>
-              <p className="text-lg text-muted-foreground mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Work Abroad with Confidence</h2>
+              <p className="text-base sm:text-lg text-muted-foreground mb-4">
                 Our overseas recruitment service connects skilled professionals with top employers across the UK, Canada, Australia, Europe, and beyond. We handle everything from job matching to visa documentation support.
               </p>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-base sm:text-lg text-muted-foreground">
                 With our established international employer network, we ensure you land in a role that truly matches your qualifications, experience, and career goals.
               </p>
             </div>
 
-            <div className="bg-card border border-border rounded-2xl p-8" style={{ animation: "slideInRight 0.6s ease-out 0.3s both" }}>
-              <h3 className="text-2xl font-bold text-foreground mb-6">Our Overseas Services</h3>
-              <div className="space-y-4">
+            <div className="bg-card border border-border rounded-2xl p-5 sm:p-8" style={{ animation: "slideInRight 0.6s ease-out 0.3s both" }}>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">Our Overseas Services</h3>
+              <div className="space-y-3 sm:space-y-4">
                 {[
                   "International job placement across 15+ countries",
                   "Visa & immigration documentation support",
@@ -107,20 +107,20 @@ export default function OverseasRecruitmentPage() {
 
 
       {/* Overseas Job Listings */}
-      <section className="py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
+      <section className="py-12 lg:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
             <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-2">Open Positions</p>
-            <h2 className="text-3xl font-bold text-foreground mb-4">Overseas Job Opportunities</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">Overseas Job Opportunities</h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
               Current international openings with our partner employers worldwide
             </p>
           </div>
 
           {isLoading ? (
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-border overflow-hidden bg-card p-6 space-y-4">
+                <div key={i} className="rounded-2xl border border-border overflow-hidden bg-card p-5 sm:p-6 space-y-4">
                   <Skeleton className="h-14 w-14 rounded-xl" />
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-3 w-1/2" />
@@ -139,7 +139,7 @@ export default function OverseasRecruitmentPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 mb-8 sm:mb-10">
                 {jobs.slice(0, 6).map((job, index) => (
                   <div key={job._id || job.slug} style={{ animation: `fadeInUp 0.6s ease-out ${0.1 + index * 0.1}s both` }} className="h-full">
                     <JobCard job={job} />
@@ -159,13 +159,13 @@ export default function OverseasRecruitmentPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/20 dark:to-indigo-950/20 border-t border-border">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">How It Works</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Our streamlined 4-step process makes working overseas straightforward.</p>
+      <section className="py-12 lg:py-24 bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/20 dark:to-indigo-950/20 border-t border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">How It Works</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">Our streamlined 4-step process makes working overseas straightforward.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
             {[
               { step: "01", title: "Profile Review", desc: "We assess your qualifications, experience, and target countries." },
               { step: "02", title: "Job Matching", desc: "We match you with verified international employers and open roles." },
@@ -185,14 +185,14 @@ export default function OverseasRecruitmentPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 lg:py-24">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-6">Ready to Work Internationally?</h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+      <section className="py-12 lg:py-24">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Ready to Work Internationally?</h2>
+          <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
             Connect with our overseas recruitment team today and take the first step toward your international career.
           </p>
           <Link href={`/contact?service=${encodeURIComponent("Overseas Recruitment")}`}>
-            <Button className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-6 text-lg">
+            <Button className="bg-violet-600 hover:bg-violet-700 text-white px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg w-full sm:w-auto">
               Get in Touch <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
