@@ -122,6 +122,7 @@ export default function UniversityDetailsPage() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        countryCode: "+91",
         mobile: "",
         city: "",
         preferredDestination: ""
@@ -1053,9 +1054,21 @@ export default function UniversityDetailsPage() {
                                             <div className="group/input">
                                                 <label className="text-xs font-bold text-blue-100 uppercase tracking-wider mb-2 block">Mobile Number *</label>
                                                 <div className="flex gap-2">
-                                                    <div className="bg-white/95 backdrop-blur-sm rounded-xl px-3.5 flex items-center text-gray-600 text-sm font-bold border-2 border-white/20 min-w-fit">
-                                                        +91
-                                                    </div>
+                                                    <select
+                                                        name="countryCode"
+                                                        defaultValue="+91"
+                                                        onChange={(e) => {
+                                                            const code = e.target.value;
+                                                            setFormData(prev => ({ ...prev, countryCode: code }));
+                                                        }}
+                                                        className="bg-white/95 backdrop-blur-sm rounded-xl px-2 py-3 text-gray-900 border-2 border-white/20 focus:outline-none text-sm font-semibold min-w-[85px] max-w-[120px] cursor-pointer"
+                                                    >
+                                                        {require("@/lib/country-codes").countryCodes.map((c) => (
+                                                            <option key={`${c.code}-${c.name}`} value={c.code}>
+                                                                {c.code} ({c.name.split(" ").pop().replace(/[()]/g, "")})
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                     <div className="relative flex-1">
                                                         <input
                                                             type="tel"
@@ -1064,7 +1077,7 @@ export default function UniversityDetailsPage() {
                                                             value={formData.mobile}
                                                             onChange={handleInputChange}
                                                             className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3.5 text-gray-900 border-2 border-white/20 group-hover/input:border-white/40 focus:border-white focus:outline-none focus:ring-0 transition-all text-sm font-medium placeholder:text-gray-400"
-                                                            placeholder="Enter 10-digit number"
+                                                            placeholder="Enter mobile number"
                                                         />
                                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 text-lg">📱</div>
                                                     </div>

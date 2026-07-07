@@ -35,9 +35,84 @@ export default function JobDetailsPage() {
     firstName: "",
     lastName: "",
     email: "",
+    countryCode: "+971",
     mobile: "",
     message: ""
   });
+
+  const [emailOtp, setEmailOtp] = useState("");
+  const [emailOtpSent, setEmailOtpSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [isSendingEmailOtp, setIsSendingEmailOtp] = useState(false);
+  const [isVerifyingEmailOtp, setIsVerifyingEmailOtp] = useState(false);
+  const [emailCooldown, setEmailCooldown] = useState(0);
+
+  useEffect(() => {
+    let emailTimer;
+    if (emailCooldown > 0) {
+      emailTimer = setTimeout(() => setEmailCooldown(emailCooldown - 1), 1000);
+    }
+    return () => clearTimeout(emailTimer);
+  }, [emailCooldown]);
+
+  const handleSendEmailOtp = async () => {
+    if (!formData.email || !formData.email.trim()) {
+      setFormError("Please enter your email address first.");
+      return;
+    }
+    setIsSendingEmailOtp(true);
+    setFormError("");
+
+    try {
+      const response = await fetch("/api/contact/send-email-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setFormError(data.error || "Failed to send code");
+        return;
+      }
+
+      setEmailOtpSent(true);
+      setEmailCooldown(60);
+    } catch (err) {
+      setFormError(err.message || "Could not send OTP. Try again.");
+    } finally {
+      setIsSendingEmailOtp(false);
+    }
+  };
+
+  const handleVerifyEmailOtp = async () => {
+    if (!emailOtp || emailOtp.length !== 6) {
+      setFormError("Please enter a 6-digit verification code.");
+      return;
+    }
+    setIsVerifyingEmailOtp(true);
+    setFormError("");
+
+    try {
+      const response = await fetch("/api/contact/verify-email-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, otp: emailOtp })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setFormError(data.error || "Incorrect OTP code");
+        return;
+      }
+
+      setEmailVerified(true);
+    } catch (err) {
+      setFormError(err.message || "Failed to verify. Please check the code.");
+    } finally {
+      setIsVerifyingEmailOtp(false);
+    }
+  };
 
   useEffect(() => {
     if (params.slug) {
@@ -71,6 +146,10 @@ export default function JobDetailsPage() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (!emailVerified) {
+      setFormError("Please verify your email address first.");
+      return;
+    }
     setFormError("");
     setIsSubmittingForm(true);
 
@@ -93,6 +172,8 @@ Cover Letter/Message:
 ${formData.message}
       `;
 
+      const combinedPhone = `${formData.countryCode || "+971"} ${formData.mobile}`;
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -102,6 +183,7 @@ ${formData.message}
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
+          phone: combinedPhone,
           serviceType: `Job Application: ${job.title} at ${job.company}`,
           message: emailContent
         })
@@ -238,9 +320,9 @@ ${formData.message}
 
         {/* Content Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column: Job Details */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-7 space-y-8">
               {/* Job Description */}
               <div className="bg-white dark:bg-card rounded-2xl shadow-sm border border-slate-100 dark:border-border p-6 sm:p-8">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-foreground mb-6 flex items-center gap-3">
@@ -290,7 +372,7 @@ ${formData.message}
             </div>
 
             {/* Right Column: Sidebar */}
-            <div className="space-y-8">
+            <div className="lg:col-span-5 space-y-8">
               {/* Job Summary Card */}
               <div className="bg-white dark:bg-card rounded-2xl shadow-sm border border-slate-100 dark:border-border p-6 sm:p-8">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-foreground mb-6">Job Summary</h3>
@@ -350,120 +432,205 @@ ${formData.message}
               </div>
 
               {/* Job Application Form */}
-              <div className="bg-white dark:bg-card rounded-2xl shadow-sm border border-slate-100 dark:border-border p-6 sm:p-8">
-                {formSubmitted ? (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-green-50 dark:bg-green-950/30 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-100 dark:border-green-900/30">
-                      <CheckCircle2 className="w-8 h-8 text-green-500" />
-                    </div>
-                    <h4 className="text-xl font-bold text-slate-900 dark:text-foreground mb-2">Application Received!</h4>
-                    <p className="text-sm text-slate-500 dark:text-muted-foreground mb-6">
-                      Thank you for applying. Our recruitment specialist will review your profile and contact you shortly.
-                    </p>
-                    <Button 
-                      onClick={() => setFormSubmitted(false)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold"
-                    >
-                      Submit Another Application
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-foreground mb-1">Apply for this Job</h3>
-                    <p className="text-xs text-slate-500 dark:text-muted-foreground mb-6">
-                      Provide your details below to submit your application.
-                    </p>
+              <div className="bg-gradient-to-br from-blue-950 via-indigo-900 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden group">
+                {/* Animated Background Elements */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-400/20 rounded-full -ml-16 -mb-16 blur-3xl group-hover:scale-110 transition-transform duration-500" />
 
-                    {formError && (
-                      <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs p-3 rounded-lg flex items-center gap-2 mb-4 border border-red-100 dark:border-red-900/30">
-                        <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                        <span>{formError}</span>
+                <div className="relative z-10">
+                  {formSubmitted ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-400/30">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-400" />
                       </div>
-                    )}
-
-                    <form onSubmit={handleFormSubmit} className="space-y-4">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">First Name *</label>
-                          <Input
-                            name="firstName"
-                            required
-                            value={formData.firstName}
-                            onChange={handleInputChange}
-                            placeholder="John"
-                            className="bg-gray-50 border-slate-200 dark:bg-background rounded-lg text-sm"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">Last Name *</label>
-                          <Input
-                            name="lastName"
-                            required
-                            value={formData.lastName}
-                            onChange={handleInputChange}
-                            placeholder="Doe"
-                            className="bg-gray-50 border-slate-200 dark:bg-background rounded-lg text-sm"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">Email Address *</label>
-                        <Input
-                          type="email"
-                          name="email"
-                          required
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          placeholder="johndoe@example.com"
-                          className="bg-gray-50 border-slate-200 dark:bg-background rounded-lg text-sm"
-                        />
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">Mobile Number</label>
-                        <Input
-                          type="tel"
-                          name="mobile"
-                          value={formData.mobile}
-                          onChange={handleInputChange}
-                          placeholder="+971 50 123 4567"
-                          className="bg-gray-50 border-slate-200 dark:bg-background rounded-lg text-sm"
-                        />
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">Cover Letter / Message *</label>
-                        <Textarea
-                          name="message"
-                          required
-                          value={formData.message}
-                          onChange={handleInputChange}
-                          placeholder="Introduce yourself and explain why you're a good fit for this role..."
-                          className="bg-gray-50 border-slate-200 dark:bg-background rounded-lg text-sm min-h-[120px] resize-none"
-                        />
-                      </div>
-
-                      <Button
-                        type="submit"
-                        disabled={isSubmittingForm}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-blue-200 dark:shadow-none"
+                      <h4 className="text-xl font-bold text-white mb-2">Application Received!</h4>
+                      <p className="text-sm text-blue-100 mb-6">
+                        Thank you for applying. Our recruitment specialist will review your profile and contact you shortly.
+                      </p>
+                      <Button 
+                        onClick={() => {
+                          setFormSubmitted(false);
+                          setEmailVerified(false);
+                          setEmailOtpSent(false);
+                          setEmailOtp("");
+                        }}
+                        className="w-full bg-white text-blue-900 hover:bg-blue-50 font-bold"
                       >
-                        {isSubmittingForm ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            Submitting...
-                          </>
-                        ) : (
-                          <>
-                            <Send className="w-4 h-4" />
-                            Submit Application
-                          </>
-                        )}
+                        Submit Another Application
                       </Button>
-                    </form>
-                  </>
-                )}
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="text-2xl font-black mb-3 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Apply for this Job</h3>
+                      <p className="text-blue-100 text-sm font-medium mb-6">
+                        Provide your details below to submit your application.
+                      </p>
+
+                      {formError && (
+                        <div className="bg-red-500/20 text-red-200 text-xs p-3 rounded-lg flex items-center gap-2 mb-4 border border-red-500/30">
+                          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                          <span>{formError}</span>
+                        </div>
+                      )}
+
+                      <form onSubmit={handleFormSubmit} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="group/input space-y-1.5">
+                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider block">First Name *</label>
+                            <input
+                              type="text"
+                              name="firstName"
+                              required
+                              value={formData.firstName}
+                              onChange={handleInputChange}
+                              placeholder="John"
+                              className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 text-gray-900 border-2 border-white/20 focus:border-white focus:outline-none transition-all text-sm font-medium placeholder:text-gray-400"
+                            />
+                          </div>
+                          <div className="group/input space-y-1.5">
+                            <label className="text-xs font-bold text-blue-100 uppercase tracking-wider block">Last Name *</label>
+                            <input
+                              type="text"
+                              name="lastName"
+                              required
+                              value={formData.lastName}
+                              onChange={handleInputChange}
+                              placeholder="Doe"
+                              className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 text-gray-900 border-2 border-white/20 focus:border-white focus:outline-none transition-all text-sm font-medium placeholder:text-gray-400"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Email Verification Form Portion */}
+                        <div className="group/input space-y-1.5">
+                          <label className="text-xs font-bold text-blue-100 uppercase tracking-wider block">Email Address *</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="email"
+                              name="email"
+                              required
+                              disabled={emailVerified || emailOtpSent}
+                              value={formData.email}
+                              onChange={handleInputChange}
+                              placeholder="johndoe@example.com"
+                              className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 text-gray-900 border-2 border-white/20 focus:border-white focus:outline-none transition-all text-sm font-medium placeholder:text-gray-400 flex-1"
+                            />
+                            {!emailVerified && (
+                              <button
+                                type="button"
+                                onClick={handleSendEmailOtp}
+                                disabled={isSendingEmailOtp || emailCooldown > 0 || !formData.email || emailVerified}
+                                className="bg-white hover:bg-blue-50 text-blue-700 h-11 font-bold px-4 rounded-xl text-xs uppercase tracking-wide min-w-[100px] disabled:opacity-50 transition-all flex items-center justify-center shrink-0 border border-white/20"
+                              >
+                                {isSendingEmailOtp ? "Sending..." : emailCooldown > 0 ? `Resend (${emailCooldown}s)` : "Send OTP"}
+                              </button>
+                            )}
+                            {emailVerified && (
+                              <div className="flex items-center gap-1 px-3 bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 rounded-xl text-xs font-bold shrink-0">
+                                <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                              </div>
+                            )}
+                          </div>
+
+                          {emailOtpSent && !emailVerified && (
+                            <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex gap-2 items-center animate-fadeIn mt-2">
+                              <input
+                                placeholder="Enter 6-digit OTP"
+                                value={emailOtp}
+                                onChange={(e) => setEmailOtp(e.target.value.slice(0, 6))}
+                                className="bg-white text-gray-900 border-2 border-white/20 rounded-xl text-center font-bold tracking-widest text-base h-11 flex-1 min-w-0 focus:outline-none focus:border-white"
+                                maxLength={6}
+                              />
+                              <button
+                                type="button"
+                                onClick={handleVerifyEmailOtp}
+                                disabled={isVerifyingEmailOtp || emailOtp.length !== 6}
+                                className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold h-11 px-4 rounded-xl text-xs uppercase tracking-wide transition-all shrink-0"
+                              >
+                                {isVerifyingEmailOtp ? "Verifying..." : "Verify"}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="group/input space-y-1.5">
+                          <label className="text-xs font-bold text-blue-100 uppercase tracking-wider block">Mobile Number *</label>
+                          <div className="flex gap-2">
+                            <div className="flex bg-white/95 backdrop-blur-sm rounded-xl border-2 border-white/20 focus-within:border-white transition-all overflow-hidden">
+                              <input
+                                type="text"
+                                name="countryCode"
+                                value={formData.countryCode || "+971"}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setFormData(prev => ({ ...prev, countryCode: val }));
+                                }}
+                                placeholder="+971"
+                                className="w-16 bg-transparent text-gray-900 px-2 py-3 text-sm font-semibold focus:outline-none border-r border-gray-200"
+                              />
+                              <select
+                                onChange={(e) => {
+                                  const code = e.target.value;
+                                  setFormData(prev => ({ ...prev, countryCode: code }));
+                                }}
+                                value=""
+                                className="bg-transparent text-gray-500 w-6 focus:outline-none text-xs font-semibold cursor-pointer px-1 pr-2"
+                              >
+                                <option value="" disabled>▾</option>
+                                {require("@/lib/country-codes").countryCodes.map((c) => (
+                                  <option key={`${c.code}-${c.name}`} value={c.code}>
+                                    {c.code} ({c.name.split(" ").pop().replace(/[()]/g, "")})
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <input
+                              type="tel"
+                              name="mobile"
+                              required
+                              value={formData.mobile}
+                              onChange={handleInputChange}
+                              placeholder="50 123 4567"
+                              className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 text-gray-900 border-2 border-white/20 focus:border-white focus:outline-none transition-all text-sm font-medium placeholder:text-gray-400 flex-1"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="group/input space-y-1.5">
+                          <label className="text-xs font-bold text-blue-100 uppercase tracking-wider block">Cover Letter / Message *</label>
+                          <textarea
+                            name="message"
+                            required
+                            value={formData.message}
+                            onChange={handleInputChange}
+                            placeholder="Introduce yourself and explain why you're a good fit for this role..."
+                            className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 text-gray-900 border-2 border-white/20 focus:border-white focus:outline-none transition-all text-sm font-medium placeholder:text-gray-400 min-h-[120px] resize-none"
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={isSubmittingForm || !emailVerified}
+                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-orange-500/50 flex items-center justify-center gap-2 mt-6 group/btn uppercase tracking-wide text-sm font-black disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isSubmittingForm ? (
+                            <>
+                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              Submitting...
+                            </>
+                          ) : (
+                            <>
+                              <Send className="w-4 h-4" />
+                              Submit Application
+                            </>
+                          )}
+                        </button>
+
+                        <p className="text-center text-xs text-blue-100 mt-4 font-medium">✓ 100% Free | No Hidden Charges | Quick Response</p>
+                      </form>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>

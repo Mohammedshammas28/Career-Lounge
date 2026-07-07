@@ -84,6 +84,7 @@ export async function POST(request) {
           name: `${firstName} ${lastName}`,
           jobTitle,
           company,
+          phone: phone || "Not provided",
           messageSummary: message
         });
       } else {

@@ -328,7 +328,7 @@ export const emailService = {
   /**
    * Legacy wrapper for old job application handler compatibility.
    */
-  sendApplicationConfirmationEmail: async ({ to, name, jobTitle, company, messageSummary }) => {
+  sendApplicationConfirmationEmail: async ({ to, name, jobTitle, company, phone, messageSummary }) => {
     const userPromise = sendEmail({
       to,
       subject: `Application Submitted: ${jobTitle} - Career Lounge`,
@@ -347,7 +347,7 @@ export const emailService = {
       html: getApplicationAdminTemplate({
         studentName: name,
         email: to,
-        phone: "N/A",
+        phone: phone || "Not provided",
         country: "N/A",
         university: company,
         course: jobTitle,
