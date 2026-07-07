@@ -434,11 +434,96 @@ export default function UniversityDetailsPage() {
         return level.includes("post") || level.includes("master") || level.includes("mba") || level.includes("doctor") || level.includes("phd");
     });
 
+    const universitySchema = {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": university.universityName,
+        "url": university.website || `https://career-lounge.in/university/${university.slug}`,
+        "logo": university.logo || "https://career-lounge.in/favicon.svg",
+        "image": university.bannerImage || "",
+        "description": university.overview || `Study at ${university.universityName} in ${university.city}, ${university.country}.`,
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": university.city,
+            "addressCountry": university.country
+        }
+    };
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://career-lounge.in"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Universities",
+                "item": "https://career-lounge.in/universities"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": university.universityName,
+                "item": `https://career-lounge.in/university/${university.slug}`
+            }
+        ]
+    };
+
+    const faqSchema = university.faqs && university.faqs.length > 0 ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": university.faqs.map(faq => ({
+            "@type": "Question",
+            "name": faq.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer
+            }
+        }))
+    } : null;
+
     return (
         <main className="min-h-screen bg-gray-50">
+            {/* Dynamic SEO Elements */}
+            <title>{`Study at ${university.universityName} | Fees, Intake & Visa Guidance | Career Lounge`}</title>
+            <meta name="description" content={`Explore ${university.universityName} in ${university.city}, ${university.country}. Learn about course duration, tuition fees, global rankings, scholarship schemes, intakes, and step-by-step admissions.`} />
+            <link rel="canonical" href={`https://career-lounge.in/university/${university.slug}`} />
+
+            {/* Dynamic Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(universitySchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            {faqSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                />
+            )}
+
             <Header />
 
             <div className="pt-[140px] pb-20">
+                {/* Breadcrumbs for Navigation UX */}
+                <div className="bg-slate-100 py-3 border-b text-xs text-slate-500">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2">
+                        <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                        <span>/</span>
+                        <Link href="/universities" className="hover:text-blue-600 transition-colors">Universities</Link>
+                        <span>/</span>
+                        <span className="text-slate-800 font-semibold">{university.universityName}</span>
+                    </div>
+                </div>
+
                 {/* University Secondary Navbar */}
                 <div className="sticky top-[116px] z-40 bg-white border-b shadow-md overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

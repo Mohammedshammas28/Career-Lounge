@@ -247,11 +247,100 @@ ${formData.message}
     );
   }
 
+  const jobSchema = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": job.title,
+    "description": job.description,
+    "identifier": {
+      "@type": "PropertyValue",
+      "name": job.company,
+      "value": job.slug || job._id
+    },
+    "datePosted": job.createdAt || new Date().toISOString(),
+    "validThrough": new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days validity
+    "employmentType": job.type === "Full-time" ? "FULL_TIME" : job.type === "Part-time" ? "PART_TIME" : "CONTRACTOR",
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": job.company,
+      "sameAs": "https://career-lounge.in",
+      "logo": job.logo || "https://career-lounge.in/favicon.svg"
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": job.location.split(",")[0]?.trim() || job.location,
+        "addressRegion": job.location.split(",")[1]?.trim() || "",
+        "addressCountry": job.category === "Overseas" ? "AE" : "IN" // Fallback country logic
+      }
+    },
+    "baseSalary": job.salary ? {
+      "@type": "MonetaryAmount",
+      "currency": job.salary.includes("SAR") ? "SAR" : job.salary.includes("AED") ? "AED" : "INR",
+      "value": {
+        "@type": "QuantitativeValue",
+        "value": job.salary,
+        "unitText": "MONTH"
+      }
+    } : undefined
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://career-lounge.in"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Jobs",
+        "item": "https://career-lounge.in/jobs"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": job.title,
+        "item": `https://career-lounge.in/jobs/${job.slug}`
+      }
+    ]
+  };
+
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-background/30">
+      {/* Dynamic SEO tags */}
+      <title>{`${job.title} at ${job.company} | Global Career Opportunities | Career Lounge`}</title>
+      <meta name="description" content={`Apply for the ${job.type} ${job.title} job position at ${job.company} in ${job.location}. Explore roles, responsibilities, salaries, experience criteria, and career details.`} />
+      <link rel="canonical" href={`https://career-lounge.in/jobs/${job.slug}`} />
+
+      {/* JSON-LD Schemas */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       <Header />
 
       <div className="pt-[140px] pb-20">
+        {/* Breadcrumb Navigation Bar */}
+        <div className="bg-slate-100 dark:bg-slate-900/50 py-3 border-b border-slate-200 dark:border-border text-xs text-slate-500 dark:text-zinc-400">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2">
+            <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/jobs" className="hover:text-blue-600 transition-colors">Jobs</Link>
+            <span>/</span>
+            <span className="text-slate-800 dark:text-zinc-200 font-semibold">{job.title}</span>
+          </div>
+        </div>
         {/* Hero Banner Section */}
         <section className="relative bg-[#1a1f35] py-16 text-white overflow-hidden">
           {/* Background shapes */}

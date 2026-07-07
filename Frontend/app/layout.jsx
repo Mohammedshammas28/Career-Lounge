@@ -11,13 +11,41 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata = {
-  title: 'Career Lounge | Elevate Your Professional Journey',
-  description: 'Career Lounge helps professionals advance their careers through expert coaching, resume building, and job search strategies.',
-  generator: 'v0.app',
-  icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+  metadataBase: new URL("https://career-lounge.in"),
+  title: {
+    default: "Career Lounge | Premium Overseas Education & Consultancy Platform",
+    template: "%s | Career Lounge"
   },
+  description: "Career Lounge offers premier consultancy services for Overseas Education, Visa processing, profile building, and global recruitment options. Partner with experts today.",
+  generator: "Next.js",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg"
+  },
+  openGraph: {
+    title: "Career Lounge | Premium Overseas Education & Consultancy",
+    description: "Career Lounge offers premier consultancy services for Overseas Education, Visa processing, profile building, and global recruitment options.",
+    url: "https://career-lounge.in",
+    siteName: "Career Lounge",
+    locale: "en_US",
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Career Lounge | Premium Overseas Education & Consultancy",
+    description: "Your gateway to top international universities, professional profile coaching, and strategic global job search."
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false
+    }
+  }
 }
 
 export default function RootLayout({ children }) {

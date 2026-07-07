@@ -1,0 +1,20 @@
+{
+  "short_name": "CareerLounge",
+  "name": "Career Lounge - Overseas Education & Consultancy",
+  "icons": [
+    {
+      "src": "/icon-light-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "display": "standalone"
+}
