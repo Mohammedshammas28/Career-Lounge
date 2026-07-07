@@ -20,8 +20,8 @@ export const metadata = {
   generator: "Next.js",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg"
+    icon: "/Careerlounge logo (1).png",
+    apple: "/Careerlounge logo (1).png"
   },
   openGraph: {
     title: "Career Lounge | Premium Overseas Education & Consultancy",
