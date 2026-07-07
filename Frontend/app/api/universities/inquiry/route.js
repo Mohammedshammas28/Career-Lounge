@@ -16,7 +16,7 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { name, email, mobile, city, preferredDestination, universityName } = body;
+    const { name, email, mobile, countryCode, city, preferredDestination, universityName } = body;
 
     // 1. Validate required fields
     if (!name || !email || !mobile || !city || !preferredDestination || !universityName) {
@@ -56,7 +56,9 @@ export async function POST(request) {
     }
 
     // 5. Save to ContactSubmission database
-    const mappedPhone = mobile.startsWith("+") ? mobile : `+91${mobile}`;
+    // Use submitted countryCode, fall back to +91 (India) if not provided
+    const prefix = countryCode && countryCode.startsWith("+") ? countryCode : "+91";
+    const mappedPhone = mobile.startsWith("+") ? mobile : `${prefix}${mobile}`;
     const submissionMessage = `Inquiry for ${universityName} from student in ${city}. Preferred destination: ${preferredDestination}.`;
 
     try {

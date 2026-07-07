@@ -89,7 +89,7 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {universities.map((university) => (
-          <Link key={university.slug || university._id} href={`/services/educational-consultancy/overseas/universities/${university.slug || university._id}`}>
+          <Link key={university.slug || university._id} href={`/university/${university.slug || university._id}`}>
             <div className="group rounded-lg border border-border hover:border-primary/50 transition-all hover:shadow-lg overflow-hidden bg-background h-full cursor-pointer flex flex-col">
               {/* Banner Image */}
               <div className="relative h-40 sm:h-48 bg-gradient-to-br from-secondary/30 to-secondary/10 overflow-hidden">
@@ -185,7 +185,7 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
       {/* View All Link */}
       {showViewAll && universities.length > 0 && (
         <div className="flex justify-center mt-8">
-          <Link href="/services/educational-consultancy/overseas/universities">
+          <Link href="/universities">
             <Button variant="outline" className="gap-2">
               View All Universities
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

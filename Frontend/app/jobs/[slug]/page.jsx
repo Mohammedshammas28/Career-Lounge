@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { countryCodes } from "@/lib/country-codes";
 
 export default function JobDetailsPage() {
   const params = useParams();
@@ -197,6 +198,7 @@ ${formData.message}
           firstName: "",
           lastName: "",
           email: "",
+          countryCode: "+971",
           mobile: "",
           message: ""
         });
@@ -577,7 +579,7 @@ ${formData.message}
                                 className="bg-transparent text-gray-500 w-6 focus:outline-none text-xs font-semibold cursor-pointer px-1 pr-2"
                               >
                                 <option value="" disabled>▾</option>
-                                {require("@/lib/country-codes").countryCodes.map((c) => (
+                                {countryCodes.map((c) => (
                                   <option key={`${c.code}-${c.name}`} value={c.code}>
                                     {c.code} ({c.name.split(" ").pop().replace(/[()]/g, "")})
                                   </option>

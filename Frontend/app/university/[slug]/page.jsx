@@ -12,6 +12,7 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { getIntakeStatus } from "@/lib/intake-status";
 import { useToast } from "@/hooks/use-toast";
+import { countryCodes } from "@/lib/country-codes";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -274,7 +275,7 @@ export default function UniversityDetailsPage() {
             }
 
             setShowSuccessDialog(true);
-            setFormData({ name: "", email: "", mobile: "", city: "", preferredDestination: "" });
+            setFormData({ name: "", email: "", countryCode: "+91", mobile: "", city: "", preferredDestination: "" });
             setEmailOtp("");
             setEmailOtpSent(false);
             setEmailVerified(false);
@@ -1063,7 +1064,7 @@ export default function UniversityDetailsPage() {
                                                         }}
                                                         className="bg-white/95 backdrop-blur-sm rounded-xl px-2 py-3 text-gray-900 border-2 border-white/20 focus:outline-none text-sm font-semibold min-w-[85px] max-w-[120px] cursor-pointer"
                                                     >
-                                                        {require("@/lib/country-codes").countryCodes.map((c) => (
+                                                        {countryCodes.map((c) => (
                                                             <option key={`${c.code}-${c.name}`} value={c.code}>
                                                                 {c.code} ({c.name.split(" ").pop().replace(/[()]/g, "")})
                                                             </option>

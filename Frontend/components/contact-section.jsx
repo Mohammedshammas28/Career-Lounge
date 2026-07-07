@@ -491,7 +491,9 @@ export function ContactSection({ searchParams }) {
     } finally {
       setIsSubmitting(false)
     }
-  }  return (
+  }
+
+  return (
     <section id="contact" className="pt-36 pb-24 lg:pt-44 lg:pb-32 relative overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       {/* Visual background enhancements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
