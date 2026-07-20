@@ -9,10 +9,20 @@ export async function POST(request) {
     const expectedUsername = String(adminAuthConfig.username || "admin").trim().toLowerCase()
     const expectedEmail = String(process.env.ADMIN_EMAIL || "info@career-lounge.in").trim().toLowerCase()
 
+    console.log("[Admin Login Debug] Attempt:", { 
+        inputUsername: username, 
+        inputPassword: password,
+        expectedUsername, 
+        expectedEmail,
+        expectedPassword: adminAuthConfig.password 
+    })
+
     if ((username.toLowerCase() !== expectedUsername && username.toLowerCase() !== expectedEmail) || password !== adminAuthConfig.password) {
+        console.warn("[Admin Login Debug] Failed login credentials match")
         return NextResponse.json({ message: "Invalid admin credentials" }, { status: 401 })
     }
 
+    console.log("[Admin Login Debug] Success! Setting cookie...")
     const response = NextResponse.json({ ok: true })
     response.cookies.set(ADMIN_SESSION_COOKIE, adminAuthConfig.sessionToken, {
         httpOnly: true,
@@ -24,3 +34,4 @@ export async function POST(request) {
 
     return response
 }
+

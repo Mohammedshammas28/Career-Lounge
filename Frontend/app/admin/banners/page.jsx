@@ -39,6 +39,8 @@ export default function BannersAdminPage() {
     const [previewData, setPreviewData] = useState(null);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [uploadError, setUploadError] = useState("");
+    const [submitError, setSubmitError] = useState("");
+    const [submitSuccess, setSubmitSuccess] = useState("");
 
     const [formData, setFormData] = useState({
         university: "",
@@ -154,6 +156,13 @@ export default function BannersAdminPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitError("");
+        setSubmitSuccess("");
+
+        if (!formData.university) {
+            setSubmitError("⚠️ Please select a university before saving.");
+            return;
+        }
 
         try {
             const url = editingId ? `/api/banners/${editingId}` : "/api/banners";
@@ -168,12 +177,18 @@ export default function BannersAdminPage() {
             const result = await response.json();
 
             if (result.success) {
-                setIsDialogOpen(false);
-                resetForm();
-                fetchBanners();
+                setSubmitSuccess(editingId ? "✅ Banner updated!" : "✅ Banner created!");
+                setTimeout(() => {
+                    setIsDialogOpen(false);
+                    resetForm();
+                    fetchBanners();
+                }, 800);
+            } else {
+                setSubmitError(`❌ Failed: ${result.error || "Unknown error"}`);
             }
         } catch (error) {
             console.error("Error saving banner:", error);
+            setSubmitError(`❌ Network error: ${error.message}`);
         }
     };
 
@@ -260,6 +275,8 @@ export default function BannersAdminPage() {
     const resetForm = () => {
         setEditingId(null);
         setPreviewData(null);
+        setSubmitError("");
+        setSubmitSuccess("");
         setFormData({
             university: "",
             heading: "Study at Top Ranked University Abroad",
@@ -495,56 +512,127 @@ export default function BannersAdminPage() {
                                                 Cancel
                                             </Button>
                                         </div>
+
+                                        {/* Error/Success feedback */}
+                                        {submitError && (
+                                            <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 font-medium">
+                                                {submitError}
+                                            </div>
+                                        )}
+                                        {submitSuccess && (
+                                            <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700 font-medium">
+                                                {submitSuccess}
+                                            </div>
+                                        )}
                                     </form>
                                 </TabsContent>
 
                                 <TabsContent value="preview" className="overflow-auto">
                                     {previewData ? (
-                                        <div className="bg-gray-900 rounded-lg overflow-hidden" style={{ minHeight: "480px" }}>
-                                            <div className={`bg-gradient-to-br ${previewData.customGradient} relative w-full min-h-[480px] rounded-lg`}>
-                                                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[480px] p-6 lg:p-8">
-                                                    <div className="text-white flex flex-col justify-between">
-                                                        <div className="space-y-4">
-                                                            <div className="w-fit bg-purple-600/40 text-purple-200 border border-purple-400/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-semibold">
-                                                                <span className="mr-2">🎓</span> {previewData.tagText}
+                                        <div className="rounded-none overflow-hidden" style={{ minHeight: "280px" }}>
+                                            <div className={`bg-gradient-to-br ${previewData.customGradient || "from-purple-950 via-blue-950 to-purple-950"} relative w-full min-h-[280px] rounded-none overflow-hidden`}>
+
+                                                {/* Top-left Logo */}
+                                                {previewData.university?.logo && (
+                                                    <div className="absolute top-3 left-4 z-20 bg-white/95 rounded-none p-1.5 shadow-lg border border-white/20">
+                                                        <img
+                                                            src={previewData.university.logo}
+                                                            alt={previewData.university.universityName || "Logo"}
+                                                            style={{ width: 44, height: 44, objectFit: "contain" }}
+                                                        />
+                                                    </div>
+                                                )}
+
+                                                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[280px]">
+                                                    {/* LEFT SIDE */}
+                                                    <div className="p-4 pl-8 lg:p-5 lg:pl-14 text-white flex flex-col justify-center">
+                                                        <div className="space-y-1.5">
+                                                            <div className="w-fit bg-purple-600/40 text-purple-200 border border-purple-400/50 px-2.5 py-0.5 text-[9px] font-bold tracking-wider rounded-none">
+                                                                <span className="mr-1.5">🎓</span> {previewData.tagText || "FEATURED UNIVERSITY"}
                                                             </div>
-                                                            <div>
-                                                                <h1 className="text-2xl lg:text-3xl font-bold leading-tight">
-                                                                    {previewData.heading.split(previewData.highlightedHeading)[0]}
-                                                                    <span className="bg-gradient-to-r from-purple-300 via-pink-400 to-purple-300 bg-clip-text text-transparent">
-                                                                        {previewData.highlightedHeading}
-                                                                    </span>
-                                                                    {previewData.heading.split(previewData.highlightedHeading)[1]}
-                                                                </h1>
-                                                            </div>
-                                                            <p className="text-sm text-gray-200">{previewData.subHeading}</p>
+                                                            <h1 className="text-xl lg:text-2xl font-extrabold leading-tight">
+                                                                {previewData.heading?.split(previewData.highlightedHeading)?.[0]}
+                                                                <span className="bg-gradient-to-r from-purple-300 via-pink-400 to-purple-300 bg-clip-text text-transparent">
+                                                                    {previewData.highlightedHeading}
+                                                                </span>
+                                                                {previewData.heading?.split(previewData.highlightedHeading)?.[1]}
+                                                            </h1>
+                                                            <p className="text-xs text-gray-300 max-w-md hidden sm:block">{previewData.subHeading}</p>
                                                         </div>
-                                                        <div className="space-y-3">
-                                                            <Button className="bg-pink-500 hover:bg-pink-600 text-white w-fit text-xs px-5 py-2.5 rounded-full">
-                                                                {previewData.buttonText}
-                                                            </Button>
+
+                                                        <div className="grid grid-cols-3 gap-3 py-3 max-w-md">
+                                                            <div>
+                                                                <p className="text-[8px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Intake</p>
+                                                                <p className="text-[11px] font-bold text-white">{previewData.university?.intakes?.[0]?.intakeName || "Coming Soon"}</p>
+                                                            </div>
+                                                            <div className="border-l border-white/10 pl-3">
+                                                                <p className="text-[8px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Courses</p>
+                                                                <p className="text-[11px] font-bold text-white">Top Programs</p>
+                                                            </div>
+                                                            <div className="border-l border-white/10 pl-3">
+                                                                <p className="text-[8px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Offer</p>
+                                                                <p className="text-[11px] font-bold text-pink-400">{previewData.offerPercentage || "—"}</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex gap-2 mt-1">
+                                                            <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold px-4 py-2 rounded-none text-[11px]">
+                                                                {previewData.buttonText || "Apply Now"} →
+                                                            </button>
+                                                            <button className="bg-white/5 text-white font-semibold px-4 py-2 rounded-none text-[11px] border border-white/10">
+                                                                ▶ Book Expert
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="relative flex flex-col justify-end">
-                                                        <div className="m-4 mt-auto bg-gradient-to-br from-purple-600/40 to-pink-600/40 backdrop-blur-xl border border-purple-400/50 rounded-2xl p-5 space-y-2.5 shadow-xl">
-                                                            <div className="flex items-center gap-1.5 w-fit">
-                                                                <span className="text-base">🔥</span>
-                                                                <span className="bg-pink-500/80 text-white border border-pink-400 text-[10px] font-bold px-2 py-0.5 rounded">
-                                                                    LIMITED TIME
-                                                                </span>
+
+                                                    {/* RIGHT SIDE - Image + Logo + Offer Card */}
+                                                    <div className="relative min-h-[280px] overflow-hidden hidden lg:block">
+                                                        {(previewData.customBannerImage || previewData.university?.bannerImage) && (
+                                                            <>
+                                                                <img
+                                                                    src={previewData.customBannerImage || previewData.university?.bannerImage}
+                                                                    alt="Banner"
+                                                                    className="absolute inset-0 w-full h-full object-cover"
+                                                                />
+                                                                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-purple-950/80" />
+                                                                <div className="absolute inset-0 bg-black/10" />
+                                                            </>
+                                                        )}
+
+                                                        {/* Right Logo */}
+                                                        {previewData.university?.logo && (
+                                                            <div className="absolute top-4 right-4 z-20 bg-white/95 rounded-none p-2 shadow-xl border border-white/20">
+                                                                <img
+                                                                    src={previewData.university.logo}
+                                                                    alt={previewData.university.universityName}
+                                                                    style={{ width: 48, height: 48, objectFit: "contain" }}
+                                                                />
                                                             </div>
-                                                            {previewData.offerPercentage && (
+                                                        )}
+
+                                                        {/* Offer Card */}
+                                                        <div className="absolute bottom-4 right-4 w-72 z-20 bg-gradient-to-br from-purple-600/90 to-pink-600/90 border border-white/20 rounded-none p-4 shadow-2xl">
+                                                            <div className="flex items-center gap-1.5 mb-2">
+                                                                <span>🔥</span>
+                                                                <span className="bg-white/20 text-white border border-white/30 text-[9px] font-bold px-1.5 py-0.5 rounded-none">LIMITED TIME OFFER</span>
+                                                            </div>
+                                                            <div className="flex items-end justify-between gap-4">
                                                                 <div>
-                                                                    <p className="text-4xl font-bold text-white leading-none">{previewData.offerPercentage}</p>
-                                                                    <p className="text-xs text-gray-100 mt-1">{previewData.offerText}</p>
+                                                                    {previewData.offerPercentage && (
+                                                                        <p className="text-2xl font-black text-white leading-none">{previewData.offerPercentage}</p>
+                                                                    )}
+                                                                    <p className="text-[10px] text-purple-100 mt-1">{previewData.offerText || "On Total Tuition Fees"}*</p>
                                                                 </div>
-                                                            )}
-                                                            {previewData.deadlineText && (
-                                                                <div className="bg-white/10 backdrop-blur border border-red-400/50 rounded-lg p-2.5 space-y-1">
-                                                                    <p className="text-[10px] text-red-300 font-bold leading-none">DEADLINE</p>
-                                                                    <p className="text-lg font-bold text-white leading-none">{previewData.deadlineText}</p>
-                                                                </div>
-                                                            )}
+                                                                {previewData.deadlineText && (
+                                                                    <div className="bg-black/20 rounded-none px-3 py-1.5 border border-white/10">
+                                                                        <p className="text-[9px] text-purple-200 font-bold uppercase">Deadline</p>
+                                                                        <p className="text-sm font-bold text-white leading-none mt-0.5">{previewData.deadlineText}</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <div className="mt-3 pt-2 border-t border-white/10">
+                                                                <p className="text-[9px] text-white italic opacity-90">*Hurry! Applications closing soon.</p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

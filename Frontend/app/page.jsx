@@ -14,8 +14,8 @@ export default function Home() {
       <Header />
 
       {/* Premium University Offers Slider */}
-      <section className="pt-32 pb-8 bg-gradient-to-b from-background via-purple-900/5 to-slate-900/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="pt-28 pb-24 bg-gradient-to-b from-background via-purple-900/5 to-slate-900/10">
+        <div className="w-full">
           <PremiumOfferSlider />
         </div>
       </section>

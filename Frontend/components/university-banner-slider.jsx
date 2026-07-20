@@ -92,10 +92,10 @@ export default function PremiumOfferSlider() {
 
     if (isLoading) {
         return (
-            <div className="w-full min-h-[380px] bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 rounded-2xl flex items-center justify-center">
+            <div className="w-full min-h-[240px] lg:h-[280px] bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 rounded-none flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-purple-400/30 border-t-purple-400 rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-gray-300">Loading offers...</p>
+                    <div className="w-10 h-10 border-4 border-purple-400/30 border-t-purple-400 rounded-none animate-spin mx-auto mb-3" />
+                    <p className="text-xs text-gray-300">Loading offers...</p>
                 </div>
             </div>
         );
@@ -103,8 +103,8 @@ export default function PremiumOfferSlider() {
 
     if (error || banners.length === 0) {
         return (
-            <div className="w-full min-h-[380px] bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 rounded-2xl flex items-center justify-center">
-                <p className="text-gray-400">{error || "No offers available"}</p>
+            <div className="w-full min-h-[240px] lg:h-[280px] bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 rounded-none flex items-center justify-center">
+                <p className="text-xs text-gray-400">{error || "No offers available"}</p>
             </div>
         );
     }
@@ -133,7 +133,7 @@ export default function PremiumOfferSlider() {
     };
 
     return (
-        <div className="relative w-full min-h-[380px] lg:h-[420px] rounded-2xl overflow-hidden group">
+        <div className="relative w-full min-h-[240px] lg:h-[280px] rounded-none overflow-hidden group">
             <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                     key={currentIndex}
@@ -154,17 +154,17 @@ export default function PremiumOfferSlider() {
                     {/* Main Grid Layout */}
                     <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 h-full">
                         {/* LEFT SIDE - Details */}
-                        <div className="p-6 lg:p-10 text-white flex flex-col justify-center">
+                        <div className="p-4 pl-8 sm:pl-12 lg:p-5 lg:pl-14 text-white flex flex-col justify-center">
                             {/* Top Section */}
-                            <div className="space-y-4">
+                            <div className="space-y-1.5">
                                 {/* Featured Badge */}
-                                <Badge className="w-fit bg-purple-600/40 text-purple-200 border-purple-400/50 backdrop-blur px-3 py-1 text-[10px] font-bold tracking-wider">
-                                    <span className="mr-2">🎓</span> FEATURED UNIVERSITY
+                                <Badge className="w-fit bg-purple-600/40 text-purple-200 border-purple-400/50 backdrop-blur px-2.5 py-0.5 text-[9px] font-bold tracking-wider rounded-none">
+                                    <span className="mr-1.5">🎓</span> FEATURED UNIVERSITY
                                 </Badge>
 
                                 {/* Headline */}
                                 <div>
-                                    <h1 className="text-2xl lg:text-3xl xl:text-4xl font-extrabold leading-tight">
+                                    <h1 className="text-xl lg:text-2xl xl:text-3xl font-extrabold leading-tight">
                                         Study at Top Ranked{" "}
                                         <span className="bg-gradient-to-r from-purple-300 via-pink-400 to-purple-300 bg-clip-text text-transparent">
                                             University
@@ -174,58 +174,58 @@ export default function PremiumOfferSlider() {
                                 </div>
 
                                 {/* Subtitle */}
-                                <p className="text-sm text-gray-300 leading-relaxed max-w-lg">
+                                <p className="text-xs text-gray-300 leading-relaxed max-w-lg hidden sm:block">
                                     Unlock global opportunities with world-class education, industry-focused courses and exclusive scholarship offers.
                                 </p>
                             </div>
 
                             {/* Middle Section - Features */}
-                            <div className="grid grid-cols-3 gap-6 py-6 max-w-lg">
+                            <div className="grid grid-cols-3 gap-4 py-3 max-w-lg">
                                 {/* Intake */}
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Calendar className="w-4 h-4 text-purple-400" />
-                                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Intake</p>
+                                <div className="space-y-0.5">
+                                    <div className="flex items-center gap-1.5 mb-0.5">
+                                        <Calendar className="w-3.5 h-3.5 text-purple-400" />
+                                        <p className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Intake</p>
                                     </div>
-                                    <p className="text-sm font-bold text-white">{intakeDate}</p>
+                                    <p className="text-xs font-bold text-white">{intakeDate}</p>
                                 </div>
 
                                 {/* Popular Courses */}
-                                <div className="space-y-1 border-l border-white/10 pl-4">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <BookOpen className="w-4 h-4 text-purple-400" />
-                                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Courses</p>
+                                <div className="space-y-0.5 border-l border-white/10 pl-4">
+                                    <div className="flex items-center gap-1.5 mb-0.5">
+                                        <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                                        <p className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Courses</p>
                                     </div>
-                                    <p className="text-sm font-bold text-white truncate">Top Programs</p>
+                                    <p className="text-xs font-bold text-white truncate">Top Programs</p>
                                 </div>
 
                                 {/* Exclusive Offer */}
-                                <div className="space-y-1 border-l border-white/10 pl-4">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Tag className="w-4 h-4 text-purple-400" />
-                                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Offer</p>
+                                <div className="space-y-0.5 border-l border-white/10 pl-4">
+                                    <div className="flex items-center gap-1.5 mb-0.5">
+                                        <Tag className="w-3.5 h-3.5 text-purple-400" />
+                                        <p className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Offer</p>
                                     </div>
                                     {currentBanner.offerPercentage && (
-                                        <p className="text-sm font-bold text-pink-400">{currentBanner.offerPercentage}</p>
+                                        <p className="text-xs font-bold text-pink-400">{currentBanner.offerPercentage}</p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Bottom Section - Buttons */}
-                            <div className="flex flex-wrap gap-4 mt-2">
+                            <div className="flex flex-wrap gap-3 mt-1">
                                 <Button
                                     onClick={() => handleApplyNow(currentBanner)}
-                                    className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold px-6 py-5 rounded-full text-sm flex items-center gap-2 shadow-lg shadow-pink-500/20 transform transition-transform hover:scale-105"
+                                    className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold px-5 py-3.5 rounded-none text-xs flex items-center gap-1.5 shadow-lg shadow-pink-500/20 transform transition-transform hover:scale-105"
                                 >
                                     Apply Now
-                                    <ArrowRight className="w-4 h-4" />
+                                    <ArrowRight className="w-3.5 h-3.5" />
                                 </Button>
 
                                 <Button
                                     onClick={handleConsultation}
-                                    className="bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-5 rounded-full text-sm border border-white/10 backdrop-blur flex items-center gap-2"
+                                    className="bg-white/5 hover:bg-white/10 text-white font-semibold px-5 py-3.5 rounded-none text-xs border border-white/10 backdrop-blur flex items-center gap-1.5"
                                 >
-                                    <Play className="w-4 h-4 fill-current" />
+                                    <Play className="w-3 h-3 fill-current" />
                                     Book Expert
                                 </Button>
                             </div>
@@ -248,24 +248,24 @@ export default function PremiumOfferSlider() {
                                 </>
                             )}
 
-                            {/* University Logo */}
+                            {/* University Logo - top-right over the image */}
                             {uni?.logo && (
-                                <div className="absolute top-6 right-6 z-20 bg-white/95 backdrop-blur rounded-xl p-3 shadow-xl border border-white/20">
+                                <div className="absolute top-4 right-4 z-20 bg-white/95 backdrop-blur rounded-none p-2 shadow-xl border border-white/20">
                                     <Image
                                         src={uni.logo}
                                         alt={uni.universityName || "University Logo"}
-                                        width={60}
-                                        height={60}
+                                        width={48}
+                                        height={48}
                                         className="object-contain"
                                     />
                                 </div>
                             )}
 
                             {/* Premium Offer Card */}
-                            <div className="absolute bottom-6 right-6 left-6 lg:left-12 z-20 bg-gradient-to-br from-purple-600/90 to-pink-600/90 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-xl">🔥</span>
-                                    <Badge className="bg-white/20 text-white border-white/30 text-[10px] font-bold px-2 py-0.5">
+                            <div className="absolute bottom-4 right-4 left-4 lg:left-auto lg:w-80 z-20 bg-gradient-to-br from-purple-600/90 to-pink-600/90 backdrop-blur-xl border border-white/20 rounded-none p-4 shadow-2xl">
+                                <div className="flex items-center gap-1.5 mb-2">
+                                    <span className="text-base">🔥</span>
+                                    <Badge className="bg-white/20 text-white border-white/30 text-[9px] font-bold px-1.5 py-0.5 rounded-none">
                                         LIMITED TIME OFFER
                                     </Badge>
                                 </div>
@@ -273,31 +273,31 @@ export default function PremiumOfferSlider() {
                                 <div className="flex items-end justify-between gap-4">
                                     <div>
                                         {currentBanner.offerPercentage && (
-                                            <p className="text-4xl lg:text-5xl font-black text-white leading-none">
+                                            <p className="text-2xl lg:text-3xl font-black text-white leading-none">
                                                 {currentBanner.offerPercentage}
                                             </p>
                                         )}
-                                        <p className="text-xs text-purple-100 mt-2 font-medium">
+                                        <p className="text-[10px] text-purple-100 mt-1 font-medium leading-none">
                                             {currentBanner.offerText || "On Total Tuition Fees"}*
                                         </p>
                                     </div>
 
                                     {currentBanner.deadlineText && (
-                                        <div className="bg-black/20 rounded-lg px-4 py-2 border border-white/10">
-                                            <p className="text-[10px] text-purple-200 font-bold uppercase tracking-tighter">Deadline</p>
-                                            <p className="text-lg font-bold text-white leading-none mt-1">{currentBanner.deadlineText}</p>
+                                        <div className="bg-black/20 rounded-none px-3 py-1.5 border border-white/10">
+                                            <p className="text-[9px] text-purple-200 font-bold uppercase tracking-tighter">Deadline</p>
+                                            <p className="text-sm font-bold text-white leading-none mt-0.5">{currentBanner.deadlineText}</p>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Urgency Message */}
-                                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
-                                    <p className="text-[10px] text-white font-medium italic opacity-90">
+                                <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between">
+                                    <p className="text-[9px] text-white font-medium italic opacity-90">
                                         *Hurry! Applications closing soon.
                                     </p>
                                     <div className="flex gap-1">
                                         {[1, 2, 3].map((i) => (
-                                            <div key={i} className="w-1 h-1 rounded-full bg-white/40 animate-pulse" />
+                                            <div key={i} className="w-1 h-1 rounded-none bg-white/40 animate-pulse" />
                                         ))}
                                     </div>
                                 </div>
@@ -313,19 +313,19 @@ export default function PremiumOfferSlider() {
                     <button
                         onClick={handlePrevious}
                         onMouseEnter={() => setIsAutoPlay(false)}
-                        className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 p-3 rounded-full transition-all duration-300 z-30 opacity-0 group-hover:opacity-100 hover:scale-110"
+                        className="absolute left-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-2 transition-all duration-300 z-30 opacity-0 group-hover:opacity-100 hover:scale-125"
                         aria-label="Previous offer"
                     >
-                        <ChevronLeft className="w-5 h-5 text-white" />
+                        <ChevronLeft className="w-8 h-8 text-white" />
                     </button>
 
                     <button
                         onClick={handleNext}
                         onMouseEnter={() => setIsAutoPlay(false)}
-                        className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 p-3 rounded-full transition-all duration-300 z-30 opacity-0 group-hover:opacity-100 hover:scale-110"
+                        className="absolute right-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-2 transition-all duration-300 z-30 opacity-0 group-hover:opacity-100 hover:scale-125"
                         aria-label="Next offer"
                     >
-                        <ChevronRight className="w-5 h-5 text-white" />
+                        <ChevronRight className="w-8 h-8 text-white" />
                     </button>
                 </>
             )}
@@ -337,7 +337,7 @@ export default function PremiumOfferSlider() {
                         <button
                             key={index}
                             onClick={() => handleGoToSlide(index)}
-                            className={`transition-all duration-300 rounded-full backdrop-blur-md border ${index === currentIndex
+                            className={`transition-all duration-300 rounded-none backdrop-blur-md border ${index === currentIndex
                                 ? "bg-white/60 border-white/80 w-8 h-1.5"
                                 : "bg-white/20 border-white/30 w-1.5 h-1.5 hover:bg-white/40"
                                 }`}

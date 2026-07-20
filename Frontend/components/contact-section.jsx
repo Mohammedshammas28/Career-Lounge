@@ -530,10 +530,7 @@ export function ContactSection({ searchParams }) {
 
           {/* Right Side: Form Card */}
           <div className="lg:col-span-2 bg-white dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-8 lg:p-10 shadow-xl dark:shadow-2xl relative">
-            <div className="absolute top-4 right-4 flex items-center gap-1.5 text-xs text-primary font-semibold bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
-              <Sparkles className="w-3.5 h-3.5" /> SECURE FORM
-            </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               
               {/* Full Name */}
