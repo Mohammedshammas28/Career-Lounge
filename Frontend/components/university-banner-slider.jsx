@@ -133,7 +133,7 @@ export default function PremiumOfferSlider() {
     };
 
     return (
-        <div className="relative w-full min-h-[240px] lg:h-[280px] rounded-none overflow-hidden group">
+        <div className="relative w-full min-h-[280px] lg:h-[350px] rounded-none overflow-hidden group">
             <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                     key={currentIndex}
@@ -164,7 +164,7 @@ export default function PremiumOfferSlider() {
 
                                 {/* Headline */}
                                 <div>
-                                    <h1 className="text-xl lg:text-2xl xl:text-3xl font-extrabold leading-tight">
+                                    <h1 className="text-2xl lg:text-3xl xl:text-4xl font-extrabold leading-tight">
                                         Study at Top Ranked{" "}
                                         <span className="bg-gradient-to-r from-purple-300 via-pink-400 to-purple-300 bg-clip-text text-transparent">
                                             University
@@ -174,7 +174,7 @@ export default function PremiumOfferSlider() {
                                 </div>
 
                                 {/* Subtitle */}
-                                <p className="text-xs text-gray-300 leading-relaxed max-w-lg hidden sm:block">
+                                <p className="text-sm text-gray-200 leading-relaxed max-w-xl hidden sm:block">
                                     Unlock global opportunities with world-class education, industry-focused courses and exclusive scholarship offers.
                                 </p>
                             </div>

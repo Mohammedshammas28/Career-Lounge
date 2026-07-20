@@ -529,8 +529,8 @@ export default function BannersAdminPage() {
 
                                 <TabsContent value="preview" className="overflow-auto">
                                     {previewData ? (
-                                        <div className="rounded-none overflow-hidden" style={{ minHeight: "280px" }}>
-                                            <div className={`bg-gradient-to-br ${previewData.customGradient || "from-purple-950 via-blue-950 to-purple-950"} relative w-full min-h-[280px] rounded-none overflow-hidden`}>
+                                        <div className="rounded-none overflow-hidden" style={{ minHeight: "350px" }}>
+                                            <div className={`bg-gradient-to-br ${previewData.customGradient || "from-purple-950 via-blue-950 to-purple-950"} relative w-full min-h-[350px] rounded-none overflow-hidden`}>
 
                                                 {/* Top-left Logo */}
                                                 {previewData.university?.logo && (
@@ -543,21 +543,21 @@ export default function BannersAdminPage() {
                                                     </div>
                                                 )}
 
-                                                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[280px]">
+                                                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[350px]">
                                                     {/* LEFT SIDE */}
                                                     <div className="p-4 pl-8 lg:p-5 lg:pl-14 text-white flex flex-col justify-center">
                                                         <div className="space-y-1.5">
                                                             <div className="w-fit bg-purple-600/40 text-purple-200 border border-purple-400/50 px-2.5 py-0.5 text-[9px] font-bold tracking-wider rounded-none">
                                                                 <span className="mr-1.5">🎓</span> {previewData.tagText || "FEATURED UNIVERSITY"}
                                                             </div>
-                                                            <h1 className="text-xl lg:text-2xl font-extrabold leading-tight">
+                                                            <h1 className="text-2xl lg:text-3xl font-extrabold leading-tight">
                                                                 {previewData.heading?.split(previewData.highlightedHeading)?.[0]}
                                                                 <span className="bg-gradient-to-r from-purple-300 via-pink-400 to-purple-300 bg-clip-text text-transparent">
                                                                     {previewData.highlightedHeading}
                                                                 </span>
                                                                 {previewData.heading?.split(previewData.highlightedHeading)?.[1]}
                                                             </h1>
-                                                            <p className="text-xs text-gray-300 max-w-md hidden sm:block">{previewData.subHeading}</p>
+                                                            <p className="text-sm text-gray-200 max-w-md hidden sm:block">{previewData.subHeading}</p>
                                                         </div>
 
                                                         <div className="grid grid-cols-3 gap-3 py-3 max-w-md">
@@ -586,7 +586,7 @@ export default function BannersAdminPage() {
                                                     </div>
 
                                                     {/* RIGHT SIDE - Image + Logo + Offer Card */}
-                                                    <div className="relative min-h-[280px] overflow-hidden hidden lg:block">
+                                                    <div className="relative min-h-[350px] overflow-hidden hidden lg:block">
                                                         {(previewData.customBannerImage || previewData.university?.bannerImage) && (
                                                             <>
                                                                 <img
