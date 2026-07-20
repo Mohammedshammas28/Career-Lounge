@@ -42,16 +42,7 @@ export default function AdminLayout({ children }) {
                         </div>
                     </div>
 
-                    {/* Breadcrumb Navigation */}
-                    <div className="border-b bg-white">
-                        <div className="mx-auto max-w-6xl px-8 py-4">
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                <Link href="/admin" className="hover:text-blue-600">
-                                    Dashboard
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+
                 </>
             ) : null}
 

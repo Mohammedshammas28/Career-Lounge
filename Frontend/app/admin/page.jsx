@@ -153,21 +153,21 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-50 pb-20">
       
-      {/* Premium Gradient Header Banner */}
-      <div className="relative overflow-hidden bg-slate-900 text-white py-12 px-6 lg:px-8 border-b border-slate-800 shadow-xl">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.18),_transparent_45%)]" />
+      {/* Light Clean Header Banner */}
+      <div className="relative overflow-hidden bg-white text-slate-900 py-10 px-6 lg:px-8 border-b border-slate-200 shadow-sm">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.06),_transparent_45%)]" />
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative z-10">
           <div>
             <div className="flex items-center gap-3">
-              <span className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full border border-blue-400/30">
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-[10px] uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
                 Control Center
               </span>
-              {loading && <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />}
+              {loading && <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" />}
             </div>
-            <h1 className="text-3xl font-black tracking-tight mt-2 bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">
+            <h1 className="text-3xl font-black tracking-tight mt-2 text-slate-900">
               Admin Portal
             </h1>
-            <p className="text-slate-400 mt-1.5 text-sm sm:text-base">
+            <p className="text-slate-500 mt-1.5 text-xs sm:text-sm">
               System dashboard to configure settings, database profiles, and review client communication logs.
             </p>
           </div>
@@ -176,16 +176,16 @@ export default function AdminDashboard() {
             <Button 
               onClick={fetchStats}
               variant="outline" 
-              className="bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white"
+              className="bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900 shadow-sm rounded-xl text-xs"
             >
-              <RefreshCw className="mr-2 h-4 w-4" />
+              <RefreshCw className="mr-2 h-3.5 w-3.5" />
               Refresh System
             </Button>
             <Button 
               onClick={handleLogout}
-              className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white border-0 shadow-lg shadow-red-900/20"
+              className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white border-0 shadow-sm rounded-xl text-xs"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="mr-2 h-3.5 w-3.5" />
               Logout Session
             </Button>
           </div>

@@ -4,23 +4,20 @@ export const dynamic = 'force-dynamic';
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Shield, Loader2, LockKeyhole, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Loader2, LockKeyhole, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 function AdminLoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const from = searchParams.get("from");
-        if (from) {
-            setError("");
-        }
+        if (from) setError("");
     }, [searchParams]);
 
     async function handleSubmit(event) {
@@ -31,15 +28,13 @@ function AdminLoginForm() {
         try {
             const response = await fetch("/api/admin/login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
             });
 
             if (!response.ok) {
                 const result = await response.json().catch(() => ({}));
-                throw new Error(result.message || "Login failed");
+                throw new Error(result.message || "Invalid credentials");
             }
 
             const fromPath = searchParams.get("from");
@@ -54,109 +49,116 @@ function AdminLoginForm() {
     }
 
     return (
-        <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_35%),linear-gradient(180deg,#f8fbff_0%,#eef5ff_55%,#eaf2ff_100%)] px-4 py-10 sm:px-6 lg:px-8">
-            <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center justify-center">
-                <div className="grid w-full overflow-hidden rounded-[32px] border border-blue-200/70 bg-white/90 shadow-[0_30px_80px_rgba(30,64,175,0.12)] backdrop-blur md:grid-cols-[1.1fr_0.9fr]">
-                    <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-sky-500 px-8 py-10 text-white sm:px-10 sm:py-12">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.24),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(255,255,255,0.16),_transparent_26%)]" />
-                        <div className="relative z-10 flex h-full flex-col justify-between gap-10">
-                            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/90">
-                                <Shield className="h-4 w-4" />
-                                Admin Access Only
-                            </div>
+        <main className="min-h-screen relative flex items-center justify-center overflow-hidden bg-slate-50">
+            {/* Soft decorative background elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-purple-100/60 blur-[120px]" />
+                <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-blue-100/60 blur-[120px]" />
+            </div>
 
-                            <div className="space-y-5">
-                                <h1 className="max-w-md text-4xl font-black tracking-tight sm:text-5xl">
-                                    Secure the admin panel before editing content.
-                                </h1>
-                                <p className="max-w-md text-sm leading-7 text-white/85 sm:text-base">
-                                    Use the admin credentials to manage universities, banners, and sliding text. Public visitors will be redirected away from the dashboard.
-                                </p>
-                            </div>
+            {/* Login Card */}
+            <div className="relative z-10 w-full max-w-md mx-auto px-4">
+                <div className="rounded-2xl border border-slate-200/80 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-8 sm:p-10">
 
-                            <div className="grid gap-3 text-sm text-white/85">
-                                <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3">
-                                    Protected routes: universities, banners, ticker, and dashboard
-                                </div>
-                                <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3">
-                                    Session cookie is required to continue
-                                </div>
-                            </div>
+                    {/* Logo + Icon */}
+                    <div className="flex flex-col items-center mb-8 text-center">
+                        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 mb-4 shadow-lg shadow-purple-500/20">
+                            <LockKeyhole className="h-7 w-7 text-white" />
                         </div>
-                    </section>
+                        <img
+                            src="/Careerlounge logo (1).png"
+                            alt="Career Lounge"
+                            className="h-8 w-auto mb-3 object-contain"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                        <p className="text-xs font-bold uppercase tracking-widest text-purple-600 mb-1">
+                            Admin Portal
+                        </p>
+                        <h1 className="text-2xl font-black text-slate-800">
+                            Sign in to Dashboard
+                        </h1>
+                        <p className="text-sm text-slate-500 mt-1">
+                            Enter your credentials to continue
+                        </p>
+                    </div>
 
-                    <section className="px-6 py-10 sm:px-8 sm:py-12 lg:px-10">
-                        <div className="mx-auto max-w-md">
-                            <div className="mb-8 flex items-center gap-3 text-blue-700">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50">
-                                    <LockKeyhole className="h-6 w-6" />
-                                </div>
-                                <div>
-                                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-500">
-                                        Login Portal
-                                    </p>
-                                    <h2 className="text-2xl font-bold text-slate-900">
-                                        Admin Sign In
-                                    </h2>
-                                </div>
-                            </div>
+                    {/* Form */}
+                    <form className="space-y-5" onSubmit={handleSubmit}>
+                        {/* Username */}
+                        <div className="space-y-2">
+                            <label htmlFor="username" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Username
+                            </label>
+                            <input
+                                id="username"
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="admin"
+                                autoComplete="username"
+                                required
+                                className="w-full h-12 px-4 rounded-xl border border-slate-200 text-slate-800 placeholder:text-slate-400 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all bg-slate-50/50"
+                            />
+                        </div>
 
-                            <form className="space-y-5" onSubmit={handleSubmit}>
-                                <div className="space-y-2">
-                                    <label htmlFor="username" className="text-sm font-medium text-slate-700">
-                                        Username
-                                    </label>
-                                    <Input
-                                        id="username"
-                                        value={username}
-                                        onChange={(event) => setUsername(event.target.value)}
-                                        placeholder="Enter admin username"
-                                        autoComplete="username"
-                                        className="h-12 rounded-2xl border-slate-200 bg-slate-50 px-4 text-slate-900 shadow-sm focus-visible:ring-blue-500"
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label htmlFor="password" className="text-sm font-medium text-slate-700">
-                                        Password
-                                    </label>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        value={password}
-                                        onChange={(event) => setPassword(event.target.value)}
-                                        placeholder="Enter admin password"
-                                        autoComplete="current-password"
-                                        className="h-12 rounded-2xl border-slate-200 bg-slate-50 px-4 text-slate-900 shadow-sm focus-visible:ring-blue-500"
-                                    />
-                                </div>
-
-                                {error ? (
-                                    <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                                        {error}
-                                    </div>
-                                ) : null}
-
-                                <Button
-                                    type="submit"
-                                    className="h-12 w-full rounded-2xl bg-blue-600 text-base font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700"
-                                    disabled={isLoading}
+                        {/* Password */}
+                        <div className="space-y-2">
+                            <label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Password
+                            </label>
+                            <div className="relative">
+                                <input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••••"
+                                    autoComplete="current-password"
+                                    required
+                                    className="w-full h-12 px-4 pr-12 rounded-xl border border-slate-200 text-slate-800 placeholder:text-slate-400 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all bg-slate-50/50"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                                 >
-                                    {isLoading ? (
-                                        <span className="inline-flex items-center gap-2">
-                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                            Signing in
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center gap-2">
-                                            Continue to dashboard
-                                            <ArrowRight className="h-4 w-4" />
-                                        </span>
-                                    )}
-                                </Button>
-                            </form>
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                            </div>
                         </div>
-                    </section>
+
+                        {/* Error */}
+                        {error && (
+                            <div className="flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                                <span>⚠️</span>
+                                {error}
+                            </div>
+                        )}
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="relative w-full h-12 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-sm font-bold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:from-purple-500 hover:to-blue-500 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden group"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Authenticating...
+                                </>
+                            ) : (
+                                <>
+                                    Access Dashboard
+                                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                </>
+                            )}
+                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <p className="mt-6 text-center text-[11px] text-slate-400">
+                        Protected by session authentication · Career Lounge Admin
+                    </p>
                 </div>
             </div>
         </main>
@@ -166,8 +168,11 @@ function AdminLoginForm() {
 export default function AdminLoginPage() {
     return (
         <Suspense fallback={
-            <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_35%),linear-gradient(180deg,#f8fbff_0%,#eef5ff_55%,#eaf2ff_100%)] flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <main className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                    <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+                    <p className="text-slate-500 text-sm">Loading...</p>
+                </div>
             </main>
         }>
             <AdminLoginForm />
