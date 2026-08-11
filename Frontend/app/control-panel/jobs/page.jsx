@@ -1186,5 +1186,6 @@ export default function JobsAdminPage() {
                 </div>
             </div>
         </div>
+    </div>
     );
 }
