@@ -1,35 +1,25 @@
-import fs from "fs"
-import path from "path"
+import { getJsonData, saveJsonData } from "@/lib/json-store"
 
 export const dynamic = 'force-dynamic'
 
-const tickerFile = path.join(process.cwd(), "public", "ticker.json")
+const FILENAME = "ticker.json"
+
+const defaultTickerData = {
+  items: [
+    {
+      id: "1",
+      text: "Study In Abroad Programs - Explore Global Opportunities",
+      active: true,
+      isNew: false
+    }
+  ]
+}
 
 export async function GET() {
   try {
-    if (!fs.existsSync(tickerFile)) {
-      const defaultData = {
-        items: [
-          {
-            id: "1",
-            text: "Study In Abroad Programs - Explore Global Opportunities",
-            active: true,
-            isNew: false
-          }
-        ]
-      }
-      return Response.json(defaultData, {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate",
-          "Pragma": "no-cache",
-        }
-      })
-    }
+    let tickerData = getJsonData(FILENAME, defaultTickerData)
 
-    const data = fs.readFileSync(tickerFile, "utf-8")
-    let tickerData = JSON.parse(data)
-
-    // Migration: If it's the old format (object with text), convert to array
+    // Migration: If it's old format (object with text), convert to array
     if (tickerData.text && !tickerData.items) {
       tickerData = {
         items: [
@@ -48,6 +38,8 @@ export async function GET() {
         ...item,
         isNew: Boolean(item.isNew),
       }))
+    } else {
+      tickerData = defaultTickerData
     }
 
     return Response.json(tickerData, {
@@ -79,7 +71,7 @@ export async function POST(req) {
       })),
     }
 
-    fs.writeFileSync(tickerFile, JSON.stringify(normalizedData, null, 2))
+    saveJsonData(FILENAME, normalizedData)
 
     return Response.json({ message: "Ticker updated successfully", data: normalizedData })
   } catch (err) {
