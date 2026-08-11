@@ -199,3 +199,5 @@ export function CountryScrollCards() {
     </section>
   )
 }
+
+export default CountryScrollCards

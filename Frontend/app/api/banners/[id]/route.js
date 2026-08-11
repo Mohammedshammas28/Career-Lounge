@@ -7,7 +7,7 @@ export async function GET(req, { params }) {
     try {
         await connectToDatabase();
 
-        const { id } = params;
+        const { id } = await params;
 
         const banner = await Banner.findById(id).populate("university");
 
@@ -44,7 +44,7 @@ export async function PATCH(req, { params }) {
     try {
         await connectToDatabase();
 
-        const { id } = params;
+        const { id } = await params;
         const body = await req.json();
 
         const banner = await Banner.findByIdAndUpdate(id, body, {
@@ -85,7 +85,7 @@ export async function DELETE(req, { params }) {
     try {
         await connectToDatabase();
 
-        const { id } = params;
+        const { id } = await params;
 
         const banner = await Banner.findByIdAndDelete(id);
 

@@ -4,7 +4,7 @@ import Lead from "@/models/Lead";
 export async function PUT(request, { params }) {
     try {
         await connectToDatabase();
-        const { id } = params;
+        const { id } = await params;
         const { status } = await request.json();
 
         if (!status) {
@@ -30,7 +30,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
     try {
         await connectToDatabase();
-        const { id } = params;
+        const { id } = await params;
 
         const deletedLead = await Lead.findByIdAndDelete(id);
 

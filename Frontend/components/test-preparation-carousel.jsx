@@ -259,25 +259,9 @@ export default function TestPreparationCarousel() {
                                         transition={{ duration: 0.3, ease: "easeOut" }}
                                         className="min-w-[100%] flex-shrink-0 rounded-[24px] border border-border/20 bg-white p-4 shadow-md cursor-pointer sm:min-w-[calc(50%-12px)] lg:min-w-[calc(25%-18px)] hover:shadow-xl"
                                     >
-                                        <div className="relative overflow-hidden rounded-[20px] bg-slate-100">
-                                            <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/18 via-black/0 to-transparent" />
-                                            <motion.img
-                                                src={exam.image || exam.img || makePlaceholder(exam.title || exam.name || "Exam")}
-                                                alt={exam.title || exam.name}
-                                                className="h-48 w-full object-cover"
-                                                whileHover={{ scale: 1.08 }}
-                                                transition={{ duration: 0.3 }}
-                                                referrerPolicy="no-referrer"
-                                                onError={(e) => {
-                                                    const name = exam.title || exam.name || "Exam"
-                                                    e.currentTarget.src = `https://picsum.photos/seed/${encodeURIComponent(name)}/800/480`
-                                                    e.currentTarget.onerror = () => {
-                                                        e.currentTarget.style.display = "none"
-                                                    }
-                                                }}
-                                            />
-                                            <div className="absolute left-3 top-3 z-20 inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur">
-                                                <GraduationCap className="h-3.5 w-3.5 text-primary" />
+                                        <div className="mb-2 flex items-center gap-2">
+                                            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                                                <GraduationCap className="h-4 w-4" />
                                                 {exam.title || exam.name}
                                             </div>
                                         </div>

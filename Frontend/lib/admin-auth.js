@@ -1,6 +1,6 @@
 export const ADMIN_SESSION_COOKIE = "admin_session"
-export const ADMIN_LOGIN_PATH = "/admin/login"
-export const ADMIN_DASHBOARD_PATH = "/admin"
+export const ADMIN_LOGIN_PATH = "/control-panel/login"
+export const ADMIN_DASHBOARD_PATH = "/control-panel"
 
 export const adminAuthConfig = {
     username: process.env.ADMIN_USERNAME || "admin",

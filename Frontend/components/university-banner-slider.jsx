@@ -56,7 +56,7 @@ export default function PremiumOfferSlider() {
 
         const timer = setInterval(() => {
             nextSlide();
-        }, 3000); // Increased speed to 3s
+        }, 3000);
 
         return () => clearInterval(timer);
     }, [isAutoPlay, banners.length, nextSlide]);
@@ -90,23 +90,8 @@ export default function PremiumOfferSlider() {
         router.push("/contact?service=Overseas Education");
     };
 
-    if (isLoading) {
-        return (
-            <div className="w-full min-h-[240px] lg:h-[280px] bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 rounded-none flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-10 h-10 border-4 border-purple-400/30 border-t-purple-400 rounded-none animate-spin mx-auto mb-3" />
-                    <p className="text-xs text-gray-300">Loading offers...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error || banners.length === 0) {
-        return (
-            <div className="w-full min-h-[240px] lg:h-[280px] bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 rounded-none flex items-center justify-center">
-                <p className="text-xs text-gray-400">{error || "No offers available"}</p>
-            </div>
-        );
+    if (isLoading || error || !banners || banners.length === 0) {
+        return null;
     }
 
     const currentBanner = banners[currentIndex];
@@ -133,7 +118,9 @@ export default function PremiumOfferSlider() {
     };
 
     return (
-        <div className="relative w-full min-h-[280px] lg:h-[350px] rounded-none overflow-hidden group">
+        <section className="pt-28 pb-24 bg-gradient-to-b from-background via-purple-900/5 to-slate-900/10">
+            <div className="w-full">
+                <div className="relative w-full min-h-[280px] lg:h-[350px] rounded-none overflow-hidden group">
             <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                     key={currentIndex}
@@ -215,7 +202,7 @@ export default function PremiumOfferSlider() {
                             <div className="flex flex-wrap gap-3 mt-1">
                                 <Button
                                     onClick={() => handleApplyNow(currentBanner)}
-                                    className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold px-5 py-3.5 rounded-none text-xs flex items-center gap-1.5 shadow-lg shadow-pink-500/20 transform transition-transform hover:scale-105"
+                                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold px-5 py-3.5 rounded-none text-xs flex items-center gap-1.5 shadow-lg shadow-purple-500/20 transform transition-transform hover:scale-105"
                                 >
                                     Apply Now
                                     <ArrowRight className="w-3.5 h-3.5" />
@@ -349,5 +336,7 @@ export default function PremiumOfferSlider() {
 
 
         </div>
+            </div>
+        </section>
     );
 }

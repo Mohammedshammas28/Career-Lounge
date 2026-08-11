@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom"; // Not used in Next.js
 import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
 import {
-  IconClipboardList,
-  IconSettings,
-  IconLogout,
-  IconHome,
-} from "@tabler/icons-react";
+  ClipboardList as IconClipboardList,
+  Settings as IconSettings,
+  LogOut as IconLogout,
+  Home as IconHome,
+} from "lucide-react";
 import { cn } from "../../lib/utils";
 import { ThemeToggle } from "../theme-toggle";
 // import { getMe } from "../../services/auth"; // Not found, remove for now

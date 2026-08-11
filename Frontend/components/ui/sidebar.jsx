@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { Menu as IconMenu2, X as IconX } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 const SidebarContext = createContext(undefined);

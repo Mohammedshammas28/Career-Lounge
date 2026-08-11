@@ -41,10 +41,26 @@ const universitySchema = new mongoose.Schema(
 
         courses: [
             {
-                courseName: String,
-                level: String,
+                courseName: { type: String, required: true },
+                level: {
+                    type: String,
+                    enum: ["Undergraduate", "Postgraduate"],
+                    default: "Undergraduate",
+                },
                 duration: String,
                 fees: String,
+                description: String,
+                overview: String,
+                careerOutcomes: String,
+                subCourses: [
+                    {
+                        name: String,
+                        duration: String,
+                        fees: String,
+                        overview: String,
+                        careerOutcomes: String,
+                    },
+                ],
             },
         ],
 

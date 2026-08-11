@@ -1,6 +1,9 @@
 import { connectToDatabase } from "@/lib/db/connect";
 import Course from "@/models/Course";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const DEFAULT_COURSES = [
     {
         courseName: "Allied Health",
@@ -280,14 +283,36 @@ export async function POST(req) {
 
         const body = await req.json();
 
-        if (!body.courseName) {
-            return Response.json(
-                { success: false, error: "Course name is required" },
-                { status: 400 }
-            );
+        // --- Bulk upload ---
+        if (Array.isArray(body)) {
+            if (body.length === 0) {
+                return Response.json({ success: false, error: "Empty array. At least one course is required." }, { status: 400 });
+            }
+            const results = { inserted: [], skipped: [], errors: [] };
+            for (const item of body) {
+                try {
+                    if (!item.courseName) {
+                        results.errors.push({ name: "Unknown", error: "courseName is required" });
+                        continue;
+                    }
+                    const slug = item.slug || item.courseName.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+                    const exists = await Course.findOne({ $or: [{ slug }, { courseName: { $regex: new RegExp(`^${item.courseName.trim().replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") } }] });
+                    if (exists) { results.skipped.push(item.courseName); continue; }
+                    const course = new Course({ ...item, slug });
+                    await course.save();
+                    results.inserted.push(course.courseName);
+                } catch (err) {
+                    results.errors.push({ name: item?.courseName || "Unknown", error: err.message });
+                }
+            }
+            return Response.json({ success: true, ...results }, { status: 201 });
         }
 
-        // Generate slug from courseName
+        // --- Single upload ---
+        if (!body.courseName) {
+            return Response.json({ success: false, error: "Course name is required" }, { status: 400 });
+        }
+
         const slug =
             body.slug ||
             body.courseName
@@ -295,7 +320,6 @@ export async function POST(req) {
                 .replace(/\s+/g, "-")
                 .replace(/[^\w-]/g, "");
 
-        // Check if course already exists (case-insensitive)
         const existingCourse = await Course.findOne({
             $or: [
                 { slug },
@@ -304,37 +328,15 @@ export async function POST(req) {
         });
 
         if (existingCourse) {
-            return Response.json(
-                {
-                    success: false,
-                    error: "Course with this name or slug already exists",
-                },
-                { status: 400 }
-            );
+            return Response.json({ success: false, error: "Course with this name or slug already exists" }, { status: 400 });
         }
 
-        const course = new Course({
-            ...body,
-            slug,
-        });
-
+        const course = new Course({ ...body, slug });
         await course.save();
 
-        return Response.json(
-            {
-                success: true,
-                data: course,
-            },
-            { status: 201 }
-        );
+        return Response.json({ success: true, data: course }, { status: 201 });
     } catch (error) {
         console.error("Error creating course:", error);
-        return Response.json(
-            {
-                success: false,
-                error: error.message,
-            },
-            { status: 500 }
-        );
+        return Response.json({ success: false, error: error.message }, { status: 500 });
     }
 }

@@ -13,7 +13,7 @@ export default function WhatsAppButton() {
         return () => window.clearTimeout(timer)
     }, [])
 
-    if (!isVisible || pathname?.startsWith("/admin")) {
+    if (!isVisible || pathname?.startsWith("/control-panel") || pathname?.startsWith("/admin")) {
         return null
     }
 

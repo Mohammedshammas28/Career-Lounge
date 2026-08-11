@@ -14,11 +14,7 @@ export default function Home() {
       <Header />
 
       {/* Premium University Offers Slider */}
-      <section className="pt-28 pb-24 bg-gradient-to-b from-background via-purple-900/5 to-slate-900/10">
-        <div className="w-full">
-          <PremiumOfferSlider />
-        </div>
-      </section>
+      <PremiumOfferSlider />
 
       <HeroSection />
 

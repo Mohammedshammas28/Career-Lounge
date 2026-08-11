@@ -3,21 +3,24 @@
 import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import * as LucideIcons from "lucide-react"
-
-const {
+import {
     ChevronLeft,
     ChevronRight,
     ArrowRight,
     UserRoundSearch,
     FileText,
     ClipboardList,
-} = LucideIcons
+} from "lucide-react"
+
+const ICON_MAP = {
+    UserRoundSearch,
+    FileText,
+    ClipboardList,
+}
 
 const getIconComponent = (name) => {
     if (!name) return UserRoundSearch;
-    const Icon = LucideIcons[name];
-    return Icon || UserRoundSearch;
+    return ICON_MAP[name] || UserRoundSearch;
 };
 
 const ACCENTS = [
@@ -241,31 +244,7 @@ export default function CareerGuidanceCarousel() {
                                         <div className="group relative h-full overflow-hidden rounded-[28px] border border-border/40 bg-transparent p-4 sm:p-5 shadow-none transition-all duration-300">
                                             <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
-                                            <div className="relative overflow-hidden rounded-[24px] bg-slate-100 shadow-[0_10px_24px_rgba(59,130,246,0.12)]">
-                                                <motion.img
-                                                    src={service.image || `https://picsum.photos/seed/${encodeURIComponent(service.title)}/800/480`}
-                                                    alt={service.title}
-                                                    className="h-44 w-full object-cover"
-                                                    whileHover={{ scale: 1.08 }}
-                                                    transition={{ duration: 0.35 }}
-                                                    referrerPolicy="no-referrer"
-                                                    onError={(e) => {
-                                                        e.currentTarget.src = `https://picsum.photos/seed/${encodeURIComponent(service.title)}/800/480`
-                                                        e.currentTarget.onerror = () => { e.currentTarget.style.display = "none" }
-                                                    }}
-                                                />
 
-                                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/50 via-slate-950/8 to-transparent" />
-
-                                                <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white shadow-lg backdrop-blur-md">
-                                                    <Icon className="h-3.5 w-3.5" />
-                                                    {service.subtitle || "Premium"}
-                                                </div>
-
-                                                <div className="absolute bottom-4 right-4 rounded-full border border-white/20 bg-white/20 px-3 py-1 text-[11px] font-semibold text-white shadow-lg backdrop-blur-md">
-                                                    {String(index + 1).padStart(2, "0")}
-                                                </div>
-                                            </div>
 
                                             <div className="relative mt-4 flex h-full flex-col items-start text-left">
                                                 <div className="mb-3 flex items-center gap-3">
@@ -340,3 +319,5 @@ export default function CareerGuidanceCarousel() {
         </section>
     )
 }
+
+export { CareerGuidanceCarousel }

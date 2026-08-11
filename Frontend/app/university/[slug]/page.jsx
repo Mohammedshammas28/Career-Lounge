@@ -431,7 +431,15 @@ export default function UniversityDetailsPage() {
     });
     const postgradCourses = allCourses.filter((course) => {
         const level = (course?.level || "").toLowerCase();
-        return level.includes("post") || level.includes("master") || level.includes("mba") || level.includes("doctor") || level.includes("phd");
+        return (
+            level.includes("post") ||
+            level.includes("master") ||
+            level.includes("mba") ||
+            level.includes("msc") ||
+            level.includes("phd") ||
+            level.includes("doctor") ||
+            level.includes("pg")
+        );
     });
 
     const universitySchema = {
@@ -787,8 +795,8 @@ export default function UniversityDetailsPage() {
                                                 <div ref={undergraduateRailRef} className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2">
                                                     {undergradCourses.length > 0 ? (
                                                         undergradCourses.map((course, idx) => (
-                                                            <div key={`ug-${idx}`} className="min-w-[280px] sm:min-w-[320px] p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group flex-shrink-0">
-                                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                            <div key={`ug-${idx}`} className="min-w-[280px] sm:min-w-[320px] p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group flex-shrink-0 flex flex-col gap-3">
+                                                                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                                                                     <div className="flex-1">
                                                                         <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{course.courseName}</h4>
                                                                         <div className="flex flex-wrap gap-4 mt-2">
@@ -799,8 +807,11 @@ export default function UniversityDetailsPage() {
                                                                                 <Calendar className="w-4 h-4" /> {course.duration}
                                                                             </div>
                                                                         </div>
+                                                                        {course.description && (
+                                                                            <p className="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{course.description}</p>
+                                                                        )}
                                                                     </div>
-                                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
+                                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50 shrink-0">
                                                                         <div className="text-indigo-600 font-semibold text-base">{course.fees}</div>
                                                                         <div className="text-[10px] text-indigo-400 font-semibold uppercase tracking-widest">ANNUAL FEE</div>
                                                                     </div>
@@ -842,8 +853,8 @@ export default function UniversityDetailsPage() {
                                                 <div ref={postgraduateRailRef} className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2">
                                                     {postgradCourses.length > 0 ? (
                                                         postgradCourses.map((course, idx) => (
-                                                            <div key={`pg-${idx}`} className="min-w-[280px] sm:min-w-[320px] p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group flex-shrink-0">
-                                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                            <div key={`pg-${idx}`} className="min-w-[280px] sm:min-w-[320px] p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-indigo-200 hover:bg-white transition-all group flex-shrink-0 flex flex-col gap-3">
+                                                                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                                                                     <div className="flex-1">
                                                                         <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{course.courseName}</h4>
                                                                         <div className="flex flex-wrap gap-4 mt-2">
@@ -854,8 +865,11 @@ export default function UniversityDetailsPage() {
                                                                                 <Calendar className="w-4 h-4" /> {course.duration}
                                                                             </div>
                                                                         </div>
+                                                                        {course.description && (
+                                                                            <p className="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{course.description}</p>
+                                                                        )}
                                                                     </div>
-                                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
+                                                                    <div className="text-left md:text-right px-6 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100/50 shrink-0">
                                                                         <div className="text-indigo-600 font-semibold text-base">{course.fees}</div>
                                                                         <div className="text-[10px] text-indigo-400 font-semibold uppercase tracking-widest">ANNUAL FEE</div>
                                                                     </div>

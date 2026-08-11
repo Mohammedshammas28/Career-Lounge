@@ -62,16 +62,12 @@ export async function GET(req) {
             }
         );
     } catch (error) {
-        console.warn("⚠️ Error fetching banners from database, using fallback:", error.message);
-        const { searchParams } = new URL(req.url);
-        const allBanners = searchParams.get("all") === "true";
-        const fallbackBanners = allBanners ? DEFAULT_BANNERS : DEFAULT_BANNERS.filter(b => b.active);
+        console.warn("⚠️ Error fetching banners from database:", error.message);
 
         return Response.json(
             {
                 success: true,
-                data: fallbackBanners,
-                isFallback: true,
+                data: [],
             },
             {
                 status: 200,

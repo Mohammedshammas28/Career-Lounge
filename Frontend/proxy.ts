@@ -8,7 +8,7 @@ export function proxy(request) {
     const isLoginPath = pathname === ADMIN_LOGIN_PATH
 
     if (isLoginPath && isAuthed) {
-        return NextResponse.redirect(new URL("/admin", request.url))
+        return NextResponse.redirect(new URL("/control-panel", request.url))
     }
 
     if (!isLoginPath && !isAuthed) {
@@ -21,5 +21,5 @@ export function proxy(request) {
 }
 
 export const config = {
-    matcher: ["/admin", "/admin/:path*"],
+    matcher: ["/control-panel", "/control-panel/:path*"],
 }

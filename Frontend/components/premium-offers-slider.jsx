@@ -36,22 +36,8 @@ export function PremiumOffersSlider() {
         }
     }
 
-    if (loading) {
-        return (
-            <section className="relative w-full min-h-[600px] bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl overflow-hidden flex items-center justify-center">
-                <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>
-                    <Sparkles className="w-12 h-12 text-cyan-400" />
-                </motion.div>
-            </section>
-        )
-    }
-
-    if (error || slides.length === 0) {
-        return (
-            <section className="relative w-full min-h-[600px] bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl overflow-hidden flex items-center justify-center">
-                <p className="text-gray-400 text-lg">{error || "No slides available"}</p>
-            </section>
-        )
+    if (loading || error || !slides || slides.length === 0) {
+        return null
     }
 
     return (

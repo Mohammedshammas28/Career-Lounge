@@ -30,10 +30,27 @@ export default function PopularCoursesCarousel() {
     useEffect(() => {
         const fetchCoursesAndStats = async () => {
             try {
+                // First check if custom homepage cards exist for popular-course
+                const cardRes = await fetch("/api/homepage-cards?type=popular-course")
+                const cardResult = await cardRes.json()
+                
+                if (cardResult.success && cardResult.data && cardResult.data.length > 0) {
+                    const mappedCards = cardResult.data.map(card => ({
+                        _id: card._id,
+                        courseName: card.title,
+                        description: card.description,
+                        image: card.image,
+                        universityCount: card.totalUniversities || 0,
+                        countryCount: 0
+                    }))
+                    setCourses(mappedCards)
+                    return
+                }
+
+                // Fallback to Courses API (/control-panel/courses)
                 const response = await fetch("/api/courses")
                 const result = await response.json()
                 if (result.success && result.data && result.data.length > 0) {
-                    // Fetch stats for each course
                     const coursesWithStats = await Promise.all(
                         result.data.map(async (course) => {
                             try {
@@ -214,22 +231,11 @@ export default function PopularCoursesCarousel() {
                                             className="min-w-[90%] sm:min-w-[46%] md:min-w-[46%] lg:min-w-[22%] flex-shrink-0 rounded-[24px] border border-border/20 bg-white p-4 shadow-md hover:shadow-xl cursor-pointer flex flex-col justify-between"
                                         >
                                             <div>
-                                                <div className="relative overflow-hidden rounded-[20px] bg-slate-100">
-                                                    <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/18 via-black/0 to-transparent" />
-                                                    <motion.img
-                                                        src={image || makePlaceholder(name)}
-                                                        alt={name}
-                                                        className="h-48 w-full object-cover"
-                                                        whileHover={{ scale: 1.08 }}
-                                                        transition={{ duration: 0.3 }}
-                                                        referrerPolicy="no-referrer"
-                                                        onError={(event) => {
-                                                            event.currentTarget.src = makePlaceholder(name)
-                                                            event.currentTarget.onerror = () => {
-                                                                event.currentTarget.style.display = "none"
-                                                            }
-                                                        }}
-                                                    />
+                                                <div className="mb-3 flex items-center gap-2">
+                                                    <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                                                        <Star className="h-3.5 w-3.5" />
+                                                        {name}
+                                                    </div>
                                                 </div>
                                                 <div className="mt-4 flex items-start justify-between">
                                                     <div className="flex-1 min-w-0">

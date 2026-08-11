@@ -292,6 +292,9 @@ const IMAGE_MIGRATION_MAP = {
 const needsMigration = (url) =>
     url && (url.includes("images.unsplash.com") || url.includes("images.pexels.com"));
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(req) {
     try {
         await connectToDatabase();
@@ -299,6 +302,19 @@ export async function GET(req) {
         const { searchParams } = new URL(req.url);
         const type = searchParams.get("type");
         const includeInactive = searchParams.get("all") === "true";
+
+        // Check if any default category is missing from database and seed it automatically
+        const existingTypes = new Set((await HomePageCard.distinct("type")) || []);
+        const defaultTypes = ["career-counselling", "test-prep", "study-destination", "popular-course"];
+        const missingTypes = defaultTypes.filter((t) => !existingTypes.has(t));
+
+        if (missingTypes.length > 0) {
+            console.log(`🌱 Seeding missing card types: ${missingTypes.join(", ")}...`);
+            const cardsToSeed = DEFAULT_CARDS.filter((c) => missingTypes.includes(c.type));
+            if (cardsToSeed.length > 0) {
+                await HomePageCard.insertMany(cardsToSeed);
+            }
+        }
 
         let query = {};
         if (type) {
@@ -309,25 +325,6 @@ export async function GET(req) {
         }
 
         let cards = await HomePageCard.find(query).sort({ displayOrder: 1, createdAt: -1 });
-
-        // If collection is empty (no type filter), seed with default cards
-        if (cards.length === 0 && !type) {
-            console.log("🌱 Seeding default home page cards...");
-            const seeded = await HomePageCard.insertMany(DEFAULT_CARDS);
-            cards = seeded.filter(card => includeInactive || card.isActive);
-            cards.sort((a, b) => a.displayOrder - b.displayOrder);
-        }
-
-        // If type-filtered query returns nothing, seed only that type
-        if (cards.length === 0 && type) {
-            const typeCards = DEFAULT_CARDS.filter(c => c.type === type);
-            if (typeCards.length > 0) {
-                console.log(`🌱 Seeding default cards for type: ${type}...`);
-                const seeded = await HomePageCard.insertMany(typeCards);
-                cards = seeded.filter(card => includeInactive || card.isActive);
-                cards.sort((a, b) => a.displayOrder - b.displayOrder);
-            }
-        }
 
         // Auto-migrate: fix any cards still using hotlink-blocked Unsplash/Pexels URLs
         const migrationPromises = [];

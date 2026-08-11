@@ -161,7 +161,32 @@ export async function POST(req) {
 
         const body = await req.json();
 
-        // Generate slug from title + company
+        // --- Bulk upload ---
+        if (Array.isArray(body)) {
+            if (body.length === 0) {
+                return Response.json({ success: false, error: "Empty array. At least one job is required." }, { status: 400 });
+            }
+            const results = { inserted: [], skipped: [], errors: [] };
+            for (const item of body) {
+                try {
+                    if (!item.title || !item.company) {
+                        results.errors.push({ name: item.title || "Unknown", error: "title and company are required" });
+                        continue;
+                    }
+                    const slug = item.slug || (item.title + "-" + item.company).toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+                    const exists = await Job.findOne({ slug });
+                    if (exists) { results.skipped.push(item.title); continue; }
+                    const job = new Job({ ...item, slug, category: item.category || "Domestic" });
+                    await job.save();
+                    results.inserted.push(job.title);
+                } catch (err) {
+                    results.errors.push({ name: item?.title || "Unknown", error: err.message });
+                }
+            }
+            return Response.json({ success: true, ...results }, { status: 201 });
+        }
+
+        // --- Single upload ---
         const slug =
             body.slug ||
             (body.title + "-" + body.company)
@@ -169,41 +194,21 @@ export async function POST(req) {
                 .replace(/\s+/g, "-")
                 .replace(/[^\w-]/g, "");
 
-        // Check if job already exists
         const existingJob = await Job.findOne({ slug });
 
         if (existingJob) {
             return Response.json(
-                {
-                    success: false,
-                    error: "Job with this title and company already exists",
-                },
+                { success: false, error: "Job with this title and company already exists" },
                 { status: 400 }
             );
         }
 
-        const job = new Job({
-            ...body,
-            slug,
-        });
-
+        const job = new Job({ ...body, slug });
         await job.save();
 
-        return Response.json(
-            {
-                success: true,
-                data: job,
-            },
-            { status: 201 }
-        );
+        return Response.json({ success: true, data: job }, { status: 201 });
     } catch (error) {
         console.error("Error creating job:", error);
-        return Response.json(
-            {
-                success: false,
-                error: error.message,
-            },
-            { status: 500 }
-        );
+        return Response.json({ success: false, error: error.message }, { status: 500 });
     }
 }
