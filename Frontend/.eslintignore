@@ -1,7 +1,7 @@
 node_modules/
 .next/
 public/
-Frontend/public/
-Frontend/.next/
+backend/
+scripts/
 *.min.js
 *.map
