@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  serverExternalPackages: ["mongoose"],
+  generateBuildId: async () => {
+    return `build-${Date.now()}`
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
