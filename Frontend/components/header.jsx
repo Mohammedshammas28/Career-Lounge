@@ -42,10 +42,11 @@ export function Header() {
     const fetchTicker = async () => {
       try {
         const origin = typeof window !== "undefined" ? window.location.origin : ""
-        const url = `${origin}/api/ticker`
+        const url = `${origin}/api/ticker?t=${Date.now()}`
         const response = await fetch(url, {
+          cache: 'no-store',
           headers: {
-            'Cache-Control': 'no-cache',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
             'Expires': '0',
           }
@@ -55,10 +56,10 @@ export function Header() {
           return
         }
         const data = await response.json()
-        if (data.items) {
-          setTickerItems(data.items.filter(item => item.active))
+        if (data.items && Array.isArray(data.items)) {
+          const activeItems = data.items.filter(item => item.active && item.text && item.text.trim() !== "")
+          setTickerItems(activeItems)
         } else if (data.text) {
-          // Fallback for transition
           setTickerItems([{ id: "1", text: data.text, active: true, isNew: false }])
         }
       } catch (error) {
@@ -67,8 +68,8 @@ export function Header() {
     }
     fetchTicker()
 
-    // Auto-refresh ticker data every 30 seconds
-    const interval = setInterval(fetchTicker, 30000)
+    // Auto-refresh ticker data every 15 seconds
+    const interval = setInterval(fetchTicker, 15000)
     return () => clearInterval(interval)
   }, [])
 

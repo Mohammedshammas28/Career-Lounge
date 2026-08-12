@@ -29,6 +29,8 @@ import {
     CheckCircle2,
     AlertCircle,
     Loader2,
+    ArrowLeft,
+    ArrowRight,
 } from "lucide-react";
 import {
     Table,
@@ -235,13 +237,12 @@ export default function JobsAdminPage() {
                     (job.company || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
                     (job.location || "").toLowerCase().includes(searchQuery.toLowerCase());
                 const matchesCategory = filterCategory === "All" || (job.category || "Domestic") === filterCategory;
-                const matchesFeatured = filterFeatured === "All" || (filterFeatured === "Featured" ? !!job.isFeatured : !job.isFeatured);
                 const matchesDate = !filterDate || (job.datePosted && job.datePosted.startsWith(filterDate));
-                return matchesSearch && matchesCategory && matchesFeatured && matchesDate;
+                return matchesSearch && matchesCategory && matchesDate;
             }
         );
         setFilteredJobs(filtered);
-    }, [searchQuery, filterCategory, filterFeatured, filterDate, jobs]);
+    }, [searchQuery, filterCategory, filterDate, jobs]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -601,379 +602,435 @@ export default function JobsAdminPage() {
                         </Dialog>
 
                         {/* Add Job Listing Dialog */}
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                            setIsDialogOpen(open);
+                            if (!open) resetForm();
+                        }}>
                             <DialogTrigger asChild>
                                 <Button
                                     onClick={() => resetForm()}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg shadow-blue-100 rounded-xl gap-2 h-11"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20 rounded-xl gap-2 h-11 px-5"
                                 >
                                     <Plus className="w-5 h-5" /> Add Job Listing
                                 </Button>
                             </DialogTrigger>
-                        <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] flex flex-col p-0 overflow-hidden bg-white shadow-2xl rounded-2xl border-none">
-                            <DialogHeader className="p-6 bg-slate-900 text-white relative">
-                                <DialogTitle className="text-xl font-bold tracking-wide flex items-center gap-2">
-                                    <Sparkles className="w-5 h-5 text-blue-400" />
-                                    {editingSlug ? "Modify Job Opportunity" : "Create New Job Opportunity"}
-                                </DialogTitle>
-                                <p className="text-xs text-slate-300 mt-1">Fill in the fields below to publish a new job opportunity to the recruitment page.</p>
-                            </DialogHeader>
+                            <DialogContent className="max-w-4xl w-[95vw] h-[92vh] sm:h-[88vh] flex flex-col p-0 overflow-hidden bg-white shadow-2xl rounded-2xl border-none">
+                                {/* Header Banner */}
+                                <DialogHeader className="p-6 bg-slate-900 text-white shrink-0 border-b border-slate-800">
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <DialogTitle className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                                                <Sparkles className="w-5 h-5 text-blue-400" />
+                                                {editingSlug ? "Modify Job Opportunity" : "Create New Job Listing"}
+                                            </DialogTitle>
+                                            <p className="text-xs text-slate-300">
+                                                {editingSlug ? "Update role details, salary, requirements, or status." : "Fill in the guided form below to publish a new job opportunity."}
+                                            </p>
+                                        </div>
+                                        <span className="text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block">
+                                            {activeFormTab === "general" ? "Step 1 of 2" : "Step 2 of 2"}
+                                        </span>
+                                    </div>
 
-                            {/* Tab selection row */}
-                            <div className="flex border-b border-slate-100 bg-slate-50/50 p-1.5 gap-1 shrink-0 overflow-x-auto">
-                                {[
-                                    { id: "general", label: "General Info", icon: Building2 },
-                                    { id: "details", label: "Description & Details", icon: Briefcase },
-                                ].map((tab) => {
-                                    const Icon = tab.icon;
-                                    return (
-                                        <button
-                                            key={tab.id}
+                                    {/* Step Progress Tracker */}
+                                    <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-slate-800/80">
+                                        {[
+                                            { id: "general", stepNum: "1", title: "Job Info & Metadata", icon: Building2 },
+                                            { id: "details", stepNum: "2", title: "Description & Requirements", icon: Briefcase },
+                                        ].map((tab) => {
+                                            const isActive = activeFormTab === tab.id;
+                                            const isPast = activeFormTab === "details" && tab.id === "general";
+                                            const Icon = tab.icon;
+
+                                            return (
+                                                <button
+                                                    key={tab.id}
+                                                    type="button"
+                                                    onClick={() => setActiveFormTab(tab.id)}
+                                                    className={
+                                                        "flex items-center gap-2.5 p-2.5 rounded-xl border text-left transition-all " +
+                                                        (isActive
+                                                            ? "bg-blue-600 border-blue-500 text-white shadow-md shadow-blue-900/30 font-bold"
+                                                            : isPast
+                                                            ? "bg-slate-800/80 border-slate-700 text-emerald-400 font-semibold"
+                                                            : "bg-slate-800/40 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80")
+                                                    }
+                                                >
+                                                    <div className={
+                                                        "w-6 h-6 rounded-lg text-xs flex items-center justify-center font-black shrink-0 " +
+                                                        (isActive ? "bg-white text-blue-600" : isPast ? "bg-emerald-500/20 text-emerald-400" : "bg-slate-700 text-slate-300")
+                                                    }>
+                                                        {isPast ? <Check className="w-3.5 h-3.5" /> : tab.stepNum}
+                                                    </div>
+                                                    <div className="min-w-0 flex-1 hidden sm:block">
+                                                        <div className="text-xs truncate">{tab.title}</div>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </DialogHeader>
+
+                                {/* Form Body */}
+                                <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-slate-50/50">
+                                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+
+                                        {/* Step 1: General Info */}
+                                        {activeFormTab === "general" && (
+                                            <div className="space-y-6 animate-in fade-in duration-200">
+                                                {/* Header Card */}
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <Building2 className="w-4 h-4 text-blue-600" /> Core Job Identity
+                                                    </div>
+                                                    
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Job Title <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="title"
+                                                                placeholder="e.g., Senior Software Engineer"
+                                                                value={formData.title}
+                                                                onChange={handleInputChange}
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200 focus:ring-blue-500"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Company Name <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="company"
+                                                                placeholder="e.g., TechNova Solutions"
+                                                                value={formData.company}
+                                                                onChange={handleInputChange}
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200 focus:ring-blue-500"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Location <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="location"
+                                                                placeholder="e.g., Dubai, UAE (Hybrid)"
+                                                                value={formData.location}
+                                                                onChange={handleInputChange}
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200 focus:ring-blue-500"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Job Type <span className="text-rose-500">*</span></label>
+                                                            <select
+                                                                name="type"
+                                                                value={formData.type}
+                                                                onChange={handleInputChange}
+                                                                required
+                                                                className="w-full h-11 px-3 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                            >
+                                                                <option value="Full-time">Full-time</option>
+                                                                <option value="Part-time">Part-time</option>
+                                                                <option value="Contract">Contract</option>
+                                                                <option value="Remote">Remote</option>
+                                                                <option value="Internship">Internship</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Category <span className="text-rose-500">*</span></label>
+                                                            <select
+                                                                name="category"
+                                                                value={formData.category}
+                                                                onChange={handleInputChange}
+                                                                required
+                                                                className="w-full h-11 px-3 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                            >
+                                                                <option value="Domestic">🏠 Domestic Placement</option>
+                                                                <option value="Overseas">✈️ Overseas Opportunities</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Date Posted</label>
+                                                            <Input
+                                                                type="date"
+                                                                name="datePosted"
+                                                                value={formData.datePosted}
+                                                                onChange={handleInputChange}
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200 focus:ring-blue-500"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Salary Package <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="salary"
+                                                                placeholder="e.g., AED 18,000 - 25,000 / Month"
+                                                                value={formData.salary}
+                                                                onChange={handleInputChange}
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200 focus:ring-blue-500"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Required Experience</label>
+                                                            <Input
+                                                                name="experience"
+                                                                placeholder="e.g., 3-5 Years Experience"
+                                                                value={formData.experience}
+                                                                onChange={handleInputChange}
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200 focus:ring-blue-500"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Logo & Visibility Options */}
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <UploadCloud className="w-4 h-4 text-blue-600" /> Company Logo &amp; Display Status
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-slate-700">Upload Company Logo</label>
+                                                            <input
+                                                                id="company-logo-upload"
+                                                                type="file"
+                                                                accept="image/*"
+                                                                className="hidden"
+                                                                onChange={(e) => uploadImage(e.target.files?.[0])}
+                                                            />
+                                                            <div
+                                                                className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/70 p-4 text-center cursor-pointer hover:bg-slate-50 transition"
+                                                                onDragOver={(e) => e.preventDefault()}
+                                                                onDrop={(e) => {
+                                                                    e.preventDefault();
+                                                                    uploadImage(e.dataTransfer.files?.[0]);
+                                                                }}
+                                                                onClick={() => document.getElementById("company-logo-upload")?.click()}
+                                                            >
+                                                                <UploadCloud className="w-6 h-6 text-slate-500 mx-auto mb-1.5" />
+                                                                <p className="text-xs font-medium text-slate-700 mb-0.5">Drag logo here or click to browse</p>
+                                                                <span className="text-[10px] text-slate-400">
+                                                                    {uploading ? "Uploading image..." : "PNG, JPG, SVG supported"}
+                                                                </span>
+                                                            </div>
+                                                            {uploadError && (
+                                                                <p className="text-xs font-semibold text-rose-600">{uploadError}</p>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-slate-700">Direct Logo URL &amp; Preview</label>
+                                                            <Input
+                                                                name="logo"
+                                                                placeholder="Or paste direct image URL..."
+                                                                value={formData.logo}
+                                                                onChange={handleInputChange}
+                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                            {formData.logo ? (
+                                                                <div className="mt-2 h-20 w-20 rounded-xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-2 shadow-sm">
+                                                                    <img src={formData.logo} alt="Company logo preview" className="max-h-full max-w-full object-contain" />
+                                                                </div>
+                                                            ) : (
+                                                                <div className="mt-2 h-20 w-20 rounded-xl border border-dashed border-slate-200 bg-slate-50 flex items-center justify-center text-slate-300 text-[10px] font-bold">
+                                                                    No Logo
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                                                        <div className="flex items-center gap-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                                                            <input
+                                                                type="checkbox"
+                                                                id="isActiveToggle"
+                                                                checked={formData.isActive}
+                                                                onChange={(e) => handleCheckboxChange(e.target.checked)}
+                                                                className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
+                                                            />
+                                                            <label htmlFor="isActiveToggle" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                                                                Active Listing (visible &amp; open for applications)
+                                                            </label>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 bg-amber-50/70 p-3.5 rounded-xl border border-amber-200/80">
+                                                            <input
+                                                                type="checkbox"
+                                                                id="isFeaturedToggle"
+                                                                checked={formData.isFeatured}
+                                                                onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
+                                                                className="w-4 h-4 rounded text-amber-500 border-amber-300 focus:ring-amber-400"
+                                                            />
+                                                            <label htmlFor="isFeaturedToggle" className="text-xs font-bold text-amber-800 cursor-pointer select-none">
+                                                                ⭐ Featured Job (highlighted on listings page)
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Step 2: Description & Lists */}
+                                        {activeFormTab === "details" && (
+                                            <div className="space-y-6 animate-in fade-in duration-200">
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <Briefcase className="w-4 h-4 text-blue-600" /> Job Role Description
+                                                    </div>
+
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-bold text-slate-700">Detailed Description <span className="text-rose-500">*</span></label>
+                                                        <Textarea
+                                                            name="description"
+                                                            placeholder="Provide a detailed overview of the job role, target expectations, team structure, and key goals..."
+                                                            value={formData.description}
+                                                            onChange={handleInputChange}
+                                                            required
+                                                            rows={6}
+                                                            className="rounded-xl border-slate-200 text-xs p-3 focus:ring-blue-500 bg-white"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Requirements List */}
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex justify-between items-center border-b pb-3">
+                                                        <label className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                                            <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Candidate Requirements
+                                                        </label>
+                                                        <Button
+                                                            type="button"
+                                                            onClick={addRequirement}
+                                                            size="sm"
+                                                            className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl font-bold gap-1.5 h-8 text-xs"
+                                                        >
+                                                            <Plus className="w-3.5 h-3.5" /> Add Requirement
+                                                        </Button>
+                                                    </div>
+
+                                                    <div className="space-y-2.5">
+                                                        {formData.requirements.map((req, index) => (
+                                                            <div key={index} className="flex gap-2 items-center">
+                                                                <Input
+                                                                    placeholder="e.g. Bachelor's degree in Computer Science or equivalent field"
+                                                                    value={req}
+                                                                    onChange={(e) => handleRequirementChange(index, e.target.value)}
+                                                                    className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                                />
+                                                                {formData.requirements.length > 1 && (
+                                                                    <Button
+                                                                        type="button"
+                                                                        onClick={() => removeRequirement(index)}
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-10 w-10 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl shrink-0"
+                                                                    >
+                                                                        <X className="w-4 h-4" />
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Responsibilities List */}
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex justify-between items-center border-b pb-3">
+                                                        <label className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                                            <Sparkles className="w-4 h-4 text-amber-500" /> Key Responsibilities
+                                                        </label>
+                                                        <Button
+                                                            type="button"
+                                                            onClick={addResponsibility}
+                                                            size="sm"
+                                                            className="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl font-bold gap-1.5 h-8 text-xs"
+                                                        >
+                                                            <Plus className="w-3.5 h-3.5" /> Add Responsibility
+                                                        </Button>
+                                                    </div>
+
+                                                    <div className="space-y-2.5">
+                                                        {formData.responsibilities.map((resp, index) => (
+                                                            <div key={index} className="flex gap-2 items-center">
+                                                                <Input
+                                                                    placeholder="e.g. Design, test, and deploy production ready application modules"
+                                                                    value={resp}
+                                                                    onChange={(e) => handleResponsibilityChange(index, e.target.value)}
+                                                                    className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                                />
+                                                                {formData.responsibilities.length > 1 && (
+                                                                    <Button
+                                                                        type="button"
+                                                                        onClick={() => removeResponsibility(index)}
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-10 w-10 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl shrink-0"
+                                                                    >
+                                                                        <X className="w-4 h-4" />
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                    </div>
+
+                                    {/* Footer Action Controls */}
+                                    <div className="bg-white px-6 py-4 border-t border-slate-200 shrink-0 flex items-center justify-between gap-4">
+                                        <Button
                                             type="button"
-                                            onClick={() => setActiveFormTab(tab.id)}
-                                            className={
-                                                "flex items-center gap-2 px-6 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex-1 justify-center whitespace-nowrap " +
-                                                (activeFormTab === tab.id
-                                                    ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80")
-                                            }
+                                            variant="outline"
+                                            onClick={() => setIsDialogOpen(false)}
+                                            className="rounded-xl border-slate-200 h-11 px-5 text-xs font-semibold text-slate-600 hover:bg-slate-100"
                                         >
-                                            <Icon className="w-4 h-4 shrink-0" />
-                                            <span>{tab.label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
+                                            Cancel
+                                        </Button>
 
-                            {/* Form Area */}
-                            <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden">
-                                <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                                    
-                                    {/* Tab 1: General Info */}
-                                    {activeFormTab === "general" && (
-                                        <div className="space-y-4 animate-in fade-in duration-200">
-                                            <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50 mb-6">
-                                                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1.5 mb-1">
-                                                    <Building2 className="w-4 h-4" /> Core Identity
-                                                </h4>
-                                                <p className="text-xs text-slate-500">Provide name, company name, location, and metadata details.</p>
-                                            </div>
+                                        <div className="flex items-center gap-3">
+                                            {activeFormTab === "details" && (
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={() => setActiveFormTab("general")}
+                                                    className="rounded-xl border-slate-200 h-11 px-4 text-xs font-semibold text-slate-700 gap-1.5"
+                                                >
+                                                    <ArrowLeft className="w-4 h-4" /> Previous Step
+                                                </Button>
+                                            )}
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Job Title <span className="text-rose-500">*</span></label>
-                                                    <Input
-                                                        name="title"
-                                                        placeholder="e.g., Senior Software Engineer"
-                                                        value={formData.title}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Company Name <span className="text-rose-500">*</span></label>
-                                                    <Input
-                                                        name="company"
-                                                        placeholder="e.g., TechNova Solutions"
-                                                        value={formData.company}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Location <span className="text-rose-500">*</span></label>
-                                                    <Input
-                                                        name="location"
-                                                        placeholder="e.g., Dubai, UAE (Hybrid)"
-                                                        value={formData.location}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Job Type <span className="text-rose-500">*</span></label>
-                                                    <select
-                                                        name="type"
-                                                        value={formData.type}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                        className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    >
-                                                        <option value="Full-time">Full-time</option>
-                                                        <option value="Part-time">Part-time</option>
-                                                        <option value="Contract">Contract</option>
-                                                        <option value="Remote">Remote</option>
-                                                        <option value="Internship">Internship</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Category <span className="text-rose-500">*</span></label>
-                                                    <select
-                                                        name="category"
-                                                        value={formData.category}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                        className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    >
-                                                        <option value="Domestic">🏠 Domestic</option>
-                                                        <option value="Overseas">✈️ Overseas</option>
-                                                    </select>
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Date Posted</label>
-                                                    <Input
-                                                        type="date"
-                                                        name="datePosted"
-                                                        value={formData.datePosted}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Salary Package <span className="text-rose-500">*</span></label>
-                                                    <Input
-                                                        name="salary"
-                                                        placeholder="e.g., AED 18,000 - 25,000 / Month"
-                                                        value={formData.salary}
-                                                        onChange={handleInputChange}
-                                                        required
-                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Required Experience</label>
-                                                    <Input
-                                                        name="experience"
-                                                        placeholder="e.g., 5+ Years"
-                                                        value={formData.experience}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Company Logo Image upload */}
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
-                                                <div className="space-y-2">
-                                                    <div className="flex justify-between items-center">
-                                                        <label className="text-xs font-bold text-slate-700">Company Logo URL / File</label>
-                                                        <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-black uppercase">Square Logo preferred</span>
-                                                    </div>
-                                                    <input
-                                                        id="company-logo-upload"
-                                                        type="file"
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={(e) => uploadImage(e.target.files?.[0])}
-                                                    />
-                                                    <div
-                                                        className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/70 p-4 text-center cursor-pointer hover:bg-slate-50 transition"
-                                                        onDragOver={(e) => e.preventDefault()}
-                                                        onDrop={(e) => {
-                                                            e.preventDefault();
-                                                            uploadImage(e.dataTransfer.files?.[0]);
-                                                        }}
-                                                        onClick={() => document.getElementById("company-logo-upload")?.click()}
-                                                    >
-                                                        <UploadCloud className="w-5 h-5 text-slate-500 mx-auto mb-2" />
-                                                        <p className="text-xs text-slate-600 mb-1">Drag logo here or click to browse</p>
-                                                        <span className="text-[10px] text-slate-400">
-                                                            {uploading ? "Uploading image..." : "Supports PNG, JPG, WEBP"}
-                                                        </span>
-                                                    </div>
-                                                    {uploadError && (
-                                                        <p className="text-xs font-semibold text-rose-600">{uploadError}</p>
-                                                    )}
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <label className="text-xs font-bold text-slate-700">Logo Preview & Direct URL</label>
-                                                    <Input
-                                                        name="logo"
-                                                        placeholder="Or paste direct image URL"
-                                                        value={formData.logo}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200 text-xs"
-                                                    />
-                                                    {formData.logo && (
-                                                        <div className="mt-2 h-20 w-20 rounded-lg overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-2">
-                                                            <img src={formData.logo} alt="Company logo preview" className="max-h-full max-w-full object-contain" />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* isActive + isFeatured status toggles */}
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                <div className="flex items-center gap-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="isActiveToggle"
-                                                        checked={formData.isActive}
-                                                        onChange={(e) => handleCheckboxChange(e.target.checked)}
-                                                        className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
-                                                    />
-                                                    <label htmlFor="isActiveToggle" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
-                                                        Active Listing (visible &amp; open for applications)
-                                                    </label>
-                                                </div>
-                                                <div className="flex items-center gap-2 bg-amber-50 p-4 rounded-xl border border-amber-100">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="isFeaturedToggle"
-                                                        checked={formData.isFeatured}
-                                                        onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
-                                                        className="w-4 h-4 rounded text-amber-500 border-amber-300 focus:ring-amber-400"
-                                                    />
-                                                    <label htmlFor="isFeaturedToggle" className="text-xs font-bold text-amber-700 cursor-pointer select-none">
-                                                        ⭐ Featured Job (highlighted on listings page)
-                                                    </label>
-                                                </div>
-                                            </div>
+                                            {activeFormTab === "general" ? (
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => setActiveFormTab("details")}
+                                                    className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 text-xs gap-2 shadow-md shadow-blue-500/20"
+                                                >
+                                                    Next Step <ArrowRight className="w-4 h-4" />
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    type="submit"
+                                                    className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 text-xs gap-2 shadow-lg shadow-blue-500/25"
+                                                >
+                                                    <Check className="w-4 h-4" />
+                                                    {editingSlug ? "Update Job Opportunity" : "Publish Job Opportunity"}
+                                                </Button>
+                                            )}
                                         </div>
-                                    )}
-
-                                    {/* Tab 2: Description & Lists */}
-                                    {activeFormTab === "details" && (
-                                        <div className="space-y-6 animate-in fade-in duration-200">
-                                            <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50">
-                                                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1.5 mb-1">
-                                                    <Briefcase className="w-4 h-4" /> Job Requirements &amp; Details
-                                                </h4>
-                                                <p className="text-xs text-slate-500">Provide detailed descriptions, responsibilities list, and candidate prerequisites.</p>
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="text-xs font-bold text-slate-700">Job Description <span className="text-rose-500">*</span></label>
-                                                <Textarea
-                                                    name="description"
-                                                    placeholder="Write a clear overview of the job role, target expectations, and company culture context..."
-                                                    value={formData.description}
-                                                    onChange={handleInputChange}
-                                                    required
-                                                    rows={6}
-                                                    className="rounded-lg border-slate-200 resize-y"
-                                                />
-                                            </div>
-
-                                            {/* Requirements List */}
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-                                                    <label className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1">
-                                                        Requirements
-                                                    </label>
-                                                    <Button
-                                                        type="button"
-                                                        onClick={addRequirement}
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="text-xs font-bold gap-1 text-blue-600 border-blue-100 hover:bg-blue-50"
-                                                    >
-                                                        <Plus className="w-3.5 h-3.5" /> Add Requirement
-                                                    </Button>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    {formData.requirements.map((req, index) => (
-                                                        <div key={index} className="flex gap-2 items-center">
-                                                            <Input
-                                                                placeholder="e.g., Bachelor's degree in Computer Science or related field"
-                                                                value={req}
-                                                                onChange={(e) => handleRequirementChange(index, e.target.value)}
-                                                                className="rounded-lg border-slate-200"
-                                                            />
-                                                            {formData.requirements.length > 1 && (
-                                                                <Button
-                                                                    type="button"
-                                                                    onClick={() => removeRequirement(index)}
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    className="h-9 w-9 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg shrink-0"
-                                                                >
-                                                                    <X className="w-4 h-4" />
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Responsibilities List */}
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-                                                    <label className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1">
-                                                        Responsibilities
-                                                    </label>
-                                                    <Button
-                                                        type="button"
-                                                        onClick={addResponsibility}
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="text-xs font-bold gap-1 text-blue-600 border-blue-100 hover:bg-blue-50"
-                                                    >
-                                                        <Plus className="w-3.5 h-3.5" /> Add Responsibility
-                                                    </Button>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    {formData.responsibilities.map((resp, index) => (
-                                                        <div key={index} className="flex gap-2 items-center">
-                                                            <Input
-                                                                placeholder="e.g., Design and implement robust, clean, and maintainable code"
-                                                                value={resp}
-                                                                onChange={(e) => handleResponsibilityChange(index, e.target.value)}
-                                                                className="rounded-lg border-slate-200"
-                                                            />
-                                                            {formData.responsibilities.length > 1 && (
-                                                                <Button
-                                                                    type="button"
-                                                                    onClick={() => removeResponsibility(index)}
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    className="h-9 w-9 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg shrink-0"
-                                                                >
-                                                                    <X className="w-4 h-4" />
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    )}
-
-                                </div>
-
-                                {/* Form Footer */}
-                                <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 shrink-0">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setIsDialogOpen(false)}
-                                        className="rounded-xl border-slate-200 hover:bg-slate-100"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl px-6"
-                                    >
-                                        Save Job Opportunity
-                                    </Button>
-                                </div>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
+                                    </div>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
 
                 {/* Table & Listings Container */}
@@ -1032,23 +1089,6 @@ export default function JobsAdminPage() {
                                     }
                                 >
                                     {cat === "Domestic" ? "🏠 " : cat === "Overseas" ? "✈️ " : ""}{cat}
-                                </button>
-                            ))}
-                            <span className="ml-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Featured:</span>
-                            {["All", "Featured", "Standard"].map((f) => (
-                                <button
-                                    key={f}
-                                    onClick={() => setFilterFeatured(f)}
-                                    className={
-                                        "px-4 py-1.5 rounded-full text-xs font-bold border transition-all " +
-                                        (filterFeatured === f
-                                            ? f === "Featured"
-                                                ? "bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-100"
-                                                : "bg-slate-600 text-white border-slate-600 shadow-md shadow-slate-100"
-                                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50")
-                                    }
-                                >
-                                    {f === "Featured" ? "⭐ " : ""}{f}
                                 </button>
                             ))}
                         </div>
@@ -1186,6 +1226,5 @@ export default function JobsAdminPage() {
                 </div>
             </div>
         </div>
-    </div>
     );
 }

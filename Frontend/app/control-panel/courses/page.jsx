@@ -18,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Plus, Edit2, Trash2, CheckCircle, Circle, UploadCloud, ArrowLeft, BookOpen, Clock, ChevronDown, FileText, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, CheckCircle, Circle, UploadCloud, ArrowLeft, ArrowRight, Check, BookOpen, Clock, ChevronDown, FileText, CheckCircle2, AlertCircle, Loader2, Search, Sparkles, GraduationCap } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -27,7 +27,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
 export default function CoursesAdminPage() {
@@ -35,6 +34,7 @@ export default function CoursesAdminPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingId, setEditingId] = useState(null);
+    const [activeFormTab, setActiveFormTab] = useState("general");
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [uploadError, setUploadError] = useState("");
 
@@ -414,23 +414,23 @@ export default function CoursesAdminPage() {
             careerOutcomes: ""
         });
         setSubCourseEditIndex(null);
+        setActiveFormTab("general");
         setUploadError("");
     };
 
     return (
-        <div className="min-h-screen bg-white p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#f8fafc] p-6 sm:p-10 font-sans">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
                     <div>
-                        <Link href="/control-panel" className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 gap-1.5 mb-2 font-medium">
-                            <ArrowLeft className="w-4 h-4" /> Back to Dashboard
-                        </Link>
-                        <h1 className="text-4xl font-bold text-gray-900">Course Management</h1>
-                        <p className="text-gray-600 mt-2">Create and edit popular courses and their specializations offered on the platform</p>
+                        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                            🎓 Admin Panel <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-full font-bold uppercase tracking-wider">Courses</span>
+                        </h1>
+                        <p className="text-slate-500 mt-1 text-sm">Add, modify, and manage all academic courses and their specializations.</p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                         {/* Bulk Add Button & Dialog */}
                         <Dialog open={isBulkDialogOpen} onOpenChange={setIsBulkDialogOpen}>
                             <DialogTrigger asChild>
@@ -567,287 +567,371 @@ export default function CoursesAdminPage() {
                             if (!open) resetForm();
                         }}>
                             <DialogTrigger asChild>
-                                <Button onClick={() => resetForm()} className="gap-2 bg-blue-600 hover:bg-blue-700 w-fit">
-                                    <Plus className="w-4 h-4" /> Add Course
+                                <Button onClick={() => resetForm()} className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20 rounded-xl gap-2 h-11 px-5">
+                                    <Plus className="w-5 h-5" /> Add Course
                                 </Button>
                             </DialogTrigger>
-                        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                            <DialogHeader>
-                                <DialogTitle className="text-2xl font-bold">
-                                    {editingId ? "Edit Course Information" : "Create New Course"}
-                                </DialogTitle>
-                            </DialogHeader>
-
-                            <Tabs defaultValue="content" className="w-full mt-4">
-                                <TabsList className="grid w-full grid-cols-3">
-                                    <TabsTrigger value="content" className="text-xs sm:text-sm px-1.5 truncate">General</TabsTrigger>
-                                    <TabsTrigger value="academic" className="text-xs sm:text-sm px-1.5 truncate">Overview & Req</TabsTrigger>
-                                    <TabsTrigger value="subcourses" className="text-xs sm:text-sm px-1.5 truncate">Sub-Courses</TabsTrigger>
-                                </TabsList>
-
-                                <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-                                    <TabsContent value="content" className="space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-semibold mb-2 text-gray-700">Course Category Title *</label>
-                                                <Input
-                                                    name="courseName"
-                                                    value={formData.courseName}
-                                                    onChange={handleInputChange}
-                                                    placeholder="e.g., Allied Health, Medicine, Management"
-                                                    required
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-semibold mb-2 text-gray-700">Course Level *</label>
-                                                <Select value={formData.category} onValueChange={handleSelectChange}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Choose level" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="Undergraduate">Undergraduate</SelectItem>
-                                                        <SelectItem value="Postgraduate">Postgraduate</SelectItem>
-                                                        <SelectItem value="Diploma">Diploma</SelectItem>
-                                                        <SelectItem value="Doctorate">Doctorate</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
+                            <DialogContent className="max-w-4xl w-[95vw] h-[92vh] sm:h-[88vh] flex flex-col p-0 overflow-hidden bg-white shadow-2xl rounded-2xl border-none">
+                                {/* Header Banner */}
+                                <DialogHeader className="p-6 bg-slate-900 text-white shrink-0 border-b border-slate-800">
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <DialogTitle className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                                                <GraduationCap className="w-5 h-5 text-blue-400" />
+                                                {editingId ? "Edit Course Details" : "Create New Course"}
+                                            </DialogTitle>
+                                            <p className="text-xs text-slate-300">
+                                                {editingId ? "Update course info, fees, overview, or specializations." : "Fill in the guided form below to publish a new course listing."}
+                                            </p>
                                         </div>
+                                        <span className="text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block">
+                                            Step {["general","academic","subcourses"].indexOf(activeFormTab) + 1} of 3
+                                        </span>
+                                    </div>
 
-                                        <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Short Description *</label>
-                                            <Textarea
-                                                name="description"
-                                                value={formData.description}
-                                                onChange={handleInputChange}
-                                                placeholder="Brief summary for popular course card..."
-                                                rows={2}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-semibold mb-2 text-gray-700">Duration (e.g., 3-4 Years) *</label>
-                                                <Input
-                                                    name="duration"
-                                                    value={formData.duration}
-                                                    onChange={handleInputChange}
-                                                    placeholder="e.g., 3 Years, 2 Years"
-                                                    required
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-semibold mb-2 text-gray-700">Estimated Tuition Fees *</label>
-                                                <Input
-                                                    name="fees"
-                                                    value={formData.fees}
-                                                    onChange={handleInputChange}
-                                                    placeholder="e.g., $15,000 / Year"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Course Image</label>
-                                            <input
-                                                id="course-image-upload"
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={(e) => handleImageUpload(e.target.files?.[0])}
-                                            />
-                                            <div
-                                                className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 text-center cursor-pointer hover:border-blue-500 transition-colors"
-                                                onDragOver={(e) => e.preventDefault()}
-                                                onDrop={(e) => {
-                                                    e.preventDefault();
-                                                    handleImageUpload(e.dataTransfer.files?.[0]);
-                                                }}
-                                                onClick={() => document.getElementById("course-image-upload")?.click()}
-                                            >
-                                                <UploadCloud className="w-8 h-8 mx-auto text-gray-500 mb-2" />
-                                                <p className="text-sm font-medium text-gray-700">Drag & drop course banner or click to browse</p>
-                                                <p className="text-xs text-gray-500 mt-1">Recommended: 800x500 px (Max 5MB)</p>
-                                            </div>
-                                            {isUploadingImage && <p className="text-sm text-blue-600 mt-2 font-medium">Uploading image, please wait...</p>}
-                                            {formData.image && (
-                                                <div className="mt-3 relative rounded-lg overflow-hidden border border-gray-200 w-fit">
-                                                    <img
-                                                        src={formData.image}
-                                                        alt="Course preview"
-                                                        className="h-28 w-44 object-cover"
-                                                    />
-                                                </div>
-                                            )}
-                                            {uploadError && (
-                                                <p className="text-xs font-semibold text-rose-600 mt-2">{uploadError}</p>
-                                            )}
-                                        </div>
-
-                                        <div className="flex gap-4">
-                                            <label className="flex items-center gap-2 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={formData.status}
-                                                    onChange={() => setFormData(prev => ({ ...prev, status: !prev.status }))}
-                                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <span className="text-sm font-medium text-gray-700">Show on homepage (Active)</span>
-                                            </label>
-                                        </div>
-                                    </TabsContent>
-
-                                    <TabsContent value="academic" className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Course Overview (Detailed) *</label>
-                                            <Textarea
-                                                name="overview"
-                                                value={formData.overview}
-                                                onChange={handleInputChange}
-                                                placeholder="Provide a comprehensive course description, scope, and objectives..."
-                                                rows={5}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Admission / Academic Requirements</label>
-                                            <Textarea
-                                                name="requirements"
-                                                value={formData.requirements}
-                                                onChange={handleInputChange}
-                                                placeholder="Specify academic scores, prerequisite subjects, eligibility criteria..."
-                                                rows={3}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Career & Placement Opportunities</label>
-                                            <Textarea
-                                                name="opportunities"
-                                                value={formData.opportunities}
-                                                onChange={handleInputChange}
-                                                placeholder="What jobs or roles can graduates apply for? Placement scope..."
-                                                rows={3}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold mb-2 text-gray-700">Key Subjects Covered (comma-separated)</label>
-                                            <Input
-                                                name="subjectsInput"
-                                                value={formData.subjectsInput}
-                                                onChange={handleInputChange}
-                                                placeholder="e.g., Financial Accounting, Micro Economics, Business Law"
-                                            />
-                                            <p className="text-xs text-muted-foreground mt-1">Separate subjects with commas (e.g. Subject A, Subject B)</p>
-                                        </div>
-                                    </TabsContent>
-
-                                    <TabsContent value="subcourses" className="space-y-4">
-                                        {/* Add Sub-Course Form */}
-                                        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
-                                            <h4 className="font-bold text-slate-800 text-sm">Add / Edit Sub-Course (Specialization)</h4>
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                <div>
-                                                    <label className="block text-xs font-semibold mb-1 text-slate-600">Sub-Course Name *</label>
-                                                    <Input
-                                                        value={newSubCourse.name}
-                                                        onChange={(e) => setNewSubCourse(prev => ({ ...prev, name: e.target.value }))}
-                                                        placeholder="e.g., Hotel Management"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-semibold mb-1 text-slate-600">Duration</label>
-                                                    <Input
-                                                        value={newSubCourse.duration}
-                                                        onChange={(e) => setNewSubCourse(prev => ({ ...prev, duration: e.target.value }))}
-                                                        placeholder="e.g., 3 Years"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-semibold mb-1 text-slate-600">Tuition Fees</label>
-                                                    <Input
-                                                        value={newSubCourse.fees}
-                                                        onChange={(e) => setNewSubCourse(prev => ({ ...prev, fees: e.target.value }))}
-                                                        placeholder="e.g., $11,500 / Year"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-xs font-semibold mb-1 text-slate-600">Overview / Focus Area</label>
-                                                    <Textarea
-                                                        value={newSubCourse.overview}
-                                                        onChange={(e) => setNewSubCourse(prev => ({ ...prev, overview: e.target.value }))}
-                                                        placeholder="Specific courses, skills learned..."
-                                                        rows={2}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-semibold mb-1 text-slate-600">Career Outcomes</label>
-                                                    <Textarea
-                                                        value={newSubCourse.careerOutcomes}
-                                                        onChange={(e) => setNewSubCourse(prev => ({ ...prev, careerOutcomes: e.target.value }))}
-                                                        placeholder="Specific job titles, salary estimates..."
-                                                        rows={2}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="flex justify-end">
-                                                <Button
+                                    {/* Step Progress Tracker */}
+                                    <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-800/80">
+                                        {[
+                                            { id: "general", stepNum: "1", title: "General Info", icon: BookOpen },
+                                            { id: "academic", stepNum: "2", title: "Overview & Requirements", icon: Sparkles },
+                                            { id: "subcourses", stepNum: "3", title: "Sub-Courses", icon: GraduationCap },
+                                        ].map((tab) => {
+                                            const tabs = ["general", "academic", "subcourses"];
+                                            const isActive = activeFormTab === tab.id;
+                                            const isPast = tabs.indexOf(activeFormTab) > tabs.indexOf(tab.id);
+                                            const Icon = tab.icon;
+                                            return (
+                                                <button
+                                                    key={tab.id}
                                                     type="button"
-                                                    onClick={handleAddSubCourse}
-                                                    className="bg-blue-600 text-white hover:bg-blue-700 text-xs px-4 py-2"
+                                                    onClick={() => setActiveFormTab(tab.id)}
+                                                    className={
+                                                        "flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all " +
+                                                        (isActive
+                                                            ? "bg-blue-600 border-blue-500 text-white shadow-md font-bold"
+                                                            : isPast
+                                                            ? "bg-slate-800/80 border-slate-700 text-emerald-400 font-semibold"
+                                                            : "bg-slate-800/40 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80")
+                                                    }
                                                 >
-                                                    {subCourseEditIndex !== null ? "Update Specialization" : "Add Specialization"}
-                                                </Button>
-                                            </div>
-                                        </div>
+                                                    <div className={
+                                                        "w-6 h-6 rounded-lg text-xs flex items-center justify-center font-black shrink-0 " +
+                                                        (isActive ? "bg-white text-blue-600" : isPast ? "bg-emerald-500/20 text-emerald-400" : "bg-slate-700 text-slate-300")
+                                                    }>
+                                                        {isPast ? <Check className="w-3.5 h-3.5" /> : tab.stepNum}
+                                                    </div>
+                                                    <div className="min-w-0 flex-1 hidden sm:block">
+                                                        <div className="text-xs truncate">{tab.title}</div>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </DialogHeader>
 
-                                        {/* Added Sub-Courses List */}
-                                        <div className="space-y-2 mt-4">
-                                            <h4 className="font-bold text-gray-700 text-sm">Listed Sub-Courses ({subCourses.length})</h4>
-                                            {subCourses.length === 0 ? (
-                                                <p className="text-sm text-gray-400 italic">No sub-courses added yet. Use the form above to add some.</p>
-                                            ) : (
-                                                <div className="border rounded-xl overflow-hidden bg-white">
-                                                    <Table>
-                                                        <TableHeader>
-                                                            <TableRow className="bg-slate-50">
-                                                                <TableHead className="font-semibold text-xs">Name</TableHead>
-                                                                <TableHead className="font-semibold text-xs">Duration</TableHead>
-                                                                <TableHead className="font-semibold text-xs">Fees</TableHead>
-                                                                <TableHead className="font-semibold text-xs text-right">Actions</TableHead>
-                                                            </TableRow>
-                                                        </TableHeader>
-                                                        <TableBody>
-                                                            {subCourses.map((sub, i) => (
-                                                                <TableRow key={i}>
-                                                                    <TableCell className="font-medium text-xs">{sub.name}</TableCell>
-                                                                    <TableCell className="text-xs">{sub.duration || "—"}</TableCell>
-                                                                    <TableCell className="text-xs text-emerald-700 font-semibold">{sub.fees || "—"}</TableCell>
-                                                                    <TableCell className="text-right">
-                                                                        <div className="flex justify-end gap-1.5">
-                                                                            <Button
-                                                                                type="button"
-                                                                                size="sm"
-                                                                                variant="outline"
-                                                                                onClick={() => handleEditSubCourse(i)}
-                                                                                className="h-7 px-2 text-[10px]"
-                                                                            >
-                                                                                Edit
-                                                                            </Button>
-                                                                            <Button
-                                                                                type="button"
-                                                                                size="sm"
-                                                                                variant="destructive"
-                                                                                onClick={() => handleRemoveSubCourse(i)}
-                                                                                className="h-7 px-2 text-[10px]"
+                                {/* Form Body */}
+                                <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-slate-50/50">
+                                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+
+                                        {/* Step 1: General Info */}
+                                        {activeFormTab === "general" && (
+                                            <div className="space-y-6 animate-in fade-in duration-200">
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <BookOpen className="w-4 h-4 text-blue-600" /> Course Identity
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Course Category Title <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="courseName"
+                                                                value={formData.courseName}
+                                                                onChange={handleInputChange}
+                                                                placeholder="e.g., Allied Health, Medicine, Management"
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Course Level <span className="text-rose-500">*</span></label>
+                                                            <Select value={formData.category} onValueChange={handleSelectChange}>
+                                                                <SelectTrigger className="h-11 text-xs rounded-xl bg-white border-slate-200">
+                                                                    <SelectValue placeholder="Choose level" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <SelectItem value="Undergraduate">Undergraduate</SelectItem>
+                                                                    <SelectItem value="Postgraduate">Postgraduate</SelectItem>
+                                                                    <SelectItem value="Diploma">Diploma</SelectItem>
+                                                                    <SelectItem value="Doctorate">Doctorate</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-bold text-slate-700">Short Description <span className="text-rose-500">*</span></label>
+                                                        <Textarea
+                                                            name="description"
+                                                            value={formData.description}
+                                                            onChange={handleInputChange}
+                                                            placeholder="Brief summary shown on the popular course card..."
+                                                            rows={2}
+                                                            required
+                                                            className="text-xs rounded-xl bg-white border-slate-200"
+                                                        />
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Duration <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="duration"
+                                                                value={formData.duration}
+                                                                onChange={handleInputChange}
+                                                                placeholder="e.g., 3 Years, 2 Years"
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Estimated Tuition Fees <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                name="fees"
+                                                                value={formData.fees}
+                                                                onChange={handleInputChange}
+                                                                placeholder="e.g., $15,000 / Year"
+                                                                required
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <UploadCloud className="w-4 h-4 text-blue-600" /> Course Banner Image &amp; Visibility
+                                                    </div>
+
+                                                    <input
+                                                        id="course-image-upload"
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={(e) => handleImageUpload(e.target.files?.[0])}
+                                                    />
+                                                    <div
+                                                        className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/70 p-5 text-center cursor-pointer hover:bg-slate-50 transition"
+                                                        onDragOver={(e) => e.preventDefault()}
+                                                        onDrop={(e) => {
+                                                            e.preventDefault();
+                                                            handleImageUpload(e.dataTransfer.files?.[0]);
+                                                        }}
+                                                        onClick={() => document.getElementById("course-image-upload")?.click()}
+                                                    >
+                                                        <UploadCloud className="w-7 h-7 mx-auto text-slate-400 mb-2" />
+                                                        <p className="text-xs font-medium text-slate-700">Drag &amp; drop course banner or click to browse</p>
+                                                        <p className="text-[10px] text-slate-400 mt-1">{isUploadingImage ? "Uploading..." : "Recommended: 800×500 px — Max 5MB"}</p>
+                                                    </div>
+                                                    {formData.image && (
+                                                        <div className="rounded-xl overflow-hidden border border-slate-200 w-fit shadow-sm">
+                                                            <img src={formData.image} alt="Course banner preview" className="h-28 w-52 object-cover" />
+                                                        </div>
+                                                    )}
+                                                    {uploadError && (
+                                                        <p className="text-xs font-semibold text-rose-600">{uploadError}</p>
+                                                    )}
+
+                                                    <div className="flex items-center gap-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="course-status-toggle"
+                                                            checked={formData.status}
+                                                            onChange={() => setFormData(prev => ({ ...prev, status: !prev.status }))}
+                                                            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                        />
+                                                        <label htmlFor="course-status-toggle" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                                                            Active — Show this course on the homepage
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Step 2: Overview & Requirements */}
+                                        {activeFormTab === "academic" && (
+                                            <div className="space-y-6 animate-in fade-in duration-200">
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <Sparkles className="w-4 h-4 text-blue-600" /> Academic Content &amp; Career Outcomes
+                                                    </div>
+
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-bold text-slate-700">Course Overview (Detailed) <span className="text-rose-500">*</span></label>
+                                                        <Textarea
+                                                            name="overview"
+                                                            value={formData.overview}
+                                                            onChange={handleInputChange}
+                                                            placeholder="Provide a comprehensive course description, scope, and objectives..."
+                                                            rows={5}
+                                                            required
+                                                            className="text-xs rounded-xl bg-white border-slate-200"
+                                                        />
+                                                    </div>
+
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-bold text-slate-700">Admission / Academic Requirements</label>
+                                                        <Textarea
+                                                            name="requirements"
+                                                            value={formData.requirements}
+                                                            onChange={handleInputChange}
+                                                            placeholder="Specify academic scores, prerequisite subjects, eligibility criteria..."
+                                                            rows={3}
+                                                            className="text-xs rounded-xl bg-white border-slate-200"
+                                                        />
+                                                    </div>
+
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-bold text-slate-700">Career &amp; Placement Opportunities</label>
+                                                        <Textarea
+                                                            name="opportunities"
+                                                            value={formData.opportunities}
+                                                            onChange={handleInputChange}
+                                                            placeholder="What jobs or roles can graduates apply for? Placement scope..."
+                                                            rows={3}
+                                                            className="text-xs rounded-xl bg-white border-slate-200"
+                                                        />
+                                                    </div>
+
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-xs font-bold text-slate-700">Key Subjects Covered <span className="text-slate-400 font-normal">(comma-separated)</span></label>
+                                                        <Input
+                                                            name="subjectsInput"
+                                                            value={formData.subjectsInput}
+                                                            onChange={handleInputChange}
+                                                            placeholder="e.g., Financial Accounting, Micro Economics, Business Law"
+                                                            className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                        />
+                                                        <p className="text-[11px] text-slate-400">Separate each subject with a comma</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Step 3: Sub-Courses */}
+                                        {activeFormTab === "subcourses" && (
+                                            <div className="space-y-6 animate-in fade-in duration-200">
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <GraduationCap className="w-4 h-4 text-blue-600" /> Add / Edit Specialization (Sub-Course)
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Sub-Course Name <span className="text-rose-500">*</span></label>
+                                                            <Input
+                                                                value={newSubCourse.name}
+                                                                onChange={(e) => setNewSubCourse(prev => ({ ...prev, name: e.target.value }))}
+                                                                placeholder="e.g., Hotel Management"
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Duration</label>
+                                                            <Input
+                                                                value={newSubCourse.duration}
+                                                                onChange={(e) => setNewSubCourse(prev => ({ ...prev, duration: e.target.value }))}
+                                                                placeholder="e.g., 3 Years"
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Tuition Fees</label>
+                                                            <Input
+                                                                value={newSubCourse.fees}
+                                                                onChange={(e) => setNewSubCourse(prev => ({ ...prev, fees: e.target.value }))}
+                                                                placeholder="e.g., $11,500 / Year"
+                                                                className="h-11 text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Overview / Focus Area</label>
+                                                            <Textarea
+                                                                value={newSubCourse.overview}
+                                                                onChange={(e) => setNewSubCourse(prev => ({ ...prev, overview: e.target.value }))}
+                                                                placeholder="Specific topics, skills learned..."
+                                                                rows={3}
+                                                                className="text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-bold text-slate-700">Career Outcomes</label>
+                                                            <Textarea
+                                                                value={newSubCourse.careerOutcomes}
+                                                                onChange={(e) => setNewSubCourse(prev => ({ ...prev, careerOutcomes: e.target.value }))}
+                                                                placeholder="Job titles, salary estimates..."
+                                                                rows={3}
+                                                                className="text-xs rounded-xl bg-white border-slate-200"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex justify-end">
+                                                        <Button
+                                                            type="button"
+                                                            onClick={handleAddSubCourse}
+                                                            className="bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-bold h-10 px-5 text-xs gap-1.5 shadow-md shadow-blue-500/20"
+                                                        >
+                                                            <Plus className="w-3.5 h-3.5" />
+                                                            {subCourseEditIndex !== null ? "Update Specialization" : "Add Specialization"}
+                                                        </Button>
+                                                    </div>
+                                                </div>
+
+                                                {/* Sub-Courses List */}
+                                                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+                                                    <div className="flex items-center gap-2 border-b pb-3 text-slate-800 font-extrabold text-xs uppercase tracking-wider">
+                                                        <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Added Specializations ({subCourses.length})
+                                                    </div>
+                                                    {subCourses.length === 0 ? (
+                                                        <p className="text-xs text-slate-400 italic py-2">No sub-courses added yet. Use the form above to add some.</p>
+                                                    ) : (
+                                                        <div className="border rounded-xl overflow-hidden bg-white">
+                                                            <Table>
+                                                                <TableHeader>
+                                                                    <TableRow className="bg-slate-50">
+                                                                        <TableHead className="font-semibold text-xs">Name</TableHead>
+                                                                        <TableHead className="font-semibold text-xs">Duration</TableHead>
+                                                                        <TableHead className="font-semibold text-xs">Fees</TableHead>
+                                                                        <TableHead className="font-semibold text-xs text-right">Actions</TableHead>
+                                                                    </TableRow>
+                                                                </TableHeader>
+                                                                <TableBody>
+                                                                    {subCourses.map((sub, i) => (
+                                                                        <TableRow key={i}>
+                                                                            <TableCell className="font-medium text-xs">{sub.name}</TableCell>
+                                                                            <TableCell className="text-xs">{sub.duration || "—"}</TableCell>
+                                                                            <TableCell className="text-xs text-emerald-700 font-semibold">{sub.fees || "—"}</TableCell>
+                                                                            <TableCell className="text-right">
+                                                                                <div className="flex justify-end gap-1.5">
+                                                                                    <Button
+                                                                                        type="button"
+                                                                                        size="sm"
+                                                                                        variant="outline"
+                                                                                        onClick={() => handleEditSubCourse(i)}
+                                                                                        className="h-7 px-2 text-[10px] rounded-lg"
+                                                                                    >
+                                                                                        Edit
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        type="button"
+                                                                                        size="sm"
+                                                                                        variant="destructive"
+                                                                                        onClick={() => handleRemoveSubCourse(i)}
+                                                                                        className="h-7 px-2 text-[10px] rounded-lg"
                                                                             >
                                                                                 Delete
                                                                             </Button>
@@ -860,25 +944,77 @@ export default function CoursesAdminPage() {
                                                 </div>
                                             )}
                                         </div>
-                                    </TabsContent>
+                                    </div>
+                                    )}
 
-                                    <div className="flex gap-3 justify-end pt-4 border-t">
-                                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                    </div>
+
+                                    {/* Footer Action Controls */}
+                                    <div className="bg-white px-6 py-4 border-t border-slate-200 shrink-0 flex items-center justify-between gap-4">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => setIsDialogOpen(false)}
+                                            className="rounded-xl border-slate-200 h-11 px-5 text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                                        >
                                             Cancel
                                         </Button>
-                                        <Button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6">
-                                            {editingId ? "Save Changes" : "Create Course"}
-                                        </Button>
+
+                                        <div className="flex items-center gap-3">
+                                            {activeFormTab !== "general" && (
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        const tabs = ["general", "academic", "subcourses"];
+                                                        const idx = tabs.indexOf(activeFormTab);
+                                                        setActiveFormTab(tabs[idx - 1]);
+                                                    }}
+                                                    className="rounded-xl border-slate-200 h-11 px-4 text-xs font-semibold text-slate-700 gap-1.5"
+                                                >
+                                                    <ArrowLeft className="w-4 h-4" /> Previous
+                                                </Button>
+                                            )}
+
+                                            <Button
+                                                type="submit"
+                                                variant="outline"
+                                                className="hidden sm:inline-flex rounded-xl border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 h-11 px-5 text-xs font-bold"
+                                            >
+                                                {editingId ? "Save Changes" : "Save Draft"}
+                                            </Button>
+
+                                            {activeFormTab !== "subcourses" ? (
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const tabs = ["general", "academic", "subcourses"];
+                                                        const idx = tabs.indexOf(activeFormTab);
+                                                        setActiveFormTab(tabs[idx + 1]);
+                                                    }}
+                                                    className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 text-xs gap-2 shadow-md shadow-blue-500/20"
+                                                >
+                                                    Next Step <ArrowRight className="w-4 h-4" />
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    type="submit"
+                                                    className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 text-xs gap-2 shadow-lg shadow-blue-500/25"
+                                                >
+                                                    <Check className="w-4 h-4" />
+                                                    {editingId ? "Update Course" : "Publish Course"}
+                                                </Button>
+                                            )}
+                                        </div>
                                     </div>
                                 </form>
-                            </Tabs>
-                        </DialogContent>
-                    </Dialog>
-                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
 
                 {/* Courses List */}
-                <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
                     {isLoading ? (
                         <div className="p-8 text-center text-gray-500">Loading courses list...</div>
                     ) : courses.length === 0 ? (

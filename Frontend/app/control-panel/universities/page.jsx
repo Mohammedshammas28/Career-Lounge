@@ -804,706 +804,771 @@ export default function UniversitiesAdminPage() {
                                     <Plus className="w-5 h-5" /> Add University
                                 </Button>
                             </DialogTrigger>
-                        <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] flex flex-col p-0 overflow-hidden bg-white shadow-2xl rounded-2xl border-none">
-                            <DialogHeader className="p-6 bg-slate-900 text-white relative">
-                                <DialogTitle className="text-xl font-bold tracking-wide flex items-center gap-2">
-                                    <Sparkles className="w-5 h-5 text-blue-400" />
-                                    {editingId ? "Modify University Details" : "Manually Create New University"}
-                                </DialogTitle>
-                                <p className="text-xs text-slate-300 mt-1">Fill in the tabs below to publish detailed information to the frontend catalog.</p>
+                        <DialogContent className="max-w-5xl w-[95vw] h-[92vh] sm:h-[88vh] flex flex-col p-0 overflow-hidden bg-white shadow-2xl rounded-2xl border-none">
+                            {/* Header Banner */}
+                            <DialogHeader className="px-6 py-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shrink-0 relative border-b border-slate-700/50">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <DialogTitle className="text-xl font-bold tracking-tight flex items-center gap-2 text-white">
+                                            <Sparkles className="w-5 h-5 text-blue-400" />
+                                            {editingId ? "Edit University Profile" : "Add New University"}
+                                        </DialogTitle>
+                                        <p className="text-xs text-slate-300 mt-1">
+                                            Follow the simple steps below to publish a university to the portal catalog.
+                                        </p>
+                                    </div>
+                                    <div className="hidden sm:flex items-center gap-1 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-medium text-slate-300">
+                                        <span>Step {
+                                            ["basic", "media", "cost", "courses", "scholarships"].indexOf(activeFormTab) + 1
+                                        } of 5</span>
+                                    </div>
+                                </div>
                             </DialogHeader>
 
-                            {/* Tab Selection Row */}
-                            <div className="flex border-b border-slate-100 bg-slate-50/50 p-1.5 gap-1 shrink-0 overflow-x-auto scrollbar-thin">
-                                {[
-                                    { id: "basic", label: "Basic Info", icon: Building2 },
-                                    { id: "media", label: "Media & Bio", icon: Globe },
-                                    { id: "cost", label: "Costs & Req", icon: DollarSign },
-                                    { id: "courses", label: "Courses", icon: BookOpen },
-                                    { id: "scholarships", label: "Intakes & Awards", icon: GraduationCap },
-                                ].map((tab) => {
-                                    const Icon = tab.icon;
-                                    return (
-                                        <button
-                                            key={tab.id}
-                                            type="button"
-                                            onClick={() => setActiveFormTab(tab.id)}
-                                            className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex-1 justify-center whitespace-nowrap
-                                                ${activeFormTab === tab.id
-                                                    ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+                            {/* Stepper Navigation */}
+                            <div className="bg-slate-50 border-b border-slate-200/80 px-4 py-2.5 shrink-0 overflow-x-auto scrollbar-none">
+                                <div className="flex items-center justify-between min-w-[600px] gap-2">
+                                    {[
+                                        { id: "basic", step: 1, label: "1. Basic Info", icon: Building2 },
+                                        { id: "media", step: 2, label: "2. Media & Bio", icon: Globe },
+                                        { id: "cost", step: 3, label: "3. Fees & Entry", icon: DollarSign },
+                                        { id: "courses", step: 4, label: "4. Courses", icon: BookOpen },
+                                        { id: "scholarships", step: 5, label: "5. Intakes & Awards", icon: GraduationCap },
+                                    ].map((tab, idx) => {
+                                        const Icon = tab.icon;
+                                        const tabsList = ["basic", "media", "cost", "courses", "scholarships"];
+                                        const currentIdx = tabsList.indexOf(activeFormTab);
+                                        const isCurrent = activeFormTab === tab.id;
+                                        const isCompleted = currentIdx > idx;
+
+                                        return (
+                                            <button
+                                                key={tab.id}
+                                                type="button"
+                                                onClick={() => setActiveFormTab(tab.id)}
+                                                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 border ${
+                                                    isCurrent
+                                                        ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20"
+                                                        : isCompleted
+                                                        ? "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100/60"
+                                                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100/80 hover:text-slate-900"
                                                 }`}
-                                        >
-                                            <Icon className="w-4 h-4 shrink-0" />
-                                            <span>{tab.label}</span>
-                                        </button>
-                                    );
-                                })}
+                                            >
+                                                {isCompleted ? (
+                                                    <Check className="w-3.5 h-3.5 text-blue-600" />
+                                                ) : (
+                                                    <Icon className="w-3.5 h-3.5" />
+                                                )}
+                                                <span>{tab.label}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
-                            {/* Form Area */}
-                            <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden">
-                                <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                                    {/* TAB 1: BASIC INFO */}
+                            {/* Main Form Body */}
+                            <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden bg-slate-50/30">
+                                <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6">
+                                    
+                                    {/* STEP 1: BASIC INFO */}
                                     {activeFormTab === "basic" && (
-                                        <div className="space-y-4 animate-in fade-in duration-200">
-                                            <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50 mb-6">
-                                                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1.5 mb-1">
-                                                    <Building2 className="w-4 h-4" /> Core Identity
-                                                </h4>
-                                                <p className="text-xs text-slate-500">Provide the official name and base locations of the university.</p>
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="text-xs font-bold text-slate-700">University Name <span className="text-rose-500">*</span></label>
-                                                <Input
-                                                    name="universityName"
-                                                    placeholder="e.g., University of Birmingham Dubai"
-                                                    value={formData.universityName}
-                                                    onChange={handleInputChange}
-                                                    required
-                                                    className="rounded-lg border-slate-200 focus:ring-blue-500"
-                                                />
-                                            </div>
-
-                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Category</label>
-                                                    <select
-                                                        name="category"
-                                                        value={formData.category}
-                                                        onChange={handleInputChange}
-                                                        className="w-full h-10 px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                                    >
-                                                        <option value="Overseas">Overseas</option>
-                                                        <option value="Domestic">Domestic</option>
-                                                    </select>
+                                        <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in duration-200">
+                                            <div className="bg-blue-50/60 border border-blue-100 p-4 rounded-2xl flex items-start gap-3">
+                                                <div className="p-2 bg-blue-600 text-white rounded-xl shrink-0 mt-0.5">
+                                                    <Building2 className="w-5 h-5" />
                                                 </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Country</label>
-                                                    <Input
-                                                        name="country"
-                                                        placeholder="e.g., United Arab Emirates"
-                                                        value={formData.country}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">City / Main Campus</label>
-                                                    <Input
-                                                        name="city"
-                                                        placeholder="e.g., Dubai"
-                                                        value={formData.city}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
+                                                <div>
+                                                    <h3 className="text-sm font-bold text-slate-900">Step 1: General University Identity</h3>
+                                                    <p className="text-xs text-slate-600 mt-0.5">
+                                                        Enter the official institution name, location, ranking, and website link.
+                                                    </p>
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">University Type</label>
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-5">
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1">
+                                                        University Name <span className="text-rose-500 font-bold">*</span>
+                                                    </label>
                                                     <Input
-                                                        name="universityType"
-                                                        placeholder="e.g., Public Research, Private"
-                                                        value={formData.universityType}
+                                                        name="universityName"
+                                                        placeholder="e.g. University of Oxford or Harvard University"
+                                                        value={formData.universityName}
                                                         onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
+                                                        required
+                                                        className="h-11 rounded-xl border-slate-200 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                                                     />
                                                 </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Established Year</label>
-                                                    <Input
-                                                        name="establishedYear"
-                                                        placeholder="e.g., 1900"
-                                                        value={formData.establishedYear}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
-                                                </div>
-                                            </div>
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">University Rank</label>
-                                                    <Input
-                                                        name="ranking"
-                                                        placeholder="e.g., 84"
-                                                        inputMode="numeric"
-                                                        value={formData.ranking}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
+                                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Category</label>
+                                                        <select
+                                                            name="category"
+                                                            value={formData.category}
+                                                            onChange={handleInputChange}
+                                                            className="w-full h-11 px-3 text-sm rounded-xl border border-slate-200 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                                        >
+                                                            <option value="Overseas">Overseas (International)</option>
+                                                            <option value="Domestic">Domestic (India)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Country</label>
+                                                        <Input
+                                                            name="country"
+                                                            placeholder="e.g. United Kingdom"
+                                                            value={formData.country}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">City / Campus</label>
+                                                        <Input
+                                                            name="city"
+                                                            placeholder="e.g. London or Oxford"
+                                                            value={formData.city}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Official Website URL</label>
-                                                    <Input
-                                                        name="website"
-                                                        placeholder="e.g., https://www.birmingham.ac.uk"
-                                                        value={formData.website}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
-                                                </div>
-                                            </div>
 
-                                            {/* Courses Offered — Tags Input */}
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-bold text-slate-700">
-                                                    Courses Offered{" "}
-                                                    <span className="text-slate-400 font-normal">(used for filtering — e.g. Engineering, Medicine)</span>
-                                                </label>
-                                                <div className="flex flex-wrap gap-2 p-3 min-h-[44px] rounded-lg border border-slate-200 bg-white">
-                                                    {(formData.coursesOffered || []).map((course, i) => (
-                                                        <span key={i} className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1 text-xs font-semibold">
-                                                            {course}
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setFormData((prev) => ({ ...prev, coursesOffered: prev.coursesOffered.filter((_, ci) => ci !== i) }))}
-                                                                className="ml-0.5 text-blue-400 hover:text-rose-500 transition-colors"
-                                                            >✕</button>
-                                                        </span>
-                                                    ))}
-                                                    <input
-                                                        type="text"
-                                                        placeholder={formData.coursesOffered?.length > 0 ? "Add more..." : "Type and press Enter (e.g. Engineering)"}
-                                                        className="flex-1 min-w-[140px] outline-none text-xs text-slate-700 placeholder:text-slate-400 bg-transparent"
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === "Enter" || e.key === ",") {
-                                                                e.preventDefault();
-                                                                const val = e.currentTarget.value.trim();
-                                                                if (val && !(formData.coursesOffered || []).includes(val)) {
-                                                                    setFormData((prev) => ({ ...prev, coursesOffered: [...(prev.coursesOffered || []), val] }));
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">University Type</label>
+                                                        <Input
+                                                            name="universityType"
+                                                            placeholder="e.g. Public Research University"
+                                                            value={formData.universityType}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Established Year</label>
+                                                        <Input
+                                                            name="establishedYear"
+                                                            placeholder="e.g. 1895"
+                                                            value={formData.establishedYear}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">QS / World Rank</label>
+                                                        <Input
+                                                            name="ranking"
+                                                            placeholder="e.g. #25 Worldwide"
+                                                            value={formData.ranking}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Official Website Link</label>
+                                                        <Input
+                                                            name="website"
+                                                            placeholder="https://www.university.edu"
+                                                            value={formData.website}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Course Tags / Categories */}
+                                                <div className="space-y-2 pt-2 border-t border-slate-100">
+                                                    <label className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+                                                        Courses / Discipline Tags
+                                                    </label>
+                                                    <p className="text-xs text-slate-500 mb-2">
+                                                        Select or type key academic subjects offered (used for website filter tags).
+                                                    </p>
+                                                    
+                                                    <div className="flex flex-wrap gap-2 p-3 min-h-[48px] rounded-xl border border-slate-200 bg-slate-50/50">
+                                                        {(formData.coursesOffered || []).map((course, i) => (
+                                                            <span key={i} className="inline-flex items-center gap-1.5 bg-blue-600 text-white rounded-lg px-3 py-1 text-xs font-semibold shadow-sm">
+                                                                {course}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setFormData((prev) => ({ ...prev, coursesOffered: prev.coursesOffered.filter((_, ci) => ci !== i) }))}
+                                                                    className="hover:text-rose-200 transition-colors ml-1 font-bold"
+                                                                >✕</button>
+                                                            </span>
+                                                        ))}
+                                                        <input
+                                                            type="text"
+                                                            placeholder={formData.coursesOffered?.length > 0 ? "Type and press Enter..." : "Type subject (e.g. Business, Engineering) and press Enter"}
+                                                            className="flex-1 min-w-[200px] outline-none text-xs text-slate-800 placeholder:text-slate-400 bg-transparent py-1"
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === "Enter" || e.key === ",") {
+                                                                    e.preventDefault();
+                                                                    const val = e.currentTarget.value.trim();
+                                                                    if (val && !(formData.coursesOffered || []).includes(val)) {
+                                                                        setFormData((prev) => ({ ...prev, coursesOffered: [...(prev.coursesOffered || []), val] }));
+                                                                    }
+                                                                    e.currentTarget.value = "";
                                                                 }
-                                                                e.currentTarget.value = "";
-                                                            }
-                                                        }}
-                                                    />
-                                                </div>
-                                                
-                                                {/* Selection dropdown helper to pick from Courses Collection */}
-                                                {availableCourses.length > 0 && (
-                                                    <div className="mt-2 space-y-1">
-                                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Click to toggle courses from database:</span>
-                                                        <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 border rounded-lg max-h-24 overflow-y-auto">
-                                                            {availableCourses.map((c) => {
-                                                                const isSelected = (formData.coursesOffered || []).includes(c.courseName);
-                                                                return (
-                                                                    <button
-                                                                        key={c._id}
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            if (isSelected) {
-                                                                                setFormData(prev => ({
-                                                                                    ...prev,
-                                                                                    coursesOffered: prev.coursesOffered.filter(item => item !== c.courseName)
-                                                                                }));
-                                                                            } else {
-                                                                                setFormData(prev => ({
-                                                                                    ...prev,
-                                                                                    coursesOffered: [...(prev.coursesOffered || []), c.courseName]
-                                                                                }));
-                                                                            }
-                                                                        }}
-                                                                        className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors border
-                                                                            ${isSelected
-                                                                                ? "bg-blue-600 border-blue-600 text-white"
-                                                                                : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                                                            }}
+                                                        />
+                                                    </div>
+
+                                                    {/* Database courses quick selector */}
+                                                    {availableCourses.length > 0 && (
+                                                        <div className="mt-3 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+                                                            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-2">
+                                                                Quick Select Popular Majors:
+                                                            </span>
+                                                            <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto">
+                                                                {availableCourses.map((c) => {
+                                                                    const isSelected = (formData.coursesOffered || []).includes(c.courseName);
+                                                                    return (
+                                                                        <button
+                                                                            key={c._id}
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                if (isSelected) {
+                                                                                    setFormData(prev => ({
+                                                                                        ...prev,
+                                                                                        coursesOffered: prev.coursesOffered.filter(item => item !== c.courseName)
+                                                                                    }));
+                                                                                } else {
+                                                                                    setFormData(prev => ({
+                                                                                        ...prev,
+                                                                                        coursesOffered: [...(prev.coursesOffered || []), c.courseName]
+                                                                                    }));
+                                                                                }
+                                                                            }}
+                                                                            className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                                                                                isSelected
+                                                                                    ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                                                                                    : "bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-100"
                                                                             }`}
-                                                                    >
-                                                                        {c.courseName}
-                                                                    </button>
-                                                                );
-                                                            })}
+                                                                        >
+                                                                            {isSelected ? "✓ " : "+ "}{c.courseName}
+                                                                        </button>
+                                                                    );
+                                                                })}
+                                                            </div>
                                                         </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* STEP 2: MEDIA & BIO */}
+                                    {activeFormTab === "media" && (
+                                        <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in duration-200">
+                                            <div className="bg-purple-50/60 border border-purple-100 p-4 rounded-2xl flex items-start gap-3">
+                                                <div className="p-2 bg-purple-600 text-white rounded-xl shrink-0 mt-0.5">
+                                                    <Globe className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-sm font-bold text-slate-900">Step 2: Media & Overview Description</h3>
+                                                    <p className="text-xs text-slate-600 mt-0.5">
+                                                        Upload logo, campus cover photo, and write an overview of the university.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-6">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    {/* Logo Upload Box */}
+                                                    <div className="space-y-2">
+                                                        <div className="flex justify-between items-center">
+                                                            <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">University Logo</label>
+                                                            <span className="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full font-bold">Square Image</span>
+                                                        </div>
+                                                        <input
+                                                            id="university-logo-upload"
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            onChange={(e) => uploadImageForField(e.target.files?.[0], "logo")}
+                                                        />
+                                                        <div
+                                                            className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100/80 transition-colors p-5 text-center cursor-pointer"
+                                                            onClick={() => document.getElementById("university-logo-upload")?.click()}
+                                                            onDragOver={(e) => e.preventDefault()}
+                                                            onDrop={(e) => {
+                                                                e.preventDefault();
+                                                                uploadImageForField(e.dataTransfer.files?.[0], "logo");
+                                                            }}
+                                                        >
+                                                            <UploadCloud className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+                                                            <p className="text-xs font-semibold text-slate-700 mb-1">
+                                                                {uploading.logo ? "Uploading Logo..." : "Click or Drag logo here"}
+                                                            </p>
+                                                            <p className="text-[11px] text-slate-400">PNG, JPG, WEBP (Max 5MB)</p>
+                                                        </div>
+                                                        {formData.logo && (
+                                                            <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-2 flex items-center justify-between">
+                                                                <img src={formData.logo} alt="Logo Preview" className="h-16 w-auto object-contain mx-auto" />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setFormData(prev => ({ ...prev, logo: "" }))}
+                                                                    className="text-xs text-rose-500 font-bold bg-white p-1 rounded-md border shadow-sm hover:bg-rose-50"
+                                                                >
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Cover Photo Box */}
+                                                    <div className="space-y-2">
+                                                        <div className="flex justify-between items-center">
+                                                            <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Campus Cover Photo</label>
+                                                            <span className="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full font-bold">Landscape Banner</span>
+                                                        </div>
+                                                        <input
+                                                            id="university-banner-upload"
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            onChange={(e) => uploadImageForField(e.target.files?.[0], "bannerImage")}
+                                                        />
+                                                        <div
+                                                            className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100/80 transition-colors p-5 text-center cursor-pointer"
+                                                            onClick={() => document.getElementById("university-banner-upload")?.click()}
+                                                            onDragOver={(e) => e.preventDefault()}
+                                                            onDrop={(e) => {
+                                                                e.preventDefault();
+                                                                uploadImageForField(e.dataTransfer.files?.[0], "bannerImage");
+                                                            }}
+                                                        >
+                                                            <UploadCloud className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+                                                            <p className="text-xs font-semibold text-slate-700 mb-1">
+                                                                {uploading.bannerImage ? "Uploading Cover..." : "Click or Drag cover image"}
+                                                            </p>
+                                                            <p className="text-[11px] text-slate-400">High Resolution Campus Photo</p>
+                                                        </div>
+                                                        {formData.bannerImage && (
+                                                            <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-2 flex items-center justify-between">
+                                                                <img src={formData.bannerImage} alt="Banner Preview" className="h-16 w-full object-cover rounded-lg" />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setFormData(prev => ({ ...prev, bannerImage: "" }))}
+                                                                    className="text-xs text-rose-500 font-bold bg-white p-1 rounded-md border shadow-sm hover:bg-rose-50 ml-2"
+                                                                >
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {uploadError && (
+                                                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-semibold text-rose-600">
+                                                        ⚠️ {uploadError}
                                                     </div>
                                                 )}
 
-                                                <p className="text-[10px] text-slate-400">Press Enter, comma, or click available courses to add. Used for filtering on the universities page.</p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* TAB 2: MEDIA & BIO */}
-                                    {activeFormTab === "media" && (
-                                        <div className="space-y-4 animate-in fade-in duration-200">
-                                            <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50 mb-6">
-                                                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1.5 mb-1">
-                                                    <Globe className="w-4 h-4" /> Graphics & Marketing Bio
-                                                </h4>
-                                                <p className="text-xs text-slate-500">Provide official media links. Default sizes are optimized for high-definition displays.</p>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div className="space-y-2">
-                                                    <div className="flex justify-between items-center">
-                                                        <label className="text-xs font-bold text-slate-700">Logo Image</label>
-                                                        <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-black uppercase">500 x 500 px (Square)</span>
-                                                    </div>
-                                                    <input
-                                                        id="university-logo-upload"
-                                                        type="file"
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={(e) => uploadImageForField(e.target.files?.[0], "logo")}
-                                                    />
-                                                    <div
-                                                        className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/70 p-4 text-center"
-                                                        onDragOver={(e) => e.preventDefault()}
-                                                        onDrop={(e) => {
-                                                            e.preventDefault();
-                                                            uploadImageForField(e.dataTransfer.files?.[0], "logo");
-                                                        }}
-                                                    >
-                                                        <UploadCloud className="w-5 h-5 text-slate-500 mx-auto mb-2" />
-                                                        <p className="text-xs text-slate-600 mb-2">Drop logo image here</p>
-                                                        <Button
-                                                            type="button"
-                                                            size="sm"
-                                                            variant="outline"
-                                                            onClick={() => document.getElementById("university-logo-upload")?.click()}
-                                                            disabled={uploading.logo}
-                                                        >
-                                                            {uploading.logo ? "Uploading..." : "Browse Image"}
-                                                        </Button>
-                                                    </div>
-                                                    {formData.logo && (
-                                                        <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 bg-white">
-                                                            <img src={formData.logo} alt="University logo" className="w-full h-28 object-contain p-2" />
-                                                        </div>
-                                                    )}
-                                                    <p className="text-[10px] text-slate-400">If left blank, a gorgeous premium default crest is automatically supplied.</p>
-                                                </div>
-
-                                                <div className="space-y-2">
-                                                    <div className="flex justify-between items-center">
-                                                        <label className="text-xs font-bold text-slate-700">Banner Image</label>
-                                                        <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-black uppercase">1920 x 1080 px (Wide)</span>
-                                                    </div>
-                                                    <input
-                                                        id="university-banner-upload"
-                                                        type="file"
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={(e) => uploadImageForField(e.target.files?.[0], "bannerImage")}
-                                                    />
-                                                    <div
-                                                        className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/70 p-4 text-center"
-                                                        onDragOver={(e) => e.preventDefault()}
-                                                        onDrop={(e) => {
-                                                            e.preventDefault();
-                                                            uploadImageForField(e.dataTransfer.files?.[0], "bannerImage");
-                                                        }}
-                                                    >
-                                                        <UploadCloud className="w-5 h-5 text-slate-500 mx-auto mb-2" />
-                                                        <p className="text-xs text-slate-600 mb-2">Drop banner image here</p>
-                                                        <Button
-                                                            type="button"
-                                                            size="sm"
-                                                            variant="outline"
-                                                            onClick={() => document.getElementById("university-banner-upload")?.click()}
-                                                            disabled={uploading.bannerImage}
-                                                        >
-                                                            {uploading.bannerImage ? "Uploading..." : "Browse Image"}
-                                                        </Button>
-                                                    </div>
-                                                    {formData.bannerImage && (
-                                                        <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 bg-white">
-                                                            <img src={formData.bannerImage} alt="University banner" className="w-full h-28 object-cover" />
-                                                        </div>
-                                                    )}
-                                                    <p className="text-[10px] text-slate-400">If left blank, a high-resolution landscape campus banner is automatically supplied.</p>
-                                                </div>
-                                            </div>
-
-                                            {uploadError && (
-                                                <p className="text-xs font-semibold text-rose-600">{uploadError}</p>
-                                            )}
-
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Total Enrolled Students</label>
-                                                    <Input
-                                                        name="studentsEnrolled"
-                                                        placeholder="e.g., 35,000+ Students"
-                                                        value={formData.studentsEnrolled}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-bold text-slate-700">Visa Success Rate</label>
-                                                    <Input
-                                                        name="visaSuccessRate"
-                                                        placeholder="e.g., 99% Visa Rate"
-                                                        value={formData.visaSuccessRate}
-                                                        onChange={handleInputChange}
-                                                        className="rounded-lg border-slate-200"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="text-xs font-bold text-slate-700">Detailed Institution Overview</label>
-                                                <Textarea
-                                                    name="overview"
-                                                    placeholder="Write a comprehensive summary about the university, academic highlights, research reputation, and location benefits..."
-                                                    value={formData.overview}
-                                                    onChange={handleInputChange}
-                                                    rows={6}
-                                                    className="rounded-lg border-slate-200 resize-y"
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* TAB 3: COSTS & ADMISSIONS */}
-                                    {activeFormTab === "cost" && (
-                                        <div className="space-y-6 animate-in fade-in duration-200">
-                                            {/* Sub-section: Costs */}
-                                            <div className="space-y-4">
-                                                <h3 className="text-xs font-black uppercase tracking-wider text-blue-600 border-b pb-2 flex items-center gap-1.5">
-                                                    <DollarSign className="w-4 h-4" /> Average Annual Costs & Accommodation
-                                                </h3>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                    <div className="space-y-1.5">
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Total Enrolled Students</label>
+                                                        <Input
+                                                            name="studentsEnrolled"
+                                                            placeholder="e.g. 25,000+ Active Students"
+                                                            value={formData.studentsEnrolled}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">Visa Success Rate</label>
+                                                        <Input
+                                                            name="visaSuccessRate"
+                                                            placeholder="e.g. 98% Visa Success"
+                                                            value={formData.visaSuccessRate}
+                                                            onChange={handleInputChange}
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+                                                        Detailed University Overview & Highlights
+                                                    </label>
+                                                    <Textarea
+                                                        name="overview"
+                                                        placeholder="Write a clear overview introducing the university, campus life, research reputation, and key student benefits..."
+                                                        value={formData.overview}
+                                                        onChange={handleInputChange}
+                                                        rows={5}
+                                                        className="rounded-xl border-slate-200 text-sm focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* STEP 3: COSTS & ADMISSIONS */}
+                                    {activeFormTab === "cost" && (
+                                        <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in duration-200">
+                                            <div className="bg-emerald-50/60 border border-emerald-100 p-4 rounded-2xl flex items-start gap-3">
+                                                <div className="p-2 bg-emerald-600 text-white rounded-xl shrink-0 mt-0.5">
+                                                    <DollarSign className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-sm font-bold text-slate-900">Step 3: Tuition Fees, Housing & Entry Scores</h3>
+                                                    <p className="text-xs text-slate-600 mt-0.5">
+                                                        Provide annual tuition ranges, housing information, and English score benchmarks.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Tuition Fees */}
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-5">
+                                                <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2 border-b pb-3">
+                                                    <DollarSign className="w-4 h-4 text-emerald-600" /> Annual Tuition Fees
+                                                </h4>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
                                                         <label className="text-xs font-bold text-slate-700">Undergraduate Tuition</label>
                                                         <Input
-                                                            placeholder="e.g., $25k - $38k / Year"
+                                                            placeholder="e.g. £18,000 - £25,000 / Year"
                                                             value={formData.tuitionFees?.undergraduate}
                                                             onChange={(e) => handleNestedChange("tuitionFees", "undergraduate", e.target.value)}
-                                                            className="rounded-lg border-slate-200"
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
                                                         />
                                                     </div>
-                                                    <div className="space-y-1.5">
+                                                    <div className="space-y-2">
                                                         <label className="text-xs font-bold text-slate-700">Postgraduate Tuition</label>
                                                         <Input
-                                                            placeholder="e.g., $30k - $45k / Year"
+                                                            placeholder="e.g. £20,000 - £28,000 / Year"
                                                             value={formData.tuitionFees?.postgraduate}
                                                             onChange={(e) => handleNestedChange("tuitionFees", "postgraduate", e.target.value)}
-                                                            className="rounded-lg border-slate-200"
+                                                            className="h-11 rounded-xl border-slate-200 text-sm"
                                                         />
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                                    <div className="flex items-center gap-2 h-10">
-                                                        <input
-                                                            type="checkbox"
-                                                            id="accAvail"
-                                                            checked={formData.accommodation?.available}
-                                                            onChange={(e) => handleNestedChange("accommodation", "available", e.target.checked)}
-                                                            className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
-                                                        />
-                                                        <label htmlFor="accAvail" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
-                                                            On-Campus Accommodation Available
+                                                {/* Accommodation */}
+                                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3 mt-4">
+                                                    <div className="flex items-center justify-between">
+                                                        <label htmlFor="accAvail" className="text-xs font-bold text-slate-800 cursor-pointer flex items-center gap-2 select-none">
+                                                            <input
+                                                                type="checkbox"
+                                                                id="accAvail"
+                                                                checked={formData.accommodation?.available}
+                                                                onChange={(e) => handleNestedChange("accommodation", "available", e.target.checked)}
+                                                                className="w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                                                            />
+                                                            On-Campus Student Housing Available
                                                         </label>
+                                                        <span className="text-[10px] font-bold uppercase text-slate-500">
+                                                            {formData.accommodation?.available ? "Enabled" : "Disabled"}
+                                                        </span>
                                                     </div>
-                                                    <div className="space-y-1.5">
-                                                        <label className="text-xs font-bold text-slate-700">Accommodation Price Info</label>
-                                                        <Input
-                                                            placeholder="e.g., From $250 / Week"
-                                                            value={formData.accommodation?.startingPrice}
-                                                            onChange={(e) => handleNestedChange("accommodation", "startingPrice", e.target.value)}
-                                                            disabled={!formData.accommodation?.available}
-                                                            className="rounded-lg border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
-                                                        />
-                                                    </div>
+                                                    {formData.accommodation?.available && (
+                                                        <div className="pt-2">
+                                                            <label className="text-xs font-bold text-slate-700 block mb-1">Starting Housing Cost</label>
+                                                            <Input
+                                                                placeholder="e.g. From £150 / Week or $800 / Month"
+                                                                value={formData.accommodation?.startingPrice}
+                                                                onChange={(e) => handleNestedChange("accommodation", "startingPrice", e.target.value)}
+                                                                className="h-11 rounded-xl border-slate-200 text-sm bg-white"
+                                                            />
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
 
-                                            {/* Sub-section: English requirements */}
-                                            <div className="space-y-4">
-                                                <h3 className="text-xs font-black uppercase tracking-wider text-rose-600 border-b pb-2 flex items-center gap-1.5">
-                                                    <GraduationCap className="w-4 h-4" /> English Language Benchmarks
-                                                </h3>
-                                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                                    <div className="space-y-1.5">
-                                                        <label className="text-xs font-bold text-slate-700">IELTS Score Required</label>
-                                                        <Input
-                                                            placeholder="e.g., 6.5 (no band < 6.0)"
-                                                            value={formData.languageRequirements?.ielts}
-                                                            onChange={(e) => handleNestedChange("languageRequirements", "ielts", e.target.value)}
-                                                            className="rounded-lg border-slate-200"
-                                                        />
-                                                    </div>
-                                                    <div className="space-y-1.5">
-                                                        <label className="text-xs font-bold text-slate-700">TOEFL iBT Required</label>
-                                                        <Input
-                                                            placeholder="e.g., 88+ Overall"
-                                                            value={formData.languageRequirements?.toefl}
-                                                            onChange={(e) => handleNestedChange("languageRequirements", "toefl", e.target.value)}
-                                                            className="rounded-lg border-slate-200"
-                                                        />
-                                                    </div>
-                                                    <div className="space-y-1.5">
-                                                        <label className="text-xs font-bold text-slate-700">PTE Required</label>
-                                                        <Input
-                                                            placeholder="e.g., 59+ Overall"
-                                                            value={formData.languageRequirements?.pte}
-                                                            onChange={(e) => handleNestedChange("languageRequirements", "pte", e.target.value)}
-                                                            className="rounded-lg border-slate-200"
-                                                        />
+                                                {/* English Requirements */}
+                                                <div className="pt-4 border-t border-slate-100 space-y-4">
+                                                    <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                                        <GraduationCap className="w-4 h-4 text-emerald-600" /> Minimum English Proficiency Benchmarks
+                                                    </h4>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-slate-700">IELTS Score</label>
+                                                            <Input
+                                                                placeholder="e.g. 6.5 (min 6.0 in each band)"
+                                                                value={formData.languageRequirements?.ielts}
+                                                                onChange={(e) => handleNestedChange("languageRequirements", "ielts", e.target.value)}
+                                                                className="h-11 rounded-xl border-slate-200 text-sm"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-slate-700">TOEFL iBT</label>
+                                                            <Input
+                                                                placeholder="e.g. 88+ Overall"
+                                                                value={formData.languageRequirements?.toefl}
+                                                                onChange={(e) => handleNestedChange("languageRequirements", "toefl", e.target.value)}
+                                                                className="h-11 rounded-xl border-slate-200 text-sm"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-slate-700">PTE Academic</label>
+                                                            <Input
+                                                                placeholder="e.g. 62+ Overall"
+                                                                value={formData.languageRequirements?.pte}
+                                                                onChange={(e) => handleNestedChange("languageRequirements", "pte", e.target.value)}
+                                                                className="h-11 rounded-xl border-slate-200 text-sm"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     )}
 
-                                    {/* TAB 4: COURSES */}
+                                    {/* STEP 4: COURSES PORTFOLIO */}
                                     {activeFormTab === "courses" && (
-                                        <div className="space-y-4 animate-in fade-in duration-200">
-                                            <div className="flex justify-between items-center border-b pb-3">
+                                        <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in duration-200">
+                                            <div className="bg-indigo-50/60 border border-indigo-100 p-4 rounded-2xl flex items-start gap-3">
+                                                <div className="p-2 bg-indigo-600 text-white rounded-xl shrink-0 mt-0.5">
+                                                    <BookOpen className="w-5 h-5" />
+                                                </div>
                                                 <div>
-                                                    <h3 className="text-sm font-black uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
-                                                        <BookOpen className="w-4 h-4" /> Academic Course Portfolio
-                                                    </h3>
-                                                    <p className="text-[10px] text-slate-400 mt-0.5">Separate undergraduate and postgraduate pathways for cleaner publishing.</p>
+                                                    <h3 className="text-sm font-bold text-slate-900">Step 4: Academic Degree Courses Offered</h3>
+                                                    <p className="text-xs text-slate-600 mt-0.5">
+                                                        Add specific bachelor's and master's degree programs to display on the university detail page.
+                                                    </p>
                                                 </div>
                                             </div>
 
-                                            <div className="space-y-6">
-                                                <div className="space-y-3">
-                                                    <div className="flex items-center justify-between gap-4">
-                                                        <h4 className="text-xs font-black uppercase tracking-wider text-indigo-700">Undergraduate Courses</h4>
-                                                        <Button
-                                                            type="button"
-                                                            onClick={() => addCourse("Undergraduate")}
-                                                            size="sm"
-                                                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-700 font-bold border border-indigo-200 rounded-lg gap-1"
-                                                        >
-                                                            <Plus className="w-4 h-4" /> Add Undergraduate Course
-                                                        </Button>
+                                            {/* Undergraduate Section */}
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <h4 className="text-xs font-extrabold text-indigo-900 uppercase tracking-wider">
+                                                            Undergraduate Degree Programs ({undergraduateCourses.length})
+                                                        </h4>
                                                     </div>
+                                                    <Button
+                                                        type="button"
+                                                        onClick={() => addCourse("Undergraduate")}
+                                                        size="sm"
+                                                        className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl font-bold gap-1.5 h-9"
+                                                    >
+                                                        <Plus className="w-4 h-4" /> Add Undergraduate Course
+                                                    </Button>
+                                                </div>
 
-                                                    {undergraduateCourses.length === 0 ? (
-                                                        <div className="p-6 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium text-sm">
-                                                            No undergraduate courses listed yet.
-                                                        </div>
-                                                    ) : (
-                                                        <div className="space-y-4 max-h-[32vh] overflow-y-auto pr-1">
-                                                            {undergraduateCourses.map((course) => {
-                                                                const courseIndex = formData.courses.indexOf(course);
-                                                                return (
-                                                                    <div key={`ug-${courseIndex}`} className="p-4 bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-indigo-200 rounded-xl transition-all shadow-[0_2px_6px_rgba(0,0,0,0.01)] flex flex-col gap-3 relative group">
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => removeCourse(courseIndex)}
-                                                                            className="absolute top-3 right-3 text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-rose-50 transition-all"
-                                                                            title="Delete Course"
-                                                                        >
-                                                                            <Trash className="w-4 h-4" />
-                                                                        </button>
+                                                {undergraduateCourses.length === 0 ? (
+                                                    <div className="p-6 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xl text-slate-400 text-xs">
+                                                        No undergraduate courses added yet. Click "+ Add Undergraduate Course" above.
+                                                    </div>
+                                                ) : (
+                                                    <div className="space-y-4">
+                                                        {undergraduateCourses.map((course) => {
+                                                            const courseIndex = formData.courses.indexOf(course);
+                                                            return (
+                                                                <div key={`ug-${courseIndex}`} className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-3 relative group">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => removeCourse(courseIndex)}
+                                                                        className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors"
+                                                                        title="Delete Course"
+                                                                    >
+                                                                        <Trash className="w-4 h-4" />
+                                                                    </button>
 
-                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Course Name</label>
-                                                                                <Input
-                                                                                    placeholder="e.g., B.Sc. Computer Science"
-                                                                                    value={course.courseName}
-                                                                                    onChange={(e) => handleCourseChange(courseIndex, "courseName", e.target.value)}
-                                                                                    required
-                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Level</label>
-                                                                                <Input value="Undergraduate" disabled className="h-9 text-xs rounded-lg border-slate-200 bg-slate-100 text-slate-500" />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Duration</label>
-                                                                                <Input
-                                                                                    placeholder="e.g., 3 Years"
-                                                                                    value={course.duration}
-                                                                                    onChange={(e) => handleCourseChange(courseIndex, "duration", e.target.value)}
-                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Annual Tuition Fees</label>
-                                                                                <Input
-                                                                                    placeholder="e.g., £26,500 / Year"
-                                                                                    value={course.fees}
-                                                                                    onChange={(e) => handleCourseChange(courseIndex, "fees", e.target.value)}
-                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="space-y-1 pr-8">
-                                                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Short Description <span className="text-slate-300 font-normal normal-case">(optional)</span></label>
+                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-10">
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Course Title *</label>
                                                                             <Input
-                                                                                placeholder="e.g., A comprehensive program covering algorithms, AI..."
-                                                                                value={course.description || ""}
-                                                                                onChange={(e) => handleCourseChange(courseIndex, "description", e.target.value)}
-                                                                                className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                placeholder="e.g. B.Sc. Computer Science"
+                                                                                value={course.courseName}
+                                                                                onChange={(e) => handleCourseChange(courseIndex, "courseName", e.target.value)}
+                                                                                required
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Degree Level</label>
+                                                                            <Input value="Undergraduate" disabled className="h-10 text-xs rounded-xl bg-slate-100 text-slate-500 font-semibold" />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-10">
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Duration</label>
+                                                                            <Input
+                                                                                placeholder="e.g. 3 Years (Full Time)"
+                                                                                value={course.duration}
+                                                                                onChange={(e) => handleCourseChange(courseIndex, "duration", e.target.value)}
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Annual Tuition Fee</label>
+                                                                            <Input
+                                                                                placeholder="e.g. £24,000 / Year"
+                                                                                value={course.fees}
+                                                                                onChange={(e) => handleCourseChange(courseIndex, "fees", e.target.value)}
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Postgraduate Section */}
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <h4 className="text-xs font-extrabold text-indigo-900 uppercase tracking-wider">
+                                                            Postgraduate Degree Programs ({postgraduateCourses.length})
+                                                        </h4>
+                                                    </div>
+                                                    <Button
+                                                        type="button"
+                                                        onClick={() => addCourse("Postgraduate")}
+                                                        size="sm"
+                                                        className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl font-bold gap-1.5 h-9"
+                                                    >
+                                                        <Plus className="w-4 h-4" /> Add Postgraduate Course
+                                                    </Button>
                                                 </div>
 
-                                                <div className="space-y-3">
-                                                    <div className="flex items-center justify-between gap-4">
-                                                        <h4 className="text-xs font-black uppercase tracking-wider text-indigo-700">Postgraduate Courses</h4>
-                                                        <Button
-                                                            type="button"
-                                                            onClick={() => addCourse("Postgraduate")}
-                                                            size="sm"
-                                                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-700 font-bold border border-indigo-200 rounded-lg gap-1"
-                                                        >
-                                                            <Plus className="w-4 h-4" /> Add Postgraduate Course
-                                                        </Button>
+                                                {postgraduateCourses.length === 0 ? (
+                                                    <div className="p-6 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xl text-slate-400 text-xs">
+                                                        No postgraduate courses added yet. Click "+ Add Postgraduate Course" above.
                                                     </div>
+                                                ) : (
+                                                    <div className="space-y-4">
+                                                        {postgraduateCourses.map((course) => {
+                                                            const courseIndex = formData.courses.indexOf(course);
+                                                            return (
+                                                                <div key={`pg-${courseIndex}`} className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-3 relative group">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => removeCourse(courseIndex)}
+                                                                        className="absolute top-3 right-3 text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors"
+                                                                        title="Delete Course"
+                                                                    >
+                                                                        <Trash className="w-4 h-4" />
+                                                                    </button>
 
-                                                    {postgraduateCourses.length === 0 ? (
-                                                        <div className="p-6 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium text-sm">
-                                                            No postgraduate courses listed yet.
-                                                        </div>
-                                                    ) : (
-                                                        <div className="space-y-4 max-h-[32vh] overflow-y-auto pr-1">
-                                                            {postgraduateCourses.map((course) => {
-                                                                const courseIndex = formData.courses.indexOf(course);
-                                                                return (
-                                                                    <div key={`pg-${courseIndex}`} className="p-4 bg-slate-50/50 hover:bg-white border border-slate-100 hover:border-indigo-200 rounded-xl transition-all shadow-[0_2px_6px_rgba(0,0,0,0.01)] flex flex-col gap-3 relative group">
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => removeCourse(courseIndex)}
-                                                                            className="absolute top-3 right-3 text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-rose-50 transition-all"
-                                                                            title="Delete Course"
-                                                                        >
-                                                                            <Trash className="w-4 h-4" />
-                                                                        </button>
-
-                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Course Name</label>
-                                                                                <Input
-                                                                                    placeholder="e.g., M.Sc. Data Science"
-                                                                                    value={course.courseName}
-                                                                                    onChange={(e) => handleCourseChange(courseIndex, "courseName", e.target.value)}
-                                                                                    required
-                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Level</label>
-                                                                                <Input value={course.level || "Postgraduate"} disabled className="h-9 text-xs rounded-lg border-slate-200 bg-slate-100 text-slate-500" />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Duration</label>
-                                                                                <Input
-                                                                                    placeholder="e.g., 2 Years"
-                                                                                    value={course.duration}
-                                                                                    onChange={(e) => handleCourseChange(courseIndex, "duration", e.target.value)}
-                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="space-y-1">
-                                                                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Annual Tuition Fees</label>
-                                                                                <Input
-                                                                                    placeholder="e.g., £26,500 / Year"
-                                                                                    value={course.fees}
-                                                                                    onChange={(e) => handleCourseChange(courseIndex, "fees", e.target.value)}
-                                                                                    className="h-9 text-xs rounded-lg border-slate-200"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="space-y-1 pr-8">
-                                                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Short Description <span className="text-slate-300 font-normal normal-case">(optional)</span></label>
+                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-10">
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Course Title *</label>
                                                                             <Input
-                                                                                placeholder="e.g., Advanced research-based program developing industry leaders..."
-                                                                                value={course.description || ""}
-                                                                                onChange={(e) => handleCourseChange(courseIndex, "description", e.target.value)}
-                                                                                className="h-9 text-xs rounded-lg border-slate-200"
+                                                                                placeholder="e.g. M.Sc. Artificial Intelligence"
+                                                                                value={course.courseName}
+                                                                                onChange={(e) => handleCourseChange(courseIndex, "courseName", e.target.value)}
+                                                                                required
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Degree Level</label>
+                                                                            <Input value="Postgraduate" disabled className="h-10 text-xs rounded-xl bg-slate-100 text-slate-500 font-semibold" />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-10">
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Duration</label>
+                                                                            <Input
+                                                                                placeholder="e.g. 1 Year (Full Time)"
+                                                                                value={course.duration}
+                                                                                onChange={(e) => handleCourseChange(courseIndex, "duration", e.target.value)}
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="space-y-1">
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Annual Tuition Fee</label>
+                                                                            <Input
+                                                                                placeholder="e.g. £27,500 / Year"
+                                                                                value={course.fees}
+                                                                                onChange={(e) => handleCourseChange(courseIndex, "fees", e.target.value)}
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     )}
 
-                                    {/* TAB 5: INTAKES & AWARDS */}
+                                    {/* STEP 5: INTAKES & SCHOLARSHIPS */}
                                     {activeFormTab === "scholarships" && (
-                                        <div className="space-y-6 animate-in fade-in duration-200">
-                                            {/* Section A: Intakes */}
-                                            <div className="space-y-4">
-                                                <div className="flex justify-between items-center border-b pb-2">
-                                                    <div>
-                                                        <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                                                            <Calendar className="w-4 h-4 text-blue-500" /> Key Intakes & Deadlines
-                                                        </h3>
-                                                    </div>
+                                        <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in duration-200">
+                                            <div className="bg-amber-50/60 border border-amber-100 p-4 rounded-2xl flex items-start gap-3">
+                                                <div className="p-2 bg-amber-600 text-white rounded-xl shrink-0 mt-0.5">
+                                                    <GraduationCap className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-sm font-bold text-slate-900">Step 5: Application Intakes & Scholarships</h3>
+                                                    <p className="text-xs text-slate-600 mt-0.5">
+                                                        Set key admission intake deadlines and available international financial aid awards.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Key Intakes */}
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                <div className="flex items-center justify-between border-b pb-3">
+                                                    <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                                        <Calendar className="w-4 h-4 text-amber-600" /> Key Intakes & Deadlines
+                                                    </h4>
                                                     <Button
                                                         type="button"
                                                         onClick={addIntake}
                                                         size="sm"
-                                                        className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold border border-blue-100 rounded-lg gap-1 h-8"
+                                                        className="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl font-bold gap-1.5 h-8 text-xs"
                                                     >
                                                         <Plus className="w-3.5 h-3.5" /> Add Intake
                                                     </Button>
                                                 </div>
 
                                                 {formData.intakes.length === 0 ? (
-                                                    <div className="p-4 text-center bg-slate-50 border border-slate-100 rounded-xl text-slate-400 text-xs">
-                                                        📅 No custom intakes added. Fall and Spring are used as defaults.
+                                                    <div className="p-4 text-center bg-slate-50 border border-slate-200 rounded-xl text-slate-400 text-xs">
+                                                        📅 Standard Fall (Sept) & Spring (Jan) intakes will be displayed by default.
                                                     </div>
                                                 ) : (
-                                                    <div className="space-y-3 max-h-[22vh] overflow-y-auto pr-1">
+                                                    <div className="space-y-3">
                                                         {formData.intakes.map((intake, idx) => {
                                                             const intakeStatus = getIntakeStatus(intake);
-
                                                             return (
-                                                                <div key={idx} className="flex gap-3 items-center bg-slate-50 p-3 rounded-lg border border-slate-100 relative group pr-10">
-                                                                    <div className="grid grid-cols-2 gap-3 flex-1">
+                                                                <div key={idx} className="flex gap-3 items-center bg-slate-50 p-3.5 rounded-xl border border-slate-200 relative group">
+                                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 pr-8">
                                                                         <div className="space-y-1">
-                                                                            <label className="text-[9px] font-black text-slate-400 uppercase">Intake Term</label>
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Intake Term</label>
                                                                             <Input
-                                                                                placeholder="e.g., Fall 2026 (August)"
+                                                                                placeholder="e.g. Fall 2026 (September)"
                                                                                 value={intake.intakeName}
                                                                                 onChange={(e) => handleIntakeChange(idx, "intakeName", e.target.value)}
                                                                                 required
-                                                                                className="h-8 text-xs rounded-md border-slate-200"
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
                                                                             />
                                                                         </div>
                                                                         <div className="space-y-1">
-                                                                            <label className="text-[9px] font-black text-slate-400 uppercase">Application Deadline</label>
+                                                                            <label className="text-[11px] font-bold text-slate-700 uppercase">Application Deadline</label>
                                                                             <Input
                                                                                 type="date"
                                                                                 value={intake.applyDeadline}
                                                                                 onChange={(e) => handleIntakeChange(idx, "applyDeadline", e.target.value)}
                                                                                 required
-                                                                                className="h-8 text-xs rounded-md border-slate-200"
+                                                                                className="h-10 text-xs rounded-xl bg-white border-slate-200"
                                                                             />
-                                                                        </div>
-                                                                        <div className="col-span-2 flex items-center justify-between rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-[10px] font-semibold text-slate-600">
-                                                                            <span>Public status preview</span>
-                                                                            <span className={`rounded-full px-2 py-1 ${intakeStatus === "Closed" ? "bg-slate-100 text-slate-500" : "bg-blue-100 text-blue-700"}`}>
-                                                                                {intakeStatus}
-                                                                            </span>
                                                                         </div>
                                                                     </div>
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => removeIntake(idx)}
-                                                                        className="absolute right-2 text-slate-400 hover:text-rose-500 p-1.5 rounded"
+                                                                        className="absolute right-3 text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors"
                                                                         title="Remove Intake"
                                                                     >
-                                                                        <Trash className="w-3.5 h-3.5" />
+                                                                        <Trash className="w-4 h-4" />
                                                                     </button>
                                                                 </div>
                                                             );
@@ -1512,61 +1577,59 @@ export default function UniversitiesAdminPage() {
                                                 )}
                                             </div>
 
-                                            {/* Section B: Scholarships */}
-                                            <div className="space-y-4">
-                                                <div className="flex justify-between items-center border-b pb-2">
-                                                    <div>
-                                                        <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                                                            <GraduationCap className="w-4 h-4 text-blue-500" /> Scholarships & Financial Grants
-                                                        </h3>
-                                                    </div>
+                                            {/* Scholarships */}
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                                                <div className="flex items-center justify-between border-b pb-3">
+                                                    <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                                        <GraduationCap className="w-4 h-4 text-amber-600" /> Scholarships & Grants
+                                                    </h4>
                                                     <Button
                                                         type="button"
                                                         onClick={addScholarship}
                                                         size="sm"
-                                                        className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold border border-blue-100 rounded-lg gap-1 h-8"
+                                                        className="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl font-bold gap-1.5 h-8 text-xs"
                                                     >
                                                         <Plus className="w-3.5 h-3.5" /> Add Scholarship
                                                     </Button>
                                                 </div>
 
                                                 {formData.scholarships.length === 0 ? (
-                                                    <div className="p-4 text-center bg-slate-50 border border-slate-100 rounded-xl text-slate-400 text-xs">
-                                                        🎓 No custom scholarships added. Standard international bursaries are used as defaults.
+                                                    <div className="p-4 text-center bg-slate-50 border border-slate-200 rounded-xl text-slate-400 text-xs">
+                                                        🎓 Standard merit-based international scholarships will be shown as defaults.
                                                     </div>
                                                 ) : (
-                                                    <div className="space-y-3 max-h-[22vh] overflow-y-auto pr-1">
+                                                    <div className="space-y-3">
                                                         {formData.scholarships.map((sch, idx) => (
-                                                            <div key={idx} className="flex gap-3 items-center bg-slate-50 p-3 rounded-lg border border-slate-100 relative group pr-10">
-                                                                <div className="grid grid-cols-2 gap-3 flex-1">
+                                                            <div key={idx} className="flex gap-3 items-center bg-slate-50 p-3.5 rounded-xl border border-slate-200 relative group">
+                                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 pr-8">
                                                                     <div className="space-y-1">
-                                                                        <label className="text-[9px] font-black text-slate-400 uppercase">Scholarship Title</label>
+                                                                        <label className="text-[11px] font-bold text-slate-700 uppercase">Scholarship Name</label>
                                                                         <Input
-                                                                            placeholder="e.g., Global High Achievers Award"
+                                                                            placeholder="e.g. Global Merit Excellence Award"
                                                                             value={sch.title}
                                                                             onChange={(e) => handleScholarshipChange(idx, "title", e.target.value)}
                                                                             required
-                                                                            className="h-8 text-xs rounded-md border-slate-200"
+                                                                            className="h-10 text-xs rounded-xl bg-white border-slate-200"
                                                                         />
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <label className="text-[9px] font-black text-slate-400 uppercase">Amount / Grant Value</label>
+                                                                        <label className="text-[11px] font-bold text-slate-700 uppercase">Grant Amount / Benefit</label>
                                                                         <Input
-                                                                            placeholder="e.g., Up to 50% tuition reduction"
+                                                                            placeholder="e.g. Up to £5,000 Tuition Discount"
                                                                             value={sch.amount}
                                                                             onChange={(e) => handleScholarshipChange(idx, "amount", e.target.value)}
                                                                             required
-                                                                            className="h-8 text-xs rounded-md border-slate-200"
+                                                                            className="h-10 text-xs rounded-xl bg-white border-slate-200"
                                                                         />
                                                                     </div>
                                                                 </div>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => removeScholarship(idx)}
-                                                                    className="absolute right-2 text-slate-400 hover:text-rose-500 p-1.5 rounded"
+                                                                    className="absolute right-3 text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors"
                                                                     title="Remove Scholarship"
                                                                 >
-                                                                    <Trash className="w-3.5 h-3.5" />
+                                                                    <Trash className="w-4 h-4" />
                                                                 </button>
                                                             </div>
                                                         ))}
@@ -1575,11 +1638,24 @@ export default function UniversitiesAdminPage() {
                                             </div>
                                         </div>
                                     )}
+
                                 </div>
 
-                                {/* Footer Area with Navigation */}
-                                <div className="flex justify-between items-center bg-slate-50 p-4 border-t border-slate-100 shrink-0">
-                                    <div className="flex gap-2">
+                                {/* Footer Action Controls */}
+                                <div className="bg-white px-6 py-4 border-t border-slate-200 shrink-0 flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => setIsDialogOpen(false)}
+                                            className="rounded-xl border-slate-200 h-11 px-5 text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+
+                                    <div className="flex items-center gap-3">
+                                        {/* Back Button */}
                                         {activeFormTab !== "basic" && (
                                             <Button
                                                 type="button"
@@ -1589,12 +1665,23 @@ export default function UniversitiesAdminPage() {
                                                     const currIdx = tabs.indexOf(activeFormTab);
                                                     setActiveFormTab(tabs[currIdx - 1]);
                                                 }}
-                                                className="gap-1 rounded-lg border-slate-200 h-10 px-4 text-xs font-semibold text-slate-700"
+                                                className="rounded-xl border-slate-200 h-11 px-4 text-xs font-semibold text-slate-700 gap-1.5"
                                             >
-                                                <ArrowLeft className="w-4 h-4" /> Back
+                                                <ArrowLeft className="w-4 h-4" /> Previous
                                             </Button>
                                         )}
-                                        {activeFormTab !== "scholarships" && (
+
+                                        {/* Quick Save Option */}
+                                        <Button
+                                            type="submit"
+                                            variant="outline"
+                                            className="hidden sm:inline-flex rounded-xl border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 h-11 px-5 text-xs font-bold"
+                                        >
+                                            {editingId ? "Save Changes" : "Save Draft"}
+                                        </Button>
+
+                                        {/* Next / Final Submit Button */}
+                                        {activeFormTab !== "scholarships" ? (
                                             <Button
                                                 type="button"
                                                 onClick={() => {
@@ -1602,27 +1689,19 @@ export default function UniversitiesAdminPage() {
                                                     const currIdx = tabs.indexOf(activeFormTab);
                                                     setActiveFormTab(tabs[currIdx + 1]);
                                                 }}
-                                                className="gap-1 rounded-lg bg-slate-800 hover:bg-slate-900 text-white h-10 px-4 text-xs font-semibold"
+                                                className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 text-xs gap-2 shadow-md shadow-blue-500/20"
                                             >
-                                                Next <ArrowRight className="w-4 h-4" />
+                                                Next Step <ArrowRight className="w-4 h-4" />
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                type="submit"
+                                                className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 text-xs gap-2 shadow-lg shadow-blue-500/25"
+                                            >
+                                                <Check className="w-4 h-4" />
+                                                {editingId ? "Update University" : "Publish Institution"}
                                             </Button>
                                         )}
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            onClick={() => setIsDialogOpen(false)}
-                                            className="rounded-lg border-slate-200 h-10 text-xs font-semibold"
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            type="submit"
-                                            className="rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold h-10 text-xs px-6 shadow-md shadow-blue-100"
-                                        >
-                                            {editingId ? "Update Institution" : "Publish Institution"}
-                                        </Button>
                                     </div>
                                 </div>
                             </form>

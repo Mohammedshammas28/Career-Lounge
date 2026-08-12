@@ -12,6 +12,20 @@ const nextConfig = {
       { protocol: "https", hostname: "placehold.co" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/admin/:path*',
+        destination: '/control-panel/:path*',
+        permanent: true,
+      },
+      {
+        source: '/admin',
+        destination: '/control-panel',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig

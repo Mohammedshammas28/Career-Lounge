@@ -5,13 +5,14 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { Save, RefreshCw, Plus, Trash2, ChevronLeft } from "lucide-react"
+import { Save, RefreshCw, Plus, Trash2, ChevronLeft, Sparkles, Eye, EyeOff } from "lucide-react"
 
 export default function TickerAdminPage() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState("")
+  const [messageType, setMessageType] = useState("success")
 
   useEffect(() => {
     fetchTickerData()
@@ -20,28 +21,51 @@ export default function TickerAdminPage() {
   const fetchTickerData = async () => {
     try {
       setLoading(true)
-      const response = await fetch("/api/ticker", { headers: { "Cache-Control": "no-cache" } })
+      const response = await fetch(`/api/ticker?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+        },
+      })
       const data = await response.json()
       setItems(data.items || [])
     } catch (error) {
       console.warn("Error fetching ticker:", error)
       setMessage("Error loading ticker data")
+      setMessageType("error")
     } finally {
       setLoading(false)
     }
   }
 
   const handleAddItem = () => {
-    const updatedItems = items.map((item) => ({ ...item, isNew: false }))
-    setItems([...updatedItems, { id: Date.now().toString(), text: "", active: true, isNew: true }])
+    setItems((prev) => [
+      ...prev,
+      { id: Date.now().toString(), text: "", active: true, isNew: true },
+    ])
   }
 
   const handleRemoveItem = (id) => {
-    setItems(items.filter(item => item.id !== id))
+    setItems((prev) => prev.filter((item) => item.id !== id))
   }
 
   const handleTextChange = (id, newText) => {
-    setItems(items.map(item => item.id === id ? { ...item, text: newText } : item))
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, text: newText } : item))
+    )
+  }
+
+  const handleToggleActive = (id) => {
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, active: !item.active } : item))
+    )
+  }
+
+  const handleToggleIsNew = (id) => {
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, isNew: !item.isNew } : item))
+    )
   }
 
   const handleSave = async () => {
@@ -56,15 +80,21 @@ export default function TickerAdminPage() {
 
       const data = await response.json()
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setMessage("Ticker updated successfully!")
-        setTimeout(() => setMessage(""), 3000)
+        setMessageType("success")
+        if (data.data?.items) {
+          setItems(data.data.items)
+        }
+        setTimeout(() => setMessage(""), 4000)
       } else {
         setMessage(data.error || "Failed to save ticker")
+        setMessageType("error")
       }
     } catch (error) {
       console.warn("Error saving ticker:", error)
-      setMessage("Error saving ticker")
+      setMessage(error.message || "Error saving ticker")
+      setMessageType("error")
     } finally {
       setSaving(false)
     }
@@ -80,6 +110,8 @@ export default function TickerAdminPage() {
       </div>
     )
   }
+
+  const activeItems = items.filter((item) => item.active)
 
   return (
     <section className="py-12 lg:py-16">
@@ -108,16 +140,46 @@ export default function TickerAdminPage() {
           <div className="space-y-6">
             {items.length === 0 ? (
               <div className="text-center py-8 border-2 border-dashed border-border rounded-xl">
-                <p className="text-muted-foreground">No sliding text items yet. Click "Add More" to create one.</p>
+                <p className="text-muted-foreground">No sliding text items yet. Click "Add More Text" to create one.</p>
               </div>
             ) : (
               items.map((item, index) => (
-                <div key={item.id} className="relative group">
+                <div key={item.id} className="relative group p-4 border border-border/50 rounded-lg bg-background/50 space-y-3">
                   <div className="flex gap-4 items-start">
                     <div className="flex-1">
-                      <label className="block text-xs font-semibold text-muted-foreground uppercase mb-1">
-                        Message #{index + 1}
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-semibold text-muted-foreground uppercase">
+                          Message #{index + 1}
+                        </label>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleIsNew(item.id)}
+                            className={`text-xs px-2 py-0.5 rounded border transition-colors flex items-center gap-1 ${
+                              item.isNew
+                                ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
+                                : "text-muted-foreground border-border hover:bg-accent"
+                            }`}
+                            title="Toggle '✨ New' badge"
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            {item.isNew ? "Badge: ✨ New" : "Badge: Standard"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleActive(item.id)}
+                            className={`text-xs px-2 py-0.5 rounded border transition-colors flex items-center gap-1 ${
+                              item.active
+                                ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                                : "bg-muted text-muted-foreground border-border hover:bg-accent"
+                            }`}
+                            title="Toggle Active status"
+                          >
+                            {item.active ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                            {item.active ? "Active" : "Hidden"}
+                          </button>
+                        </div>
+                      </div>
                       <Input
                         value={item.text}
                         onChange={(e) => handleTextChange(item.id, e.target.value)}
@@ -128,7 +190,7 @@ export default function TickerAdminPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="mt-5 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
+                      className="mt-6 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
                       onClick={() => handleRemoveItem(item.id)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -139,7 +201,11 @@ export default function TickerAdminPage() {
             )}
 
             <div className="flex items-center justify-between pt-4 border-t border-border">
-              <div className="text-sm font-medium text-emerald-500">
+              <div
+                className={`text-sm font-medium ${
+                  messageType === "error" ? "text-red-500" : "text-emerald-500"
+                }`}
+              >
                 {message}
               </div>
               <div className="flex gap-4">
@@ -165,11 +231,11 @@ export default function TickerAdminPage() {
           <h3 className="text-sm font-semibold mb-4 text-foreground uppercase tracking-wider">Live Preview</h3>
           <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-3 rounded-lg">
             <div className="animate-scroll-left flex gap-12 whitespace-nowrap">
-              {items.length > 0 ? (
+              {activeItems.length > 0 ? (
                 Array(3).fill(0).map((_, i) => (
                   <div key={i} className="flex gap-12">
-                    {items.map((item) => (
-                      <span key={item.id} className="text-sm font-semibold text-primary flex items-center gap-2">
+                    {activeItems.map((item) => (
+                      <span key={`${i}-${item.id}`} className="text-sm font-semibold text-primary flex items-center gap-2">
                         {item.isNew ? (
                           <>
                             ✨ New: <span className="text-foreground font-medium">{item.text || "..."}</span>
@@ -182,7 +248,7 @@ export default function TickerAdminPage() {
                   </div>
                 ))
               ) : (
-                <span className="text-sm italic text-muted-foreground">No messages to display</span>
+                <span className="text-sm italic text-muted-foreground">No active messages to display</span>
               )}
             </div>
           </div>
@@ -191,3 +257,4 @@ export default function TickerAdminPage() {
     </section>
   )
 }
+
