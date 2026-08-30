@@ -1,5 +1,15 @@
+import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/db/connect";
 import Job from "@/models/Job";
+
+const getJobQuery = (identifier) => {
+    const decoded = decodeURIComponent(identifier);
+    const conditions = [{ slug: decoded }];
+    if (mongoose.Types.ObjectId.isValid(decoded)) {
+        conditions.push({ _id: decoded });
+    }
+    return { $or: conditions };
+};
 
 export async function GET(req, { params }) {
     try {
@@ -7,7 +17,7 @@ export async function GET(req, { params }) {
 
         const { slug } = await params;
 
-        const job = await Job.findOne({ slug });
+        const job = await Job.findOne(getJobQuery(slug));
 
         if (!job) {
             return Response.json(
@@ -49,7 +59,7 @@ export async function PATCH(req, { params }) {
         let normalizedBody = { ...body };
         if ((body.title || body.company) && !body.slug) {
             // Fetch current job to get fallbacks
-            const currentJob = await Job.findOne({ slug });
+            const currentJob = await Job.findOne(getJobQuery(slug));
             if (currentJob) {
                 const title = body.title || currentJob.title;
                 const company = body.company || currentJob.company;
@@ -60,7 +70,7 @@ export async function PATCH(req, { params }) {
             }
         }
 
-        const job = await Job.findOneAndUpdate({ slug }, normalizedBody, {
+        const job = await Job.findOneAndUpdate(getJobQuery(slug), normalizedBody, {
             new: true,
             runValidators: true,
         });
@@ -100,7 +110,7 @@ export async function DELETE(req, { params }) {
 
         const { slug } = await params;
 
-        const job = await Job.findOneAndDelete({ slug });
+        const job = await Job.findOneAndDelete(getJobQuery(slug));
 
         if (!job) {
             return Response.json(
@@ -130,3 +140,4 @@ export async function DELETE(req, { params }) {
         );
     }
 }
+

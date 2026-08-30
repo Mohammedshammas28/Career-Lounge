@@ -114,28 +114,6 @@ export async function GET(req) {
 
         let jobs = await Job.find(query).sort({ createdAt: -1 });
 
-        // If no jobs exist at all, seed with default jobs
-        const totalJobs = await Job.countDocuments();
-        if (totalJobs === 0) {
-            console.log("🌱 No jobs found. Seeding default jobs...");
-            const seeded = [];
-            for (const item of DEFAULT_JOBS) {
-                const slug = (item.title + "-" + item.company)
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")
-                    .replace(/[^\w-]/g, "");
-                
-                const job = new Job({
-                    ...item,
-                    slug,
-                    category: item.category || "Domestic",
-                });
-                await job.save();
-                seeded.push(job);
-            }
-            jobs = seeded.filter(j => !categoryFilter || j.category === categoryFilter).sort((a, b) => b.createdAt - a.createdAt);
-        }
-
         return Response.json(
             {
                 success: true,

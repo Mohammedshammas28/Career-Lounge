@@ -378,7 +378,7 @@ export default function JobsAdminPage() {
     };
 
     const handleEdit = (job) => {
-        setEditingSlug(job.slug);
+        setEditingSlug(job.slug || job._id);
         setFormData({
             title: job.title || "",
             company: job.company || "",
@@ -399,10 +399,10 @@ export default function JobsAdminPage() {
         setIsDialogOpen(true);
     };
 
-    const handleDelete = async (slug) => {
+    const handleDelete = async (identifier) => {
         if (confirm("Are you sure you want to delete this job opportunity? This action is permanent!")) {
             try {
-                const response = await fetch(`/api/jobs/${slug}`, {
+                const response = await fetch(`/api/jobs/${encodeURIComponent(identifier)}`, {
                     method: "DELETE",
                 });
                 const result = await response.json();
@@ -440,7 +440,8 @@ export default function JobsAdminPage() {
 
     const toggleJobStatus = async (job) => {
         try {
-            const response = await fetch(`/api/jobs/${job.slug}`, {
+            const identifier = job.slug || job._id;
+            const response = await fetch(`/api/jobs/${encodeURIComponent(identifier)}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -1208,7 +1209,7 @@ export default function JobsAdminPage() {
                                                         <Edit2 className="w-4 h-4" />
                                                     </Button>
                                                     <Button
-                                                        onClick={() => handleDelete(job.slug)}
+                                                        onClick={() => handleDelete(job.slug || job._id)}
                                                         variant="ghost"
                                                         size="icon"
                                                         className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg"
