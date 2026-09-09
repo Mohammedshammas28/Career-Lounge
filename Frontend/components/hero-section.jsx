@@ -70,9 +70,12 @@ export function HeroSection() {
             <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4 animate-slideInLeft" style={{ animation: 'slideInLeft 0.6s ease-out 0.1s both' }}>
               Your Career Partner
             </p>
-            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-[3.2rem] text-balance animate-slideInLeft leading-tight" style={{ animation: 'slideInLeft 0.6s ease-out 0.2s both' }}>
-              Where ambition meets{" "}
-              <span className="text-primary inline-block animate-float">opportunity</span>
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-[3.2rem] text-balance animate-slideInLeft leading-snug sm:leading-normal lg:leading-[1.35]" style={{ animation: 'slideInLeft 0.6s ease-out 0.2s both' }}>
+              <span className="block">Where ambition</span>
+              <span className="block mt-1 sm:mt-2">
+                meets{" "}
+                <span className="text-primary inline-block">opportunity</span>
+              </span>
             </h1>
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-gray-200 max-w-xl mx-auto lg:mx-0 animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>
               We help professionals navigate their career journey with expert coaching,

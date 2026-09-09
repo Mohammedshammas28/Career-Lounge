@@ -33,7 +33,7 @@ export default function PopularCoursesCarousel() {
                 // First check if custom homepage cards exist for popular-course
                 const cardRes = await fetch("/api/homepage-cards?type=popular-course")
                 const cardResult = await cardRes.json()
-                
+
                 if (cardResult.success && cardResult.data && cardResult.data.length > 0) {
                     const mappedCards = cardResult.data.map(card => ({
                         _id: card._id,
