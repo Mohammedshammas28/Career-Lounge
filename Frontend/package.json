@@ -43,6 +43,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
+    "cobe": "^2.0.1",
     "date-fns": "4.1.0",
     "embla-carousel-react": "8.5.1",
     "express-validator": "^7.3.2",
@@ -77,6 +78,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "25.2.2",
+    "@types/react": "19.2.18",
     "autoprefixer": "^10.5.4",
     "eslint": "^8.57.1",
     "postcss": "^8.5.25",
