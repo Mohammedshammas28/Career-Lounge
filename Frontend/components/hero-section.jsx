@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { GlassButton } from "@/components/ui/glass-button"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -81,20 +82,24 @@ export function HeroSection() {
               We help professionals navigate their career journey with expert coaching,
               strategic guidance, and personalized support. Transform your potential into success.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
+            <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
               <Link href="/contact">
-                <Button
+                <GlassButton
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 transition-all hover:shadow-lg hover:scale-105"
+                  variant="primary"
+                  contentClassName="flex items-center gap-2 font-semibold"
                 >
-                  Start Your Journey
+                  <span>Start Your Journey</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
+                </GlassButton>
               </Link>
               <Link href="/about">
-                <Button size="lg" variant="outline" className="border-gray-400 text-foreground bg-white/80 dark:bg-transparent hover:bg-gray-100 dark:hover:bg-secondary transition-all hover:shadow-lg hover:scale-105">
-                  Learn More
-                </Button>
+                <GlassButton
+                  size="lg"
+                  contentClassName="font-medium text-white"
+                >
+                  <span>Learn More</span>
+                </GlassButton>
               </Link>
             </div>
 

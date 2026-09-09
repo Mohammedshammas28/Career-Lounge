@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { GlassButton } from "@/components/ui/glass-button"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -231,9 +232,9 @@ export function Header() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
           <Link href={getContactHref()}>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105">
+            <GlassButton size="sm" variant="primary" contentClassName="font-semibold px-5 py-2 text-white">
               Get Started
-            </Button>
+            </GlassButton>
           </Link>
         </div>
 

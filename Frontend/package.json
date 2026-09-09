@@ -45,6 +45,7 @@
     "cmdk": "1.0.4",
     "cobe": "^2.0.1",
     "date-fns": "4.1.0",
+    "dotted-map": "^3.1.0",
     "embla-carousel-react": "8.5.1",
     "express-validator": "^7.3.2",
     "framer-motion": "^12.38.0",
