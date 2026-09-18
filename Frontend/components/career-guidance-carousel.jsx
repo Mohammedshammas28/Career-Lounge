@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
@@ -28,7 +28,7 @@ const STATIC_SERVICES = [
         _id: "1",
         title: "Career Counselling",
         description: "Our personalised Career Counselling sessions pair you with seasoned overseas-education specialists who map your unique academic background, interests, and ambitions to the most suitable global destinations and programmes. Through a structured deep-dive, we help you clarify your goals, understand entry requirements, and chart a realistic timeline — so every decision you make is purposeful and well-informed.",
-        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1200&fit=crop",
+        image: "/images/career-counselling.jpg",
         iconName: "UserRoundSearch",
         buttonText: "Book a Session",
         buttonLink: "/contact?service=Career+Counselling",
@@ -270,10 +270,10 @@ export default function CareerGuidanceCarousel() {
                                                     </div>
                                                 </DialogTrigger>
 
-                                                <DialogContainer className="pt-16">
+                                                <DialogContainer>
                                                     <DialogContent
                                                         style={{ borderRadius: "24px" }}
-                                                        className="relative mx-auto flex h-[85vh] w-[92%] max-w-3xl flex-col overflow-y-auto bg-white dark:bg-zinc-950 border border-border/40 shadow-2xl"
+                                                        className="relative mx-auto flex max-h-[85vh] w-full max-w-2xl flex-col overflow-y-auto bg-white dark:bg-zinc-950 border border-border/40 shadow-2xl"
                                                     >
                                                         <DialogImage
                                                             src={image}

@@ -13,10 +13,10 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       <Header />
 
-      {/* Premium University Offers Slider */}
-      <PremiumOfferSlider />
-
       <HeroSection />
+
+      {/* Featured University & Scholarships Banner Slider */}
+      <PremiumOfferSlider />
 
       <CareerGuidanceCarousel />
 

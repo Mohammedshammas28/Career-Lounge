@@ -72,7 +72,21 @@ export default function PremiumOfferSlider() {
   }, [banners, router]);
 
   return (
-    <section className="pt-24 sm:pt-28 pb-8 bg-background relative overflow-hidden">
+    <section className="py-12 sm:py-16 bg-background relative overflow-hidden">
+      {/* Section Header */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.35em] text-primary">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Featured Universities &amp; Scholarships</span>
+        </div>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          Top-Ranked Global Institutions
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base text-muted-foreground">
+          Unlock international study pathways with world-class faculty, accredited degrees, and exclusive tuition grants.
+        </p>
+      </div>
+
       <div className="w-full px-0 relative z-10">
         {/* 3D Dimensional Switch Banner Slider */}
         <DimensionalSwitchSlider

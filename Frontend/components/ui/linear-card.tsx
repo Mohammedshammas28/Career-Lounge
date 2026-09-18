@@ -1,7 +1,8 @@
-﻿'use client';
+'use client';
 import React, {
   useCallback, useContext, useEffect, useId, useMemo, useRef, useState, forwardRef
 } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { XIcon, Plus } from 'lucide-react';
@@ -97,19 +98,27 @@ export function DialogContainer({ children, className }) {
   const { isOpen, setIsOpen, uniqueId } = useDialog();
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); return () => setMounted(false); }, []);
-  if (!mounted) return null;
-  return (
+  if (!mounted || typeof document === 'undefined') return null;
+
+  return createPortal(
     <AnimatePresence initial={false} mode='sync'>
       {isOpen && (
-        <>
-          <motion.div key={`backdrop-${uniqueId}`}
-            className='fixed inset-0 h-full z-50 w-full bg-white/40 backdrop-blur-sm dark:bg-black/40'
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)} />
-          <div className={cn('fixed inset-0 z-50 w-fit mx-auto', className)}>{children}</div>
-        </>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <motion.div
+            key={`backdrop-${uniqueId}`}
+            className="fixed inset-0 h-full w-full bg-black/60 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+          />
+          <div className={cn('relative z-10 w-full max-w-2xl my-auto', className)}>
+            {children}
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 
@@ -143,11 +152,14 @@ export function DialogImage({ src, alt, className, style }) {
 
 export function DialogClose({ children, className, variants }) {
   const { setIsOpen, uniqueId } = useDialog();
-  const handleClose = useCallback(() => setIsOpen(false), [setIsOpen]);
+  const handleClose = useCallback((e) => {
+    e?.stopPropagation?.();
+    setIsOpen(false);
+  }, [setIsOpen]);
   return (
     <motion.button onClick={handleClose} type='button' aria-label='Close dialog'
       key={`dialog-close-${uniqueId}`}
-      className={cn('absolute right-6 top-6', className)}
+      className={cn('absolute right-6 top-6 z-20', className)}
       initial='initial' animate='animate' exit='exit' variants={variants}>
       {children || <XIcon size={24} />}
     </motion.button>

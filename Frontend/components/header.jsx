@@ -95,7 +95,8 @@ export function Header() {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex lg:gap-x-10">
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex lg:gap-x-6 lg:items-center">
           {navItems.map((item, index) => {
             if (item.name === "Services") {
               return (
@@ -109,7 +110,8 @@ export function Header() {
                       style={{
                         animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
                       }}
-                      className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full cursor-pointer select-none flex items-center gap-1"
+                      className="relative min-h-[44px] px-3.5 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-105 group cursor-pointer select-none inline-flex items-center gap-1.5 rounded-lg hover:bg-muted/50"
+                      aria-label="Open Services menu"
                     >
                       <span className="relative group-hover:animate-glow">Services</span>
                       <ChevronDown className="h-4 w-4" />
@@ -124,7 +126,7 @@ export function Header() {
                     {/* Career Counselling with Submenu */}
                     <div className="relative group">
                       <button
-                        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent transition-colors"
+                        className="w-full min-h-[40px] flex items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
                       >
                         <span>Career Counselling</span>
                         <ChevronDown className="h-4 w-4 group-hover:rotate-90 transition-transform" />
@@ -134,16 +136,15 @@ export function Header() {
                       <div
                         className="absolute left-full top-0 ml-2 w-56 bg-popover border border-border rounded-md shadow-lg p-1 z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                       >
-
                         <Link
                           href="/services/career-counselling/test-preparation"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                          className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left min-h-[40px]"
                         >
                           Test Preparation
                         </Link>
                         <Link
                           href="/services/career-counselling/language-training"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                          className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left min-h-[40px]"
                         >
                           Language Training
                         </Link>
@@ -155,7 +156,7 @@ export function Header() {
                     {/* Educational Consultancy with Submenu */}
                     <div className="relative group">
                       <button
-                        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent transition-colors"
+                        className="w-full min-h-[40px] flex items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
                       >
                         <span>Educational Consultancy</span>
                         <ChevronDown className="h-4 w-4 group-hover:rotate-90 transition-transform" />
@@ -167,13 +168,13 @@ export function Header() {
                       >
                         <Link
                           href="/services/educational-consultancy/domestic"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                          className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left min-h-[40px]"
                         >
                           Domestic Education
                         </Link>
                         <Link
                           href="/services/educational-consultancy/overseas"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                          className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left min-h-[40px]"
                         >
                           Overseas Education
                         </Link>
@@ -182,14 +183,14 @@ export function Header() {
 
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/services/immigration">Immigration</Link>
+                      <Link href="/services/immigration" className="min-h-[40px] flex items-center">Immigration</Link>
                     </DropdownMenuItem>
 
                     {/* Recruitment with Submenu */}
                     <DropdownMenuSeparator />
                     <div className="relative group">
                       <button
-                        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-accent transition-colors"
+                        className="w-full min-h-[40px] flex items-center justify-between rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors"
                       >
                         <span>Recruitment</span>
                         <ChevronDown className="h-4 w-4 group-hover:rotate-90 transition-transform" />
@@ -197,16 +198,15 @@ export function Header() {
                       <div
                         className="absolute left-full top-0 ml-2 w-52 bg-popover border border-border rounded-md shadow-lg p-1 z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                       >
-
                         <Link
                           href="/services/recruitment/domestic"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                          className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left min-h-[40px]"
                         >
                           🏠 Domestic
                         </Link>
                         <Link
                           href="/services/recruitment/overseas"
-                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left"
+                          className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-accent transition-colors block w-full text-left min-h-[40px]"
                         >
                           ✈️ Overseas
                         </Link>
@@ -223,7 +223,7 @@ export function Header() {
                 style={{
                   animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
                 }}
-                className="relative text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-110 group after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-primary after:transition-all hover:after:w-full"
+                className="relative min-h-[44px] px-3.5 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary hover:scale-105 group inline-flex items-center justify-center rounded-lg hover:bg-muted/50"
               >
                 <span className="relative group-hover:animate-glow">{item.name}</span>
               </Link>
@@ -231,9 +231,9 @@ export function Header() {
           })}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
-          <Link href={getContactHref()}>
-            <GlassButton size="sm" variant="primary" contentClassName="font-semibold px-5 py-2 text-white">
-              Get Started
+          <Link href="/contact?service=Consultation">
+            <GlassButton size="sm" variant="primary" className="min-h-[44px]" contentClassName="font-semibold px-5 py-2.5 text-white">
+              Book Free Consultation
             </GlassButton>
           </Link>
         </div>
@@ -242,9 +242,9 @@ export function Header() {
         <div className="flex lg:hidden items-center gap-2">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground hover:bg-secondary transition-all"
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg p-2.5 text-foreground hover:bg-secondary transition-all"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? (
               <X className="h-6 w-6" aria-hidden="true" />
@@ -255,33 +255,36 @@ export function Header() {
         </div>
 
       </nav>
-      {/* Animated notification banner moved below navbar */}
-      <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/20 w-full overflow-hidden py-2">
-        <div className="animate-scroll-left flex gap-12 whitespace-nowrap">
-          {tickerItems.length > 0 ? (
-            // Duplicate the items logic to ensure smooth infinite scroll
-            Array(4).fill(0).map((_, i) => (
-              <div key={i} className="flex gap-12 items-center">
-                {tickerItems.map((item) => (
-                  <span key={`${i}-${item.id}`} className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">
-                    {item.isNew ? (
-                      <>
-                        ✨ New: <span className="text-foreground font-medium">{item.text}</span>
-                      </>
-                    ) : (
-                      <span className="text-foreground font-medium">{item.text}</span>
-                    )}
-                  </span>
-                ))}
-              </div>
-            ))
-          ) : (
-            <span className="text-sm font-semibold text-primary flex items-center gap-2 shrink-0">
-              ✨ New: <span className="text-foreground font-medium">Study In Abroad Programs - Explore Global Opportunities</span>
-            </span>
-          )}
+      {/* High-Contrast Accessible Announcement Banner with 44px Touch Targets */}
+      <aside aria-label="Announcements" className="bg-slate-900 text-white dark:bg-zinc-950 dark:text-zinc-100 border-b border-slate-800 min-h-[44px] w-full overflow-hidden flex items-center">
+        <div className="animate-scroll-left flex gap-8 whitespace-nowrap py-1">
+          {/* Curated distinct announcements with high contrast and minimum 44px clickable target */}
+          {[
+            { tag: "✨ Admissions", text: "Global Admissions Open for 2026-2027 Intakes", href: "/services/educational-consultancy/overseas" },
+            { tag: "🎓 Scholarships", text: "Up to 50% Tuition Fee Scholarships at Top Partner Universities", href: "/contact?service=Scholarships" },
+            { tag: "🌏 Free Evaluation", text: "Get Your Complete 360° Profile Assessment by Experts", href: "/contact?service=Profile+Evaluation" },
+            { tag: "🤝 1-on-1 Mentorship", text: "Book Your Free Consultation Session with Education Advisors", href: "/contact?service=Consultation" },
+            ...(tickerItems.map(item => ({
+              tag: item.isNew ? "✨ New" : "📢 Update",
+              text: item.text,
+              href: "/contact?service=Consultation"
+            })))
+          ].map((item, idx) => (
+            <Link
+              key={idx}
+              href={item.href}
+              className="min-h-[44px] px-3.5 inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-100 hover:text-white transition-colors group shrink-0"
+            >
+              <span className="rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm">
+                {item.tag}
+              </span>
+              <span className="text-slate-200 group-hover:text-white underline-offset-4 group-hover:underline">
+                {item.text}
+              </span>
+            </Link>
+          ))}
         </div>
-      </div>
+      </aside>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
@@ -295,7 +298,7 @@ export function Header() {
               <h2 className="text-lg font-semibold text-foreground">Menu</h2>
               <button
                 type="button"
-                className="-m-2.5 rounded-md p-2.5 text-foreground hover:bg-secondary transition-all"
+                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-md p-2.5 text-foreground hover:bg-secondary transition-all"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span className="sr-only">Close menu</span>
@@ -375,9 +378,9 @@ export function Header() {
               })}
             </div>
             <div className="py-4 border-t border-border mt-4 flex flex-col gap-3">
-              <Link href={getContactHref()} onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                  Get Started
+              <Link href="/contact?service=Consultation" onClick={() => setMobileMenuOpen(false)}>
+                <Button className="w-full min-h-[44px] bg-primary text-primary-foreground font-semibold hover:bg-primary/90">
+                  Book Free Consultation
                 </Button>
               </Link>
             </div>

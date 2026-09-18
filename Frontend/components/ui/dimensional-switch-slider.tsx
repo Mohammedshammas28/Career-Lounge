@@ -206,7 +206,7 @@ export const DimensionalSwitchSlider = ({
             <Link
               href={item.href}
               onClick={() => handleAction(item)}
-              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-orange-500/25 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
             >
               <span>{item.buttonText || "Apply Now"}</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -215,7 +215,7 @@ export const DimensionalSwitchSlider = ({
             <button
               type="button"
               onClick={() => handleAction(item)}
-              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-orange-500/25 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
             >
               <span>{item.buttonText || "Apply Now"}</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -318,7 +318,7 @@ export const DimensionalSwitchSlider = ({
                   <Link
                     href={item.href}
                     onClick={() => handleAction(item)}
-                    className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-orange-500/25 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
                   >
                     <span>{item.buttonText || "Apply Now"}</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -327,7 +327,7 @@ export const DimensionalSwitchSlider = ({
                   <button
                     type="button"
                     onClick={() => handleAction(item)}
-                    className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-orange-500/25 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shrink-0"
                   >
                     <span>{item.buttonText || "Apply Now"}</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -338,24 +338,24 @@ export const DimensionalSwitchSlider = ({
           ))}
         </div>
 
-        {/* Arrow Buttons */}
+        {/* Arrow Buttons - 44px Minimum Touch Target */}
         {items.length > 1 && (
           <>
             <button
               type="button"
               onClick={goPrev}
-              aria-label="Previous University"
+              aria-label="Previous University Slide"
               disabled={!infinite && currentIndex === 0}
-              className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all duration-300 hover:bg-orange-500 hover:border-orange-400 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl"
+              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 flex h-11 w-11 sm:h-12 sm:w-12 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/30 bg-black/60 text-white backdrop-blur-md transition-all duration-300 hover:bg-primary hover:border-primary hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <button
               type="button"
               onClick={goNext}
-              aria-label="Next University"
+              aria-label="Next University Slide"
               disabled={!infinite && currentIndex === items.length - 1}
-              className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all duration-300 hover:bg-orange-500 hover:border-orange-400 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl"
+              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 flex h-11 w-11 sm:h-12 sm:w-12 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/30 bg-black/60 text-white backdrop-blur-md transition-all duration-300 hover:bg-primary hover:border-primary hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl cursor-pointer"
             >
               <ArrowRight className="w-5 h-5" />
             </button>
@@ -363,23 +363,33 @@ export const DimensionalSwitchSlider = ({
         )}
       </div>
 
-      {/* Dot Indicators */}
+      {/* Prominent Carousel Navigation & Slide Status - 44px Minimum Touch Target */}
       {items.length > 1 && (
-        <div className="flex items-center gap-2 mt-4 z-30">
+        <div className="flex items-center gap-1.5 mt-5 z-30">
           {items.map((item, idx) => (
             <button
               key={`dot-${item.text}-${idx}`}
               type="button"
               onClick={() => goToIndex(idx)}
-              aria-label={`Go to ${item.text}`}
+              aria-label={`Go to slide ${idx + 1}: ${item.text}`}
               aria-current={idx === currentIndex}
-              className={`h-2 rounded-full transition-all duration-300 ease-in-out ${
-                idx === currentIndex
-                  ? "w-8 bg-gradient-to-r from-orange-500 to-amber-500 shadow-md shadow-orange-500/30"
-                  : "w-2 bg-white/30 hover:bg-white/60"
-              }`}
-            />
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-full cursor-pointer transition-transform hover:scale-110 active:scale-95"
+            >
+              <span
+                className={`h-2.5 rounded-full transition-all duration-300 ease-in-out ${
+                  idx === currentIndex
+                    ? "w-8 bg-primary shadow-md shadow-primary/40"
+                    : "w-2.5 bg-foreground/25 hover:bg-foreground/50"
+                }`}
+              />
+            </button>
           ))}
+          {/* Slide Count Status Indicator */}
+          <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-muted/80 border border-border/40 text-xs font-semibold text-muted-foreground ml-1 select-none">
+            <span>{currentIndex + 1}</span>
+            <span className="opacity-50">/</span>
+            <span>{items.length}</span>
+          </div>
         </div>
       )}
     </div>

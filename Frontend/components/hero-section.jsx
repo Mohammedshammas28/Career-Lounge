@@ -56,7 +56,7 @@ const globeArcs = [
 export function HeroSection() {
 
   return (
-    <section className="relative min-h-[560px] lg:min-h-[620px] flex items-center justify-center pt-16 pb-12 overflow-hidden bg-[#060816] text-white">
+    <section className="relative min-h-[600px] lg:min-h-[660px] flex items-center justify-center pt-32 sm:pt-36 lg:pt-40 pb-20 lg:pb-28 overflow-hidden bg-[#060816] text-white">
       {/* Ambient background lighting and subtle gradients */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[140px]" />
@@ -64,7 +64,10 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/15 via-transparent to-transparent" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-16 w-full">
+      {/* Smooth Dark-to-Light Theme Transition at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none z-10" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-4 lg:px-8 w-full">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left Column - Hero Content */}
           <div className="text-center lg:text-left">
@@ -82,23 +85,26 @@ export function HeroSection() {
               We help professionals navigate their career journey with expert coaching,
               strategic guidance, and personalized support. Transform your potential into success.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
-              <Link href="/contact">
+            {/* Unified CTA Hierarchy: Primary 'Book Free Consultation' & Secondary Outline 'Explore Services' */}
+            <div className="mt-7 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center animate-slideInLeft" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
+              <Link href="/contact?service=Consultation" className="w-full sm:w-auto">
                 <GlassButton
                   size="lg"
                   variant="primary"
-                  contentClassName="flex items-center gap-2 font-semibold"
+                  className="w-full sm:w-auto min-h-[48px]"
+                  contentClassName="flex items-center justify-center gap-2 font-semibold px-6 py-3"
                 >
-                  <span>Start Your Journey</span>
+                  <span>Book Free Consultation</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </GlassButton>
               </Link>
-              <Link href="/about">
+              <Link href="/about" className="w-full sm:w-auto">
                 <GlassButton
                   size="lg"
-                  contentClassName="font-medium !text-white"
+                  className="w-full sm:w-auto min-h-[48px] border border-white/20 bg-white/5 hover:bg-white/10"
+                  contentClassName="font-medium !text-white flex items-center justify-center px-6 py-3"
                 >
-                  <span className="text-white">Learn More</span>
+                  <span className="text-white">Explore Services</span>
                 </GlassButton>
               </Link>
             </div>
