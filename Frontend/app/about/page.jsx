@@ -2,6 +2,7 @@ import { Header } from "@/components/header"
 import { AboutSection } from "@/components/about-section"
 import { WhyChooseSection } from "@/components/why-choose-section"
 import { ProcessSection } from "@/components/process-section"
+import { AboutMapSection } from "@/components/about-map-section"
 import { Footer } from "@/components/footer"
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default function AboutPage() {
       <AboutSection />
       <WhyChooseSection />
       <ProcessSection />
+      <AboutMapSection />
       <Footer />
     </main>
   )

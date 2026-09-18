@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { getUniversities } from "@/lib/universityService"
 import Link from "next/link"
 import { MapPin, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -15,29 +16,17 @@ export function UniversitiesGrid({ limit = null, showViewAll = true }) {
     const fetchUniversities = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch("/api/universities", {
-          headers: {
-            "Cache-Control": "no-cache",
-            "Pragma": "no-cache",
-            "Expires": "0",
-          },
-        })
+        setError(null)
 
-        if (!response.ok) {
-          setIsLoading(false)
-          return
-        }
+        const data = await getUniversities()
 
+        let universitiesData = data
 
-        const result = await response.json()
-        let data = result.data || result.universities || []
-
-        // Limit results if specified
         if (limit) {
-          data = data.slice(0, limit)
+          universitiesData = data.slice(0, limit)
         }
 
-        setUniversities(data)
+        setUniversities(universitiesData)
       } catch (err) {
         console.error("Error fetching universities:", err)
         setError("Failed to load universities")

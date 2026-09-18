@@ -33,7 +33,7 @@ const NAV_LINKS = [
 export default function AdminLayout({ children }) {
     const pathname = usePathname();
     const router = useRouter();
-    const isLoginPage = pathname === "/control-panel/login" || pathname === "/admin/login";
+    const isLoginPage = pathname === "/control-panel/login";
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     async function handleLogout() {
@@ -85,11 +85,10 @@ export default function AdminLayout({ children }) {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 whitespace-nowrap ${
-                                        isActive
+                                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 whitespace-nowrap ${isActive
                                             ? "bg-blue-600 text-white shadow-xs font-semibold"
                                             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                                    }`}
+                                        }`}
                                 >
                                     <Icon className="w-3.5 h-3.5" />
                                     {link.label}
@@ -132,9 +131,8 @@ export default function AdminLayout({ children }) {
             )}
 
             <aside
-                className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out xl:hidden ${
-                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                }`}
+                className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out xl:hidden ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    }`}
             >
                 <div className="flex items-center justify-between p-4 border-b border-slate-100">
                     <div className="flex items-center gap-2">
@@ -160,11 +158,10 @@ export default function AdminLayout({ children }) {
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => setSidebarOpen(false)}
-                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                                    isActive
+                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${isActive
                                         ? "bg-blue-600 text-white shadow-sm"
                                         : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                                }`}
+                                    }`}
                             >
                                 <Icon className="w-4 h-4 shrink-0" />
                                 {link.label}
