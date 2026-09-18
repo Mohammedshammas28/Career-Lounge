@@ -96,9 +96,9 @@ export function HeroSection() {
               <Link href="/about">
                 <GlassButton
                   size="lg"
-                  contentClassName="font-medium text-white"
+                  contentClassName="font-medium !text-white"
                 >
-                  <span>Learn More</span>
+                  <span className="text-white">Learn More</span>
                 </GlassButton>
               </Link>
             </div>

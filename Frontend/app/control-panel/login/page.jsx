@@ -38,7 +38,7 @@ function AdminLoginForm() {
             }
 
             const fromPath = searchParams.get("from");
-            const destination = fromPath && (fromPath.startsWith("/control-panel") || fromPath.startsWith("/admin")) ? fromPath : "/control-panel";
+            const destination = fromPath && (fromPath.startsWith("/control-panel")) ? fromPath : "/control-panel";
             router.replace(destination);
             router.refresh();
         } catch (loginError) {
